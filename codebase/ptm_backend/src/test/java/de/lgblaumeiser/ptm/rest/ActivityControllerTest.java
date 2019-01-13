@@ -27,9 +27,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.util.Base64Utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -62,8 +64,11 @@ public class ActivityControllerTest {
 
 	@Test
 	public void testWithInitialSetupNoActivities() throws Exception {
-		mockMvc.perform(get("/activities").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
-				.andExpect(status().isOk()).andExpect(content().string(containsString("[]")));
+		mockMvc.perform(get("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("[]")));
 	}
 
 	@Test
@@ -71,32 +76,50 @@ public class ActivityControllerTest {
 		UserRestController.UserBody user = new UserRestController.UserBody();
 		user.username = "MyTestUser";
 		user.password = "DummyPwd";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+		mockMvc.perform(post("/users/register")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(user)))
+				.andDo(print()).andExpect(status().isCreated());
 
 		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyTestActivity";
 		data.bookingNumber = "0815";
 		data.hidden = false;
-		mockMvc.perform(post("/activities").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(data))).andDo(print()).andExpect(status().isCreated());
+		mockMvc.perform(post("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isCreated());
 
-		mockMvc.perform(get("/activities").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
-				.andExpect(status().isOk()).andExpect(content().string(containsString("MyTestActivity")))
+		mockMvc.perform(get("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("MyTestActivity")))
 				.andExpect(content().string(containsString("0815")));
 
-		mockMvc.perform(get("/activities/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
-				.andExpect(status().isOk()).andExpect(content().string(containsString("MyTestActivity")))
+		mockMvc.perform(get("/activities/1")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("MyTestActivity")))
 				.andExpect(content().string(containsString("0815")));
 
 		data.hidden = true;
 		data.activityName = "MyOtherTestActivity";
 		data.bookingNumber = "4711";
-		mockMvc.perform(post("/activities/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(data))).andDo(print()).andExpect(status().isOk());
+		mockMvc.perform(post("/activities/1")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isOk());
 
-		mockMvc.perform(get("/activities").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
-				.andExpect(status().isOk()).andExpect(content().string(containsString("true")))
+		mockMvc.perform(get("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("true")))
 				.andExpect(content().string(containsString("MyOtherTestActivity")))
 				.andExpect(content().string(containsString("4711")))
 				.andExpect(content().string(containsString("\"id\":1")));
