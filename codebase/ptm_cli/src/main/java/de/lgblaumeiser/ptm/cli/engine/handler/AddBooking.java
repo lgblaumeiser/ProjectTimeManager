@@ -17,6 +17,7 @@ import com.beust.jcommander.Parameters;
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.datamanager.model.Booking.BookingBuilder;
+import de.lgblaumeiser.ptm.util.Utils;
 
 /**
  * Add a booking for the day
@@ -51,9 +52,10 @@ public class AddBooking extends AbstractCommandHandler {
 	@Override
 	public void handleCommand() {
 		getLogger().log("Add new booking ...");
+		Utils.assertState(user.isPresent());
 		BookingBuilder newBooking = Booking.newBooking().setBookingday(bookingDay).setActivity(activityId)
 				.setStarttime(starttime.get());
-		user.ifPresentOrElse(newBooking::setUser, IllegalStateException::new);
+		user.ifPresent(newBooking::setUser);
 		endtime.ifPresent(newBooking::setEndtime);
 		comment.ifPresent(newBooking::setComment);
 		Booking addedBooking = getServices().getBookingsStore().store(newBooking.build());
