@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
-import de.lgblaumeiser.ptm.datamanager.model.internal.ActivityImpl;
 
 public class FileStoreActivityTest {
 	private static final String TESTNAME = "TestName";
@@ -86,11 +85,6 @@ public class FileStoreActivityTest {
 	@Before
 	public void setUp() {
 		testee = new FileStore<Activity>(stubAccess) {
-			@Override
-			protected Class<ActivityImpl> getImplType() {
-				return ActivityImpl.class;
-			}
-
 			@Override
 			protected Class<Activity> getType() {
 				return Activity.class;

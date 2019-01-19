@@ -8,7 +8,6 @@
 package de.lgblaumeiser.ptm.datamanager.service;
 
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
-import de.lgblaumeiser.ptm.datamanager.service.impl.BookingServiceImpl;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 /**
@@ -16,6 +15,6 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  */
 public class BookingServiceProvider {
 	public BookingService getBookingService(ObjectStore<Booking> store) {
-		return new BookingServiceImpl(store);
+		return new BookingService(store);
 	}
 }

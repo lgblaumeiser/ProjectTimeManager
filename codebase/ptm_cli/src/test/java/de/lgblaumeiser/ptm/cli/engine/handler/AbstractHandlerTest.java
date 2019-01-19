@@ -42,9 +42,9 @@ public abstract class AbstractHandlerTest {
 	static final String ACTIVITY2NAME = "NewAct2";
 	static final String ACTIVITY2NUMBER = "4711";
 	static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITY1NAME).setBookingNumber(ACTIVITY1NUMBER)
-			.setId(1L).build();
+			.build();
 	static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITY2NAME).setBookingNumber(ACTIVITY2NUMBER)
-			.setHidden(true).setId(2L).build();
+			.setHidden(true).build();
 	static final String USER = "TestUser";
 	static final String COMMENT = "TestComment";
 	static final Booking BOOKING1 = Booking.newBooking().setActivity(1L).setBookingday(DATE1).setUser(USER)
@@ -151,10 +151,17 @@ public abstract class AbstractHandlerTest {
 			f.setAccessible(true);
 			f.set(BOOKING1, 10L);
 			f.setAccessible(false);
+			f = ACTIVITY1.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY1, 1L);
+			f.setAccessible(false);
+			f = ACTIVITY2.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY2, 2L);
+			f.setAccessible(false);
 		} catch (IllegalAccessException | IllegalArgumentException | ClassCastException | NoSuchFieldException
 				| SecurityException e) {
 			throw new IllegalStateException(e);
 		}
-
 	}
 }

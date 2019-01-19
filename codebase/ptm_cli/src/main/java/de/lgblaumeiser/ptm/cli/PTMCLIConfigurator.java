@@ -9,7 +9,6 @@ package de.lgblaumeiser.ptm.cli;
 
 import com.beust.jcommander.JCommander;
 
-import de.lgblaumeiser.ptm.analysis.DataAnalysisService;
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 import de.lgblaumeiser.ptm.cli.engine.PrettyPrinter;
 import de.lgblaumeiser.ptm.cli.engine.ServiceManager;
@@ -68,7 +67,7 @@ public class PTMCLIConfigurator {
 	public CLI configure() {
 		RestBookingStore bookingStore = new RestBookingStore();
 		ObjectStore<Activity> activityStore = new RestActivityStore();
-		DataAnalysisService analysisService = new RestAnalysisService();
+		RestAnalysisService analysisService = new RestAnalysisService();
 		RestInfrastructureServices infrastructureServices = new RestInfrastructureServices();
 		ServiceManager manager = createServiceManager(bookingStore, activityStore, analysisService,
 				infrastructureServices);
@@ -78,7 +77,7 @@ public class PTMCLIConfigurator {
 	}
 
 	private ServiceManager createServiceManager(final RestBookingStore bookingStore,
-			final ObjectStore<Activity> activityStore, final DataAnalysisService analysisService,
+			final ObjectStore<Activity> activityStore, final RestAnalysisService analysisService,
 			RestInfrastructureServices infrastructureServices) {
 		ServiceManager serviceManager = new ServiceManager();
 		serviceManager.setActivityStore(activityStore);

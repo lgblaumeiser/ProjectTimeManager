@@ -22,8 +22,6 @@ import org.junit.Test;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
-import de.lgblaumeiser.ptm.datamanager.model.internal.ActivityImpl;
-import de.lgblaumeiser.ptm.datamanager.model.internal.BookingImpl;
 import de.lgblaumeiser.ptm.store.ZipBackupRestore;
 
 /**
@@ -53,21 +51,11 @@ public class ZipBackupRestoreTest {
 			protected Class<Activity> getType() {
 				return Activity.class;
 			}
-
-			@Override
-			protected Class<? extends Activity> getImplType() {
-				return ActivityImpl.class;
-			}
 		};
 		FileStore<Booking> bookStore = new FileStore<Booking>(fileact) {
 			@Override
 			protected Class<Booking> getType() {
 				return Booking.class;
-			}
-
-			@Override
-			protected Class<? extends Booking> getImplType() {
-				return BookingImpl.class;
 			}
 		};
 		testee = new ZipBackupRestore(actStore, bookStore);
