@@ -28,7 +28,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
-import de.lgblaumeiser.ptm.datamanager.model.internal.BookingImpl;
 
 public class FileStoreBookingTest {
 	private static final String TESTUSER = "TestUser";
@@ -92,11 +91,6 @@ public class FileStoreBookingTest {
 	@Before
 	public void setUp() {
 		testee = new FileStore<Booking>(stubAccess) {
-			@Override
-			protected Class<BookingImpl> getImplType() {
-				return BookingImpl.class;
-			}
-
 			@Override
 			protected Class<Booking> getType() {
 				return Booking.class;

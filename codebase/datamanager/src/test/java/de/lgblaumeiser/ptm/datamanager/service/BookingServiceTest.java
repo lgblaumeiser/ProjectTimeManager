@@ -5,7 +5,7 @@
  * 
  * SPDX-License-Identifier: MIT
  */
-package de.lgblaumeiser.ptm.datamanager.service.impl;
+package de.lgblaumeiser.ptm.datamanager.service;
 
 import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
 import static de.lgblaumeiser.ptm.util.Utils.getFirstFromCollection;
@@ -27,7 +27,6 @@ import org.junit.Test;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
-import de.lgblaumeiser.ptm.datamanager.service.BookingService;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 /**
@@ -91,7 +90,7 @@ public class BookingServiceTest {
 				storedBookings.stream().filter(b -> id == b.getId()).findFirst().ifPresent(storedBookings::remove);
 			}
 		};
-		testee = new BookingServiceImpl(mockStore);
+		testee = new BookingService(mockStore);
 	}
 
 	@Test

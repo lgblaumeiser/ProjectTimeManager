@@ -16,7 +16,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
-import de.lgblaumeiser.ptm.datamanager.model.internal.ActivityImpl;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 /**
@@ -26,13 +25,12 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
 public class RestActivityStore extends RestBaseService implements ObjectStore<Activity> {
 	@Override
 	public Collection<Activity> retrieveAll() {
-		return asList(getRestUtils().<ActivityImpl[]>get("/activities", ActivityImpl[].class));
+		return asList(getRestUtils().<Activity[]>get("/activities", Activity[].class));
 	}
 
 	@Override
 	public Optional<Activity> retrieveById(final Long id) {
-		return Optional
-				.ofNullable(getRestUtils().<ActivityImpl>get("/activities/" + id.toString(), ActivityImpl.class));
+		return Optional.ofNullable(getRestUtils().<Activity>get("/activities/" + id.toString(), Activity.class));
 	}
 
 	@Override

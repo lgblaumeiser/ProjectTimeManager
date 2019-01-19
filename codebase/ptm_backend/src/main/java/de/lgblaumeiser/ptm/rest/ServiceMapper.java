@@ -50,7 +50,7 @@ public class ServiceMapper {
 		bookingStore = storageProvider.getBookingFileStore();
 		bookingService = new BookingServiceProvider().getBookingService(bookingStore);
 		backupService = storageProvider.getZipBackupRestore();
-		analysisService = new AnalysisProvider().getDefaultAnalysis(activityStore, bookingStore);
+		analysisService = new AnalysisProvider().getAnalysisService(activityStore, bookingStore);
 		logger.info("PTM services initialized");
 	}
 

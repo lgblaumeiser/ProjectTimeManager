@@ -133,13 +133,11 @@ public abstract class FileStore<T> implements ObjectStore<T>, StoreBackupRestore
 
 	private T extractFileContent(final String content) {
 		try {
-			return jsonUtil.readValue(content, getImplType());
+			return jsonUtil.readValue(content, getType());
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
 	}
-
-	protected abstract Class<? extends T> getImplType();
 
 	protected abstract Class<T> getType();
 

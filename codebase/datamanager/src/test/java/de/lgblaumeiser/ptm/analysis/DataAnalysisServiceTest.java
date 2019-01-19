@@ -20,8 +20,6 @@ import java.util.Collection;
 import org.junit.Before;
 import org.junit.Test;
 
-import de.lgblaumeiser.ptm.analysis.impl.DataAnalysisServiceImpl;
-
 public class DataAnalysisServiceTest {
 	private DataAnalysisService testee;
 
@@ -31,7 +29,7 @@ public class DataAnalysisServiceTest {
 
 	@Before
 	public void before() {
-		DataAnalysisServiceImpl testSetup = new DataAnalysisServiceImpl().addAnalysis(ANALYSISID, new Analysis() {
+		DataAnalysisService testSetup = new DataAnalysisService().addAnalysis(ANALYSISID, new Analysis() {
 			@Override
 			public Collection<Collection<Object>> analyze(final Collection<String> parameter) {
 				Collection<Object> returnParam = new ArrayList<>(parameter);

@@ -13,13 +13,10 @@ import static java.util.Arrays.asList;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import de.lgblaumeiser.ptm.analysis.DataAnalysisService;
-
 /**
  * Rest Proxy Implementation for accessing analysis results over rest api.
  */
-public class RestAnalysisService extends RestBaseService implements DataAnalysisService {
-	@Override
+public class RestAnalysisService extends RestBaseService {
 	public Collection<Collection<Object>> analyze(final String analyzerId, final Collection<String> parameter) {
 		Object[][] result = getRestUtils().get("/analysis/" + analyzerId + "/" + getIndexFromCollection(parameter, 0)
 				+ "/" + getIndexFromCollection(parameter, 1), Object[][].class);
