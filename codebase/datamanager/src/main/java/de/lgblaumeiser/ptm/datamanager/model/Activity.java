@@ -36,11 +36,6 @@ public class Activity {
 			// Nothing to do
 		}
 
-		public ActivityBuilder setId(final Long id) {
-			this.id = id;
-			return this;
-		}
-
 		public ActivityBuilder setActivityName(final String activityName) {
 			this.activityName = activityName;
 			return this;
