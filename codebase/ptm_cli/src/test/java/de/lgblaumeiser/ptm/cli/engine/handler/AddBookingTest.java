@@ -26,48 +26,32 @@ public class AddBookingTest extends AbstractHandlerTest {
 		assertEquals("/bookings/day/" + LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
 				restutils.apiNameGiven);
 		assertEquals("1", restutils.bodyDataGiven.get("activityId"));
-		assertEquals(System.getProperty("user.name"), restutils.bodyDataGiven.get("user"));
 		assertEquals(TIME1.toString(), restutils.bodyDataGiven.get("starttime"));
 		assertEquals("", restutils.bodyDataGiven.get("comment"));
-		assertEquals(4, restutils.bodyDataGiven.size());
+		assertEquals(3, restutils.bodyDataGiven.size());
 	}
 
 	@Test
-	public void testAddBookingThreeParam() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-u", USER, "-s", TIME1.toString());
+	public void testAddBookingThreeParamEndtime() {
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-s", TIME1.toString(), "-e", TIME2.toString());
 		assertEquals("/bookings/day/" + LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
 				restutils.apiNameGiven);
 		assertEquals("1", restutils.bodyDataGiven.get("activityId"));
-		assertEquals(USER, restutils.bodyDataGiven.get("user"));
-		assertEquals(TIME1.toString(), restutils.bodyDataGiven.get("starttime"));
-		assertEquals("", restutils.bodyDataGiven.get("comment"));
-		assertEquals(4, restutils.bodyDataGiven.size());
-	}
-
-	@Test
-	public void testAddBookingFourParamEndtime() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-u", USER, "-s", TIME1.toString(), "-e",
-				TIME2.toString());
-		assertEquals("/bookings/day/" + LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
-				restutils.apiNameGiven);
-		assertEquals("1", restutils.bodyDataGiven.get("activityId"));
-		assertEquals(USER, restutils.bodyDataGiven.get("user"));
 		assertEquals(TIME1.toString(), restutils.bodyDataGiven.get("starttime"));
 		assertEquals(TIME2.toString(), restutils.bodyDataGiven.get("endtime"));
 		assertEquals("", restutils.bodyDataGiven.get("comment"));
-		assertEquals(5, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test
-	public void testAddBookingFourParamComment() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-u", USER, "-s", TIME1.toString(), "-c", COMMENT);
+	public void testAddBookingThreeParamComment() {
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-s", TIME1.toString(), "-c", COMMENT);
 		assertEquals("/bookings/day/" + LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE),
 				restutils.apiNameGiven);
 		assertEquals("1", restutils.bodyDataGiven.get("activityId"));
-		assertEquals(USER, restutils.bodyDataGiven.get("user"));
 		assertEquals(TIME1.toString(), restutils.bodyDataGiven.get("starttime"));
 		assertEquals(COMMENT, restutils.bodyDataGiven.get("comment"));
-		assertEquals(4, restutils.bodyDataGiven.size());
+		assertEquals(3, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)
@@ -82,18 +66,16 @@ public class AddBookingTest extends AbstractHandlerTest {
 
 	@Test(expected = DateTimeParseException.class)
 	public void testAddBookingTwoParamWrongTime() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-u", USER, "-s", ACTIVITY1NUMBER);
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-s", ACTIVITY1NUMBER);
 	}
 
 	@Test(expected = DateTimeParseException.class)
 	public void testAddBookingThreeParamWrongTime() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "3", "-u", USER, "-s", TIME1.toString(), "-e",
-				ACTIVITY1NUMBER);
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "3", "-s", TIME1.toString(), "-e", ACTIVITY1NUMBER);
 	}
 
 	@Test(expected = IllegalStateException.class)
-	public void testAddBookingFourParamWrongTimeSequence() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "3", "-u", USER, "-s", TIME2.toString(), "-e",
-				TIME1.toString());
+	public void testAddBookingThreeParamWrongTimeSequence() {
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "3", "-s", TIME2.toString(), "-e", TIME1.toString());
 	}
 }

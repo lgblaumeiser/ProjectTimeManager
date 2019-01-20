@@ -77,7 +77,6 @@ public class AnalysisControllerTest {
 		String dateString = date.format(ISO_LOCAL_DATE);
 		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(16, 45).format(ISO_LOCAL_TIME);
 		booking.comment = "";

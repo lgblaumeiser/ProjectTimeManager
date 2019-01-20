@@ -17,6 +17,7 @@ import java.util.Optional;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 /**
@@ -42,7 +43,7 @@ public class BookingService {
 	 * @throws IllegalStateException If given data is not valid, e.g. endtime before
 	 *                               starttime
 	 */
-	public Booking addBooking(final LocalDate bookingday, final String user, final Activity activity,
+	public Booking addBooking(final LocalDate bookingday, final User user, final Activity activity,
 			final LocalTime starttime, final Optional<LocalTime> endtime, final Optional<String> comment) {
 		getLastOpenBooking(bookingday).ifPresent(b -> {
 			if (b.getStarttime().isBefore(starttime)) {
@@ -51,10 +52,10 @@ public class BookingService {
 			}
 		});
 		assertState(!activity.isHidden());
-		return createBooking(bookingday, user, activity.getId(), starttime, endtime, comment);
+		return createBooking(bookingday, user.getId(), activity.getId(), starttime, endtime, comment);
 	}
 
-	private Booking createBooking(final LocalDate bookingday, final String user, final Long activity,
+	private Booking createBooking(final LocalDate bookingday, final Long user, final Long activity,
 			final LocalTime starttime, final Optional<LocalTime> endtime, final Optional<String> comment) {
 		Booking.BookingBuilder newBookingBuilder = newBooking().setBookingday(bookingday).setUser(user)
 				.setStarttime(starttime).setActivity(activity);

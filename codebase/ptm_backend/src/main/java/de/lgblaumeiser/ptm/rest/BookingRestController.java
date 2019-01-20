@@ -33,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 
 /**
  * Rest Controller for Booking Management
@@ -62,7 +63,6 @@ public class BookingRestController {
 
 	static class BookingBody {
 		public String activityId;
-		public String user;
 		public String starttime;
 		public String endtime;
 		public String comment;
@@ -74,9 +74,10 @@ public class BookingRestController {
 	public ResponseEntity<?> addBooking(@PathVariable final String dayString, @RequestBody final BookingBody newData) {
 		logger.info("Request: Post new Booking for day " + dayString);
 		LocalDate day = LocalDate.parse(dayString);
+		User user = services.userStore().retrieveById(1L).orElseThrow(IllegalStateException::new);
 		Activity activity = services.activityStore().retrieveById(valueOf(newData.activityId))
 				.orElseThrow(IllegalStateException::new);
-		Booking newBooking = services.bookingService().addBooking(day, newData.user, activity, parse(newData.starttime),
+		Booking newBooking = services.bookingService().addBooking(day, user, activity, parse(newData.starttime),
 				newData.endtime != null ? Optional.of(parse(newData.endtime)) : Optional.empty(),
 				stringHasContent(newData.comment) ? Optional.of(newData.comment) : Optional.empty());
 		if (newData.breakstart != null) {

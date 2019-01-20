@@ -87,7 +87,6 @@ public class BookingControllerTest {
 		String dateString = date.format(ISO_LOCAL_DATE);
 		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
 		booking.comment = "";
 		MvcResult result = mockMvc
@@ -101,12 +100,12 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		booking.starttime = LocalTime.of(15, 30).format(ISO_LOCAL_TIME);
@@ -116,7 +115,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
 
@@ -125,7 +124,6 @@ public class BookingControllerTest {
 
 		booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(16, 30).format(ISO_LOCAL_TIME);
 		booking.comment = "Test Comment";
@@ -134,7 +132,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/2").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("Test Comment")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
@@ -170,7 +168,6 @@ public class BookingControllerTest {
 		String dateString = date.format(ISO_LOCAL_DATE);
 		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(9, 0).format(ISO_LOCAL_TIME);
 		booking.comment = "";
@@ -182,7 +179,6 @@ public class BookingControllerTest {
 
 		booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(10, 15).format(ISO_LOCAL_TIME);
 		booking.comment = "";
 		result = mockMvc
@@ -193,7 +189,6 @@ public class BookingControllerTest {
 
 		booking = new BookingRestController.BookingBody();
 		booking.activityId = "2";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(9, 0).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(10, 15).format(ISO_LOCAL_TIME);
 		booking.comment = "";
@@ -205,7 +200,6 @@ public class BookingControllerTest {
 
 		booking = new BookingRestController.BookingBody();
 		booking.activityId = "2";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(11, 0).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(12, 15).format(ISO_LOCAL_TIME);
 		booking.comment = "";
@@ -221,27 +215,27 @@ public class BookingControllerTest {
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/2").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/3").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/4").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")));
 
 		booking.starttime = LocalTime.of(9, 15).format(ISO_LOCAL_TIME);
@@ -251,7 +245,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/3").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
 
@@ -270,7 +264,6 @@ public class BookingControllerTest {
 		String dateString = date.format(ISO_LOCAL_DATE);
 		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(17, 0).format(ISO_LOCAL_TIME);
 		booking.breakstart = LocalTime.of(10, 30).format(ISO_LOCAL_TIME);
@@ -283,7 +276,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString(booking.starttime)))
 				.andExpect(content().string(containsString(booking.endtime)))
 				.andExpect(content().string(containsString(booking.breakstart)))
@@ -296,7 +289,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString(booking.breakstart)))
 				.andExpect(content().string(containsString(LocalTime.of(15, 45).format(ISO_LOCAL_TIME))));
 	}

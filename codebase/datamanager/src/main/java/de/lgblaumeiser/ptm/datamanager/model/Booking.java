@@ -31,7 +31,7 @@ public class Booking {
 		private LocalTime starttime;
 		private LocalTime endtime = null;
 		private Long activity;
-		private String user;
+		private Long user;
 		private String comment = emptyString();
 
 		private BookingBuilder(final Booking booking) {
@@ -87,10 +87,10 @@ public class Booking {
 		}
 
 		/**
-		 * @param user The user of the booking to build
+		 * @param user The user id of the booking to build
 		 * @return The booking build as fluent api, non null
 		 */
-		public BookingBuilder setUser(final String user) {
+		public BookingBuilder setUser(final Long user) {
 			this.user = user;
 			return this;
 		}
@@ -149,8 +149,7 @@ public class Booking {
 	private LocalTime starttime;
 	private LocalTime endtime;
 	private Long activity;
-
-	private String user;
+	private Long user;
 	private String comment;
 	private Long id;
 
@@ -193,7 +192,7 @@ public class Booking {
 	/**
 	 * @return User for whom booking was made, never null
 	 */
-	public String getUser() {
+	public Long getUser() {
 		return user;
 	}
 
@@ -230,14 +229,14 @@ public class Booking {
 
 	@Override
 	public String toString() {
-		return format("Booking: Bookingday: %s, User: %s, Starttime: %s, %sActivity Id: %d, Comment: %s, Id: %d",
+		return format("Booking: Bookingday: %s, User Id: %d, Starttime: %s, %sActivity Id: %d, Comment: %s, Id: %d",
 				bookingday.format(ISO_LOCAL_DATE), user, starttime.format(DateTimeFormatter.ofPattern("HH:mm")),
 				endtime != null ? "Endtime: " + endtime.format(DateTimeFormatter.ofPattern("HH:mm")) + ", "
 						: emptyString(),
 				activity, comment, id);
 	}
 
-	private Booking(final Long id, final LocalDate bookingday, final String user, final LocalTime starttime,
+	private Booking(final Long id, final LocalDate bookingday, final Long user, final LocalTime starttime,
 			final LocalTime endtime, final Long activity, final String comment) {
 		this.id = id;
 		this.bookingday = bookingday;
@@ -251,5 +250,4 @@ public class Booking {
 	private Booking() {
 		// Only needed for deserialization
 	}
-
 }

@@ -79,7 +79,6 @@ public class ServicesControllerTest {
 		String dateString = date.format(ISO_LOCAL_DATE);
 		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
 		booking.activityId = "1";
-		booking.user = "TestUser";
 		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
 		booking.endtime = LocalTime.of(16, 45).format(ISO_LOCAL_TIME);
 		booking.comment = "";
@@ -99,7 +98,7 @@ public class ServicesControllerTest {
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity")))
-				.andExpect(content().string(containsString("TestUser")))
+				.andExpect(content().string(containsString("user\":1")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
 

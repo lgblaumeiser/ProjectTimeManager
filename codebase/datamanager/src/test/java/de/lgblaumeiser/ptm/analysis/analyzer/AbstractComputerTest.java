@@ -48,28 +48,26 @@ public abstract class AbstractComputerTest {
 	private static final LocalTime TIME7 = LocalTime.of(15, 39);
 	private static final LocalTime TIME8 = LocalTime.of(18, 45);
 
-	private static final String USER = "TestUser";
-
 	private static final Booking BOOKING1 = newBooking().setBookingday(LocalDate.of(2017, 3, 1)).setStarttime(TIME1)
-			.setEndtime(TIME2).setActivity(1L).setUser(USER).build();
+			.setEndtime(TIME2).setActivity(1L).setUser(1L).build();
 	private static final Booking BOOKING2 = newBooking().setBookingday(LocalDate.of(2017, 3, 1)).setStarttime(TIME2)
-			.setEndtime(TIME3).setActivity(2L).setUser(USER).build();
+			.setEndtime(TIME3).setActivity(2L).setUser(1L).build();
 	private static final Booking BOOKING3 = newBooking().setBookingday(LocalDate.of(2017, 3, 6)).setStarttime(TIME4)
-			.setEndtime(TIME6).setActivity(3L).setUser(USER).build();
+			.setEndtime(TIME6).setActivity(3L).setUser(1L).build();
 	private static final Booking BOOKING4 = newBooking().setBookingday(LocalDate.of(2017, 3, 6)).setStarttime(TIME7)
-			.setEndtime(TIME5).setActivity(1L).setUser(USER).build();
+			.setEndtime(TIME5).setActivity(1L).setUser(1L).build();
 	private static final Booking BOOKING5 = newBooking().setBookingday(LocalDate.of(2017, 3, 9)).setStarttime(TIME6)
-			.setEndtime(TIME3).setActivity(2L).setUser(USER).build();
+			.setEndtime(TIME3).setActivity(2L).setUser(1L).build();
 	private static final Booking BOOKING6 = newBooking().setBookingday(LocalDate.of(2017, 3, 9)).setStarttime(TIME3)
-			.setEndtime(TIME5).setActivity(3L).setUser(USER).build();
+			.setEndtime(TIME5).setActivity(3L).setUser(1L).build();
 	private static final Booking BOOKING7 = newBooking().setBookingday(LocalDate.of(2017, 3, 15)).setStarttime(TIME4)
-			.setEndtime(TIME7).setActivity(1L).setUser(USER).build();
+			.setEndtime(TIME7).setActivity(1L).setUser(1L).build();
 	private static final Booking BOOKING8 = newBooking().setBookingday(LocalDate.of(2017, 3, 15)).setStarttime(TIME7)
-			.setEndtime(TIME8).setActivity(2L).setUser(USER).build();
+			.setEndtime(TIME8).setActivity(2L).setUser(1L).build();
 	private static final Booking BOOKING9 = newBooking().setBookingday(LocalDate.of(2017, 3, 24)).setStarttime(TIME4)
-			.setActivity(3L).setUser(USER).build();
+			.setActivity(3L).setUser(1L).build();
 	private static final Booking BOOKING10 = newBooking().setBookingday(LocalDate.of(2017, 3, 28)).setStarttime(TIME6)
-			.setEndtime(TIME8).setActivity(1L).setUser(USER).build();
+			.setEndtime(TIME8).setActivity(1L).setUser(1L).build();
 
 	private static Collection<Booking> testBStore = Arrays.asList(BOOKING1, BOOKING2, BOOKING3, BOOKING4, BOOKING5,
 			BOOKING6, BOOKING7, BOOKING8, BOOKING9, BOOKING10);

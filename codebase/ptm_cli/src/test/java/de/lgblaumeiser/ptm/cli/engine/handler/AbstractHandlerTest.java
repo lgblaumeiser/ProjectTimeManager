@@ -45,9 +45,8 @@ public abstract class AbstractHandlerTest {
 			.build();
 	static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITY2NAME).setBookingNumber(ACTIVITY2NUMBER)
 			.setHidden(true).build();
-	static final String USER = "TestUser";
 	static final String COMMENT = "TestComment";
-	static final Booking BOOKING1 = Booking.newBooking().setActivity(1L).setBookingday(DATE1).setUser(USER)
+	static final Booking BOOKING1 = Booking.newBooking().setActivity(1L).setBookingday(DATE1).setUser(1L)
 			.setStarttime(TIME1).setEndtime(TIME2).build();
 
 	protected static class TestCommandLogger implements CommandLogger {
