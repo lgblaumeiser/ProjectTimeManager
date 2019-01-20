@@ -20,6 +20,7 @@ import de.lgblaumeiser.ptm.analysis.AnalysisProvider;
 import de.lgblaumeiser.ptm.analysis.DataAnalysisService;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 import de.lgblaumeiser.ptm.datamanager.service.BookingService;
 import de.lgblaumeiser.ptm.datamanager.service.BookingServiceProvider;
 import de.lgblaumeiser.ptm.store.FileStoreProvider;
@@ -35,8 +36,9 @@ public class ServiceMapper {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final ObjectStore<Activity> activityStore;
-
 	private final ObjectStore<Booking> bookingStore;
+	private final ObjectStore<User> userStore;
+
 	private final BookingService bookingService;
 
 	private final ZipBackupRestore backupService;
@@ -46,12 +48,22 @@ public class ServiceMapper {
 	public ServiceMapper() {
 		setProperty("filestore.folder", new File(getProperty("user.home"), ".ptm").getAbsolutePath());
 		FileStoreProvider storageProvider = new FileStoreProvider();
+		userStore = storageProvider.getUserFileStore();
 		activityStore = storageProvider.getActivityFileStore();
 		bookingStore = storageProvider.getBookingFileStore();
 		bookingService = new BookingServiceProvider().getBookingService(bookingStore);
 		backupService = storageProvider.getZipBackupRestore();
 		analysisService = new AnalysisProvider().getAnalysisService(activityStore, bookingStore);
 		logger.info("PTM services initialized");
+	}
+
+	private boolean userInitialized = false;
+
+	public ObjectStore<User> userStore() {
+		if (!userInitialized) {
+			userStore.store(User.newUser().setUsername("CurrentUser").setPassword("CurrentPwd").build());
+		}
+		return userStore;
 	}
 
 	public ObjectStore<Activity> activityStore() {

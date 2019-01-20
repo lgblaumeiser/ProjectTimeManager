@@ -30,7 +30,7 @@ public class ChangeBookingTest extends AbstractHandlerTest {
 		assertEquals(TIME3.toString(), restutils.bodyDataGiven.get("starttime"));
 		assertEquals(TIME2.toString(), restutils.bodyDataGiven.get("endtime"));
 		assertEquals("", restutils.bodyDataGiven.get("comment"));
-		assertEquals(5, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class ChangeBookingTest extends AbstractHandlerTest {
 		assertEquals(TIME3.toString(), restutils.bodyDataGiven.get("starttime"));
 		assertEquals(TIME4.toString(), restutils.bodyDataGiven.get("endtime"));
 		assertEquals("", restutils.bodyDataGiven.get("comment"));
-		assertEquals(5, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test
@@ -53,7 +53,7 @@ public class ChangeBookingTest extends AbstractHandlerTest {
 		assertEquals(TIME3.toString(), restutils.bodyDataGiven.get("starttime"));
 		assertEquals(TIME2.toString(), restutils.bodyDataGiven.get("endtime"));
 		assertEquals(COMMENT, restutils.bodyDataGiven.get("comment"));
-		assertEquals(5, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)

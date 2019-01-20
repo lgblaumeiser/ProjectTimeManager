@@ -46,7 +46,6 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 		try {
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("activityId", booking.getActivity().toString());
-			bodyData.put("user", booking.getUser());
 			bodyData.put("comment", booking.getComment());
 			bodyData.put("starttime", booking.getStarttime().format(DateTimeFormatter.ofPattern("HH:mm")));
 			if (booking.hasEndtime()) {
@@ -75,7 +74,6 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 		try {
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("activityId", booking.getActivity().toString());
-			bodyData.put("user", booking.getUser());
 			bodyData.put("comment", booking.getComment());
 			bodyData.put("starttime", booking.getStarttime().format(DateTimeFormatter.ofPattern("HH:mm")));
 			if (booking.hasEndtime()) {

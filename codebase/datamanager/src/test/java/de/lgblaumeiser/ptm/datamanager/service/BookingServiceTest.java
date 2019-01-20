@@ -8,6 +8,7 @@
 package de.lgblaumeiser.ptm.datamanager.service;
 
 import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
+import static de.lgblaumeiser.ptm.datamanager.model.User.newUser;
 import static de.lgblaumeiser.ptm.util.Utils.getFirstFromCollection;
 import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
 import static java.util.Collections.unmodifiableCollection;
@@ -27,6 +28,7 @@ import org.junit.Test;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 /**
@@ -39,7 +41,7 @@ public class BookingServiceTest {
 	private static final LocalTime TIME3 = LocalTime.of(13, 45);
 	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setBookingNumber("b").build();
 	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setBookingNumber("c").build();
-	private static final String USER = "TestUser";
+	private static final User USER = newUser().setUsername("TestUser").setPassword("DummyPwd").build();
 	private static final String COMMENT1 = "Test Comment";
 	private static final String COMMENT2 = "";
 	private static final Integer BREAKDURATION = 45;

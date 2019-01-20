@@ -17,15 +17,12 @@ import com.beust.jcommander.Parameters;
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.datamanager.model.Booking.BookingBuilder;
-import de.lgblaumeiser.ptm.util.Utils;
 
 /**
  * Add a booking for the day
  */
 @Parameters(commandDescription = "Add a new booking")
 public class AddBooking extends AbstractCommandHandler {
-	private static final String USER_PROPERTY = "user.name";
-
 	@Parameter(names = { "-d",
 			"--day" }, description = "Optional day for booking, either a iso date format or -<days>", converter = LocalDateConverter.class)
 	private LocalDate bookingDay = LocalDate.now();
@@ -41,10 +38,6 @@ public class AddBooking extends AbstractCommandHandler {
 			"--endtime" }, description = "End time of the booked time frame", converter = LocalTimeConverter.class)
 	private Optional<LocalTime> endtime = Optional.empty();
 
-	@Parameter(names = { "-u",
-			"--user" }, description = "User for which time frame is booked", converter = OptionalStringConverter.class)
-	private Optional<String> user = Optional.ofNullable(System.getProperty(USER_PROPERTY));
-
 	@Parameter(names = { "-c",
 			"--comment" }, description = "Comment on booked time frame", converter = OptionalStringConverter.class)
 	private Optional<String> comment = Optional.empty();
@@ -52,10 +45,8 @@ public class AddBooking extends AbstractCommandHandler {
 	@Override
 	public void handleCommand() {
 		getLogger().log("Add new booking ...");
-		Utils.assertState(user.isPresent());
 		BookingBuilder newBooking = Booking.newBooking().setBookingday(bookingDay).setActivity(activityId)
-				.setStarttime(starttime.get());
-		user.ifPresent(newBooking::setUser);
+				.setStarttime(starttime.get()).setUser(-1L);
 		endtime.ifPresent(newBooking::setEndtime);
 		comment.ifPresent(newBooking::setComment);
 		Booking addedBooking = getServices().getBookingsStore().store(newBooking.build());

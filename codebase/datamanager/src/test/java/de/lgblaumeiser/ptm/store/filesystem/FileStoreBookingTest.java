@@ -30,7 +30,7 @@ import org.junit.Test;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 
 public class FileStoreBookingTest {
-	private static final String TESTUSER = "TestUser";
+	private static final Long TESTUSER = 456L;
 	private static final Long TESTACTID = 105L;
 	private static final LocalDate TESTDATE = LocalDate.of(2018, 9, 3);
 	private static final LocalTime TESTSTARTTIME = LocalTime.of(8, 15);

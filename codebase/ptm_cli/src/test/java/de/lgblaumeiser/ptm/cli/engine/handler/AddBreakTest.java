@@ -31,7 +31,7 @@ public class AddBreakTest extends AbstractHandlerTest {
 		assertEquals("", restutils.bodyDataGiven.get("comment"));
 		assertEquals(TIME3.toString(), restutils.bodyDataGiven.get("breakstart"));
 		assertEquals("15", restutils.bodyDataGiven.get("breaklength"));
-		assertEquals(7, restutils.bodyDataGiven.size());
+		assertEquals(6, restutils.bodyDataGiven.size());
 	}
 
 	@Test
@@ -43,7 +43,7 @@ public class AddBreakTest extends AbstractHandlerTest {
 		assertEquals(TIME2.toString(), restutils.bodyDataGiven.get("endtime"));
 		assertEquals("", restutils.bodyDataGiven.get("comment"));
 		assertEquals(TIME3.toString(), restutils.bodyDataGiven.get("breakstart"));
-		assertEquals(6, restutils.bodyDataGiven.size());
+		assertEquals(5, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)

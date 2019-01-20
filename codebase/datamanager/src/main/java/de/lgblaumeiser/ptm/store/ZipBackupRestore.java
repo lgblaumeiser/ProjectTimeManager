@@ -19,6 +19,7 @@ import java.util.zip.ZipOutputStream;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 
 /**
  * A implementation of a backup/restore mechanism using StoreBackupRestore. The
@@ -27,6 +28,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Booking;
 public class ZipBackupRestore {
 	private final StoreBackupRestore<Activity> activityStorage;
 	private final StoreBackupRestore<Booking> bookingStorage;
+	private final StoreBackupRestore<User> userStorage;
 
 	/**
 	 * Make a backup to the provided output stream as a zip file content
@@ -37,6 +39,7 @@ public class ZipBackupRestore {
 		try (ZipOutputStream zipstream = new ZipOutputStream(outputStream)) {
 			Map<String, String> filemap = activityStorage.backup();
 			filemap.putAll(bookingStorage.backup());
+			filemap.putAll(userStorage.backup());
 			filemap.keySet().stream().forEach(k -> createZipEntry(zipstream, k, filemap.get(k)));
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
@@ -61,6 +64,7 @@ public class ZipBackupRestore {
 	public void restore(final InputStream inputStream) {
 		Map<String, String> activityMap = new HashMap<>();
 		Map<String, String> bookingMap = new HashMap<>();
+		Map<String, String> userMap = new HashMap<>();
 		try (ZipInputStream zipstream = new ZipInputStream(inputStream)) {
 			ZipEntry currentEntry;
 			while ((currentEntry = zipstream.getNextEntry()) != null) {
@@ -71,6 +75,8 @@ public class ZipBackupRestore {
 					activityMap.put(key, data);
 				} else if (key.endsWith("booking")) {
 					bookingMap.put(key, data);
+				} else if (key.endsWith("user")) {
+					userMap.put(key, data);
 				}
 			}
 		} catch (IOException e) {
@@ -78,6 +84,7 @@ public class ZipBackupRestore {
 		}
 		activityStorage.restore(activityMap);
 		bookingStorage.restore(bookingMap);
+		userStorage.restore(userMap);
 	}
 
 	private String extractFromZip(final ZipInputStream inputStream) {
@@ -99,6 +106,7 @@ public class ZipBackupRestore {
 	public void emptyDatabase() {
 		activityStorage.delete();
 		bookingStorage.delete();
+		userStorage.delete();
 	}
 
 	/**
@@ -106,10 +114,12 @@ public class ZipBackupRestore {
 	 * 
 	 * @param activityStorage
 	 * @param bookingStorage
+	 * @param userStorage
 	 */
 	public ZipBackupRestore(final StoreBackupRestore<Activity> activityStorage,
-			final StoreBackupRestore<Booking> bookingStorage) {
+			final StoreBackupRestore<Booking> bookingStorage, final StoreBackupRestore<User> userStorage) {
 		this.activityStorage = activityStorage;
 		this.bookingStorage = bookingStorage;
+		this.userStorage = userStorage;
 	}
 }
