@@ -22,6 +22,7 @@ import org.junit.Test;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 import de.lgblaumeiser.ptm.store.ZipBackupRestore;
 
 /**
@@ -58,7 +59,13 @@ public class ZipBackupRestoreTest {
 				return Booking.class;
 			}
 		};
-		testee = new ZipBackupRestore(actStore, bookStore);
+		FileStore<User> userStore = new FileStore<User>(fileact) {
+			@Override
+			protected Class<User> getType() {
+				return User.class;
+			}
+		};
+		testee = new ZipBackupRestore(actStore, bookStore, userStore);
 	}
 
 	private void createTestFiles() throws IOException {

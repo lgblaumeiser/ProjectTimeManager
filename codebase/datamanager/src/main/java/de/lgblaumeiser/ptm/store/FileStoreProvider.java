@@ -9,6 +9,7 @@ package de.lgblaumeiser.ptm.store;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 import de.lgblaumeiser.ptm.store.filesystem.FileStore;
 import de.lgblaumeiser.ptm.store.filesystem.FilesystemAbstraction;
 import de.lgblaumeiser.ptm.store.filesystem.FilesystemAbstractionImpl;
@@ -30,6 +31,12 @@ public class FileStoreProvider {
 			return Booking.class;
 		}
 	};
+	private FileStore<User> userFileStore = new FileStore<User>(filesystemAbstraction) {
+		@Override
+		protected Class<User> getType() {
+			return User.class;
+		}
+	};
 
 	public FileStore<Activity> getActivityFileStore() {
 		return activityFileStore;
@@ -39,15 +46,11 @@ public class FileStoreProvider {
 		return bookingFileStore;
 	}
 
-	public StoreBackupRestore<Activity> getActivityBackupRestore() {
-		return activityFileStore;
-	}
-
-	public StoreBackupRestore<Booking> getBookingBackupRestore() {
-		return bookingFileStore;
+	public FileStore<User> getUserFileStore() {
+		return userFileStore;
 	}
 
 	public ZipBackupRestore getZipBackupRestore() {
-		return new ZipBackupRestore(activityFileStore, bookingFileStore);
+		return new ZipBackupRestore(activityFileStore, bookingFileStore, userFileStore);
 	}
 }
