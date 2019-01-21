@@ -59,7 +59,8 @@ public class OverviewController {
 		public Long activity;
 		public String comment;
 
-		BookingStruct(Long id, String starttime, String endtime, Long activity, String comment) {
+		BookingStruct(final Long id, final String starttime, final String endtime, final Long activity,
+				final String comment) {
 			this.id = id;
 			this.starttime = starttime;
 			this.endtime = endtime;
@@ -78,7 +79,7 @@ public class OverviewController {
 		return createPage(model, LocalDate.parse(dayString));
 	}
 
-	private String createPage(Model model, LocalDate dateToShow) {
+	private String createPage(final Model model, final LocalDate dateToShow) {
 		model.addAttribute(DATEATTRIBUTE, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE));
 		model.addAttribute(MONTHATTRIBUTE, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")));
 		model.addAttribute(ALLACTIVITIESATTRIBUTE,
@@ -103,8 +104,8 @@ public class OverviewController {
 		return TEMPLATENAME;
 	}
 
-	private void setAnalysisData(Model model, String headlineAttr, String analysisAttr, String analysisId,
-			String timeFrameType, String timeFrame) {
+	private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
+			final String analysisId, final String timeFrameType, final String timeFrame) {
 		Collection<Collection<Object>> analysisResult = services.analysisService().analyze(analysisId,
 				Arrays.asList(timeFrameType, timeFrame));
 		Collection<String> headline = mapToString(Utils.getFirstFromCollection(analysisResult));
@@ -114,7 +115,7 @@ public class OverviewController {
 		model.addAttribute(analysisAttr, bodydata);
 	}
 
-	private Collection<String> mapToString(Collection<Object> source) {
+	private Collection<String> mapToString(final Collection<Object> source) {
 		return source.stream().map(o -> o.toString()).collect(toList());
 	}
 }

@@ -125,7 +125,8 @@ public class BookingService {
 	 * @throws IllegalStateException If given data is not valid, according to rules
 	 *                               defined above, or if a parameter is null
 	 */
-	public Booking addBreakToBooking(Booking booking, LocalTime breakstart, Optional<Integer> duration) {
+	public Booking addBreakToBooking(final Booking booking, final LocalTime breakstart,
+			final Optional<Integer> duration) {
 		assertState(booking != null);
 		assertState(breakstart != null);
 		assertState(duration != null);
@@ -139,7 +140,7 @@ public class BookingService {
 		return afterBreak;
 	}
 
-	private void checkParameters(Booking booking, LocalTime breakstart, long internalDuration) {
+	private void checkParameters(final Booking booking, final LocalTime breakstart, final long internalDuration) {
 		assertState(booking.getStarttime().isBefore(breakstart));
 		assertState(booking.getEndtime() != null);
 		assertState(booking.getEndtime().isAfter(breakstart.plusMinutes(internalDuration)));

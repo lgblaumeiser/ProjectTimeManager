@@ -182,7 +182,7 @@ public class RestUtils {
 		return prop;
 	}
 
-	private void assertState(boolean condition, Object message) {
+	private void assertState(final boolean condition, final Object message) {
 		if (!condition) {
 			throw new IllegalStateException(message.toString());
 		}

@@ -83,7 +83,7 @@ public class HourComputer extends AbstractBaseComputer {
 		return result;
 	}
 
-	private boolean bookingsWithOverlaps(Collection<Booking> bookings) {
+	private boolean bookingsWithOverlaps(final Collection<Booking> bookings) {
 		for (Booking current : bookings) {
 			TimeSpan currentSpan = TimeSpan.newTimeSpan(current);
 			for (Booking toCheck : bookings) {

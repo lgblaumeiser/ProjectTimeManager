@@ -131,7 +131,7 @@ public class BookingRestController {
 		return ResponseEntity.status(BAD_REQUEST).body(e.toString());
 	}
 
-	private boolean stringHasContent(String string) {
+	private boolean stringHasContent(final String string) {
 		return (string != null) && !string.isEmpty();
 	}
 }

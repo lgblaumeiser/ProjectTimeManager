@@ -18,7 +18,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.datamanager.model.Booking.BookingBuilder;
 
 /**
- * End a booking that has been started with start booking command
+ * Change a booking
  */
 @Parameters(commandDescription = "Changes properties of an existing booking")
 public class ChangeBooking extends AbstractCommandHandler {

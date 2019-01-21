@@ -16,7 +16,7 @@ import de.lgblaumeiser.ptm.cli.Utils;
 public class OptionalStringConverter implements IStringConverter<Optional<String>> {
 
 	@Override
-	public Optional<String> convert(String value) {
+	public Optional<String> convert(final String value) {
 		if (Utils.stringHasContent(value)) {
 			return Optional.of(value);
 		}

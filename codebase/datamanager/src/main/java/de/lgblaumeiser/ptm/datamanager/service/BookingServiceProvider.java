@@ -14,7 +14,7 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * Provider for Booking Service Implementation
  */
 public class BookingServiceProvider {
-	public BookingService getBookingService(ObjectStore<Booking> store) {
+	public BookingService getBookingService(final ObjectStore<Booking> store) {
 		return new BookingService(store);
 	}
 }

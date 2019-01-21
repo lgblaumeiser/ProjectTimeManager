@@ -74,8 +74,8 @@ public class ProjectComputer extends AbstractBaseComputer {
 		return result;
 	}
 
-	private Collection<Collection<Object>> computeResultLines(Duration totalMinutes,
-			Map<Long, Duration> activityToMinutesMap, Map<Long, String> activityToCommentsMap) {
+	private Collection<Collection<Object>> computeResultLines(final Duration totalMinutes,
+			final Map<Long, Duration> activityToMinutesMap, final Map<Long, String> activityToCommentsMap) {
 		Collection<Collection<Object>> valueList = new ArrayList<>();
 		for (Entry<Long, Duration> currentActivity : activityToMinutesMap.entrySet()) {
 			Long activityId = currentActivity.getKey();
@@ -110,7 +110,7 @@ public class ProjectComputer extends AbstractBaseComputer {
 		return String.format("%c%02d:%02d", pre, minutes / 60, minutes % 60);
 	}
 
-	public ProjectComputer(final ObjectStore<Booking> bStore, ObjectStore<Activity> aStore) {
+	public ProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
 		super(bStore);
 		activityStore = aStore;
 	}

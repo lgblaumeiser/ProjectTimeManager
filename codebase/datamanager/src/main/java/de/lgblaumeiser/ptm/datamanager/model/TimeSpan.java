@@ -55,7 +55,7 @@ public final class TimeSpan {
 		return ofMinutes(MINUTES.between(starttime, endtime));
 	}
 
-	public boolean overlapsWith(TimeSpan theOther) {
+	public boolean overlapsWith(final TimeSpan theOther) {
 		if (starttime.equals(theOther.endtime) || endtime.equals(theOther.starttime)
 				|| starttime.isAfter(theOther.endtime) || endtime.isBefore(theOther.starttime)) {
 			return false;

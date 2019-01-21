@@ -63,7 +63,7 @@ public class ControlBackend extends AbstractCommandHandler {
 		}
 	}
 
-	private void startBackendProcess(String... command) throws IOException, InterruptedException {
+	private void startBackendProcess(final String... command) throws IOException, InterruptedException {
 		BufferedReader outputReader = prepareAndStartProcess(command);
 		String line;
 		while ((line = outputReader.readLine()) != null) {
@@ -80,7 +80,7 @@ public class ControlBackend extends AbstractCommandHandler {
 		return false;
 	}
 
-	private BufferedReader prepareAndStartProcess(String... command) throws IOException, InterruptedException {
+	private BufferedReader prepareAndStartProcess(final String... command) throws IOException, InterruptedException {
 		String pathToYaml = createPathToYaml();
 		List<String> commands = new ArrayList<>();
 		commands.addAll(asList("sudo", "docker-compose", "-f", pathToYaml));
@@ -94,7 +94,7 @@ public class ControlBackend extends AbstractCommandHandler {
 		return new File(ptmHome, "ptm_docker_config.yml").getAbsolutePath();
 	}
 
-	private BufferedReader startExternalProcess(List<String> commands) throws IOException, InterruptedException {
+	private BufferedReader startExternalProcess(final List<String> commands) throws IOException, InterruptedException {
 		String[] commandarray = commands.toArray(new String[commands.size()]);
 		Process process = new ProcessBuilder(commandarray).redirectErrorStream(true)
 				.redirectOutput(ProcessBuilder.Redirect.PIPE).start();

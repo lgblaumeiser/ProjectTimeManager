@@ -83,7 +83,7 @@ public class PTMCLIConfigurator {
 
 	private ServiceManager createServiceManager(final RestBookingStore bookingStore,
 			final ObjectStore<Activity> activityStore, final RestUserStore userStore,
-			final RestAnalysisService analysisService, RestInfrastructureServices infrastructureServices) {
+			final RestAnalysisService analysisService, final RestInfrastructureServices infrastructureServices) {
 		ServiceManager serviceManager = new ServiceManager();
 		serviceManager.setActivityStore(activityStore);
 		serviceManager.setBookingsStore(bookingStore);
