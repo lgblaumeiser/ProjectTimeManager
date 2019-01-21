@@ -33,11 +33,11 @@ public abstract class AbstractComputerTest {
 	private static final String BOOKINGNUMBER2 = "e";
 
 	private static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITYNAME1)
-			.setBookingNumber(BOOKINGNUMBER1).build();
+			.setBookingNumber(BOOKINGNUMBER1).setUser(1L).build();
 	private static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITYNAME2)
-			.setBookingNumber(BOOKINGNUMBER2).build();
+			.setBookingNumber(BOOKINGNUMBER2).setUser(1L).build();
 	private static final Activity ACTIVITY3 = newActivity().setActivityName(ACTIVITYNAME3)
-			.setBookingNumber(BOOKINGNUMBER1).build();
+			.setBookingNumber(BOOKINGNUMBER1).setUser(1L).build();
 
 	private static final LocalTime TIME1 = LocalTime.of(12, 34);
 	private static final LocalTime TIME2 = LocalTime.of(13, 57);

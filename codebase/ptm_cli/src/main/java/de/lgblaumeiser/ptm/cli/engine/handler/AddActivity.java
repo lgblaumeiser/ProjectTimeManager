@@ -30,7 +30,7 @@ public class AddActivity extends AbstractCommandHandler {
 	public void handleCommand() {
 		getLogger().log("Add activity " + name + " with id " + identifier);
 		Activity newAct = getServices().getActivityStore()
-				.store(newActivity().setActivityName(name).setBookingNumber(identifier).build());
+				.store(newActivity().setActivityName(name).setBookingNumber(identifier).setUser(1L).build());
 		getLogger().log("Activity added: " + newAct.toString() + "\n");
 	}
 }

@@ -39,8 +39,10 @@ public class BookingServiceTest {
 	private static final LocalTime TIME1 = LocalTime.of(10, 12);
 	private static final LocalTime TIME2 = LocalTime.of(12, 15);
 	private static final LocalTime TIME3 = LocalTime.of(13, 45);
-	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setBookingNumber("b").build();
-	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setBookingNumber("c").build();
+	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setBookingNumber("b").setUser(1L)
+			.build();
+	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setBookingNumber("c").setUser(1L)
+			.build();
 	private static final User USER = newUser().setUsername("TestUser").setPassword("DummyPwd").build();
 	private static final String COMMENT1 = "Test Comment";
 	private static final String COMMENT2 = "";

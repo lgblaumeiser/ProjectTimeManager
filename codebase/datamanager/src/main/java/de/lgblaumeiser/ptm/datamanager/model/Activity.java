@@ -21,12 +21,14 @@ import static java.util.Objects.hash;
 public class Activity {
 	public static class ActivityBuilder {
 		private Long id = valueOf(-1);
+		private Long user;
 		private String activityName;
 		private String bookingNumber;
 		private boolean hidden = false;
 
 		private ActivityBuilder(final Activity activity) {
 			id = activity.getId();
+			user = activity.getUser();
 			activityName = activity.getActivityName();
 			bookingNumber = activity.getBookingNumber();
 			hidden = activity.isHidden();
@@ -34,6 +36,11 @@ public class Activity {
 
 		private ActivityBuilder() {
 			// Nothing to do
+		}
+
+		public ActivityBuilder setUser(final Long user) {
+			this.user = user;
+			return this;
 		}
 
 		public ActivityBuilder setActivityName(final String activityName) {
@@ -57,10 +64,11 @@ public class Activity {
 		 */
 		public Activity build() {
 			checkData();
-			return new Activity(id, activityName, bookingNumber, hidden);
+			return new Activity(id, user, activityName, bookingNumber, hidden);
 		}
 
 		private void checkData() {
+			assertState(user != null && user > 0);
 			assertState(stringHasContent(activityName));
 			assertState(stringHasContent(bookingNumber));
 		}
@@ -88,13 +96,16 @@ public class Activity {
 	private String activityName;
 	private String bookingNumber;
 	private boolean hidden = false;
+	private Long user;
 	private Long id = valueOf(-1);
 
-	private Activity(final Long id, final String activityName, final String bookingNumber, final boolean hidden) {
+	private Activity(final Long id, final Long user, final String activityName, final String bookingNumber,
+			final boolean hidden) {
 		this.id = id;
 		this.activityName = activityName;
 		this.bookingNumber = bookingNumber;
 		this.hidden = hidden;
+		this.user = user;
 	}
 
 	private Activity() {
@@ -130,10 +141,17 @@ public class Activity {
 		return hidden;
 	}
 
+	/**
+	 * @return User owning the activity
+	 */
+	public Long getUser() {
+		return user;
+	}
+
 	@Override
 	public String toString() {
-		return format("Activity: Booking Number: %s, Name: %s, Hidden: %b, Id: %d", bookingNumber, activityName, hidden,
-				id);
+		return format("Activity: Booking Number: %s, Name: %s, Hidden: %b, User: %d, Id: %d", bookingNumber,
+				activityName, hidden, user, id);
 	}
 
 	@Override
@@ -141,13 +159,13 @@ public class Activity {
 		if (obj instanceof Activity) {
 			Activity act = (Activity) obj;
 			return id == act.id && hidden == act.isHidden() && activityName.equals(act.activityName)
-					&& bookingNumber.equals(act.bookingNumber);
+					&& bookingNumber.equals(act.bookingNumber) && user.equals(act.user);
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return hash(id, activityName, bookingNumber);
+		return hash(id, activityName, bookingNumber, user);
 	}
 }
