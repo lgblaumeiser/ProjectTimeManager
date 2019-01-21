@@ -57,12 +57,7 @@ public class ServiceMapper {
 		logger.info("PTM services initialized");
 	}
 
-	private boolean userInitialized = false;
-
 	public ObjectStore<User> userStore() {
-		if (!userInitialized) {
-			userStore.store(User.newUser().setUsername("CurrentUser").setPassword("CurrentPwd").build());
-		}
 		return userStore;
 	}
 

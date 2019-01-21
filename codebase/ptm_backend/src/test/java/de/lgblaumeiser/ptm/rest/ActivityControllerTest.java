@@ -68,6 +68,12 @@ public class ActivityControllerTest {
 
 	@Test
 	public void testRoundtripCreateAndRetrieveActivity() throws Exception {
+		UserRestController.UserBody user = new UserRestController.UserBody();
+		user.username = "MyTestUser";
+		user.password = "DummyPwd";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
 		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyTestActivity";
 		data.bookingNumber = "0815";
