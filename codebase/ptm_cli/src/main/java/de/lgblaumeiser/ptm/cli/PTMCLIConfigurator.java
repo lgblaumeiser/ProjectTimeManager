@@ -23,6 +23,7 @@ import de.lgblaumeiser.ptm.cli.engine.handler.DeleteBooking;
 import de.lgblaumeiser.ptm.cli.engine.handler.License;
 import de.lgblaumeiser.ptm.cli.engine.handler.ListActivity;
 import de.lgblaumeiser.ptm.cli.engine.handler.ListBookings;
+import de.lgblaumeiser.ptm.cli.engine.handler.RegisterUser;
 import de.lgblaumeiser.ptm.cli.engine.handler.Restore;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunHourAnalysis;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunProjectAnalysis;
@@ -31,6 +32,7 @@ import de.lgblaumeiser.ptm.cli.rest.RestAnalysisService;
 import de.lgblaumeiser.ptm.cli.rest.RestBaseService;
 import de.lgblaumeiser.ptm.cli.rest.RestBookingStore;
 import de.lgblaumeiser.ptm.cli.rest.RestInfrastructureServices;
+import de.lgblaumeiser.ptm.cli.rest.RestUserStore;
 import de.lgblaumeiser.ptm.cli.rest.RestUtils;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.store.ObjectStore;
@@ -45,6 +47,8 @@ public class PTMCLIConfigurator {
 	private static final String CHANGE_ACTIVITY_COMMAND_ABBRV = "ca";
 	private static final String LIST_ACTIVITY_COMMAND = "list_activities";
 	private static final String LIST_ACTIVITY_COMMAND_ABBRV = "la";
+	private static final String REGISTER_USER_COMMAND = "register_user";
+	private static final String REGISTER_USER_COMMAND_ABBRV = "ru";
 	private static final String ADD_BOOKING_COMMAND = "add_booking";
 	private static final String ADD_BOOKING_COMMAND_ABBRV = "ab";
 	private static final String DELETE_BOOKING_COMMAND = "delete_booking";
@@ -68,8 +72,9 @@ public class PTMCLIConfigurator {
 		RestBookingStore bookingStore = new RestBookingStore();
 		ObjectStore<Activity> activityStore = new RestActivityStore();
 		RestAnalysisService analysisService = new RestAnalysisService();
+		RestUserStore userStore = new RestUserStore();
 		RestInfrastructureServices infrastructureServices = new RestInfrastructureServices();
-		ServiceManager manager = createServiceManager(bookingStore, activityStore, analysisService,
+		ServiceManager manager = createServiceManager(bookingStore, activityStore, userStore, analysisService,
 				infrastructureServices);
 		RestBaseService.setRestUtils(new RestUtils().configure());
 		RestBaseService.setServices(manager);
@@ -77,11 +82,12 @@ public class PTMCLIConfigurator {
 	}
 
 	private ServiceManager createServiceManager(final RestBookingStore bookingStore,
-			final ObjectStore<Activity> activityStore, final RestAnalysisService analysisService,
-			RestInfrastructureServices infrastructureServices) {
+			final ObjectStore<Activity> activityStore, final RestUserStore userStore,
+			final RestAnalysisService analysisService, RestInfrastructureServices infrastructureServices) {
 		ServiceManager serviceManager = new ServiceManager();
 		serviceManager.setActivityStore(activityStore);
 		serviceManager.setBookingsStore(bookingStore);
+		serviceManager.setUserStore(userStore);
 		serviceManager.setAnalysisService(analysisService);
 		serviceManager.setInfrastructureServices(infrastructureServices);
 		return serviceManager;
@@ -96,6 +102,7 @@ public class PTMCLIConfigurator {
 				.addCommand(ADD_ACTIVITY_COMMAND, new AddActivity(), ADD_ACTIVITY_COMMAND_ABBRV)
 				.addCommand(CHANGE_ACTIVITY_COMMAND, new ChangeActivity(), CHANGE_ACTIVITY_COMMAND_ABBRV)
 				.addCommand(LIST_ACTIVITY_COMMAND, new ListActivity(), LIST_ACTIVITY_COMMAND_ABBRV)
+				.addCommand(REGISTER_USER_COMMAND, new RegisterUser(), REGISTER_USER_COMMAND_ABBRV)
 				.addCommand(ADD_BOOKING_COMMAND, new AddBooking(), ADD_BOOKING_COMMAND_ABBRV)
 				.addCommand(DELETE_BOOKING_COMMAND, new DeleteBooking(), DELETE_BOOKING_COMMAND_ABBRV)
 				.addCommand(CHANGE_BOOKING_COMMAND, new ChangeBooking(), CHANGE_BOOKING_COMMAND_ABBRV)
