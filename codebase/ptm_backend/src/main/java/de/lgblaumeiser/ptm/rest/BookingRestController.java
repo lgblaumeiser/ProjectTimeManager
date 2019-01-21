@@ -74,6 +74,7 @@ public class BookingRestController {
 	public ResponseEntity<?> addBooking(@PathVariable final String dayString, @RequestBody final BookingBody newData) {
 		logger.info("Request: Post new Booking for day " + dayString);
 		LocalDate day = LocalDate.parse(dayString);
+		// Temporary concept for user, replaced by security mechanism
 		User user = services.userStore().retrieveById(1L).orElseThrow(IllegalStateException::new);
 		Activity activity = services.activityStore().retrieveById(valueOf(newData.activityId))
 				.orElseThrow(IllegalStateException::new);

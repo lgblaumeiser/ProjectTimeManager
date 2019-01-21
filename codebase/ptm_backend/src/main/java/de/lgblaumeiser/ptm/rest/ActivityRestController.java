@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 
 /**
  * Rest Controller for management of activities
@@ -57,8 +58,11 @@ public class ActivityRestController {
 	@RequestMapping(method = RequestMethod.POST)
 	ResponseEntity<?> addActivity(@RequestBody final ActivityBody activityData) {
 		logger.info("Request: Post new Activity");
-		Activity newActivity = services.activityStore().store(newActivity().setActivityName(activityData.activityName)
-				.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
+		// Temporary concept for user, replaced by security mechanism
+		User user = services.userStore().retrieveById(1L).orElseThrow(IllegalStateException::new);
+		Activity newActivity = services.activityStore()
+				.store(newActivity().setUser(user.getId()).setActivityName(activityData.activityName)
+						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newActivity.getId()).toUri();
 		logger.info("Result: Activity Created with Id " + newActivity.getId());

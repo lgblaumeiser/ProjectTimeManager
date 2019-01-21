@@ -93,7 +93,7 @@ public class FileStoreActivityTest {
 	}
 
 	private static final Activity testData = Activity.newActivity().setActivityName(TESTNAME)
-			.setBookingNumber(TESTINDEX).build();
+			.setBookingNumber(TESTINDEX).setUser(1L).build();
 
 	@Test
 	public void testStore() {

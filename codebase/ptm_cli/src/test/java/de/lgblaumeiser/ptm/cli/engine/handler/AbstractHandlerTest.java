@@ -42,9 +42,9 @@ public abstract class AbstractHandlerTest {
 	static final String ACTIVITY2NAME = "NewAct2";
 	static final String ACTIVITY2NUMBER = "4711";
 	static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITY1NAME).setBookingNumber(ACTIVITY1NUMBER)
-			.build();
+			.setUser(1L).build();
 	static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITY2NAME).setBookingNumber(ACTIVITY2NUMBER)
-			.setHidden(true).build();
+			.setUser(1L).setHidden(true).build();
 	static final String COMMENT = "TestComment";
 	static final Booking BOOKING1 = Booking.newBooking().setActivity(1L).setBookingday(DATE1).setUser(1L)
 			.setStarttime(TIME1).setEndtime(TIME2).build();
