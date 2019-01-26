@@ -41,12 +41,19 @@ public class UserRestController {
 	@RequestMapping(method = RequestMethod.POST, value = "/register")
 	ResponseEntity<?> addUser(@RequestBody final UserBody userData) {
 		logger.info("Request: Register new User");
+		checkUsername(userData.username);
 		User newUser = services.userStore()
 				.store(newUser().setUsername(userData.username).setPassword(userData.password).build());
 		URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/users/"
 				+ newUser.getId());
 		logger.info("Result: User Created with Id " + newUser.getId());
 		return ResponseEntity.created(location).build();
+	}
+
+	private void checkUsername(String username) {
+		if (services.userStore().retrieveAll().stream().anyMatch(u -> u.getUsername().equals(username))) {
+			throw new IllegalStateException();
+		}
 	}
 
 	@ExceptionHandler(IllegalStateException.class)
