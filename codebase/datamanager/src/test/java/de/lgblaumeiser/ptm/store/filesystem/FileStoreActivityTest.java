@@ -30,6 +30,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
 public class FileStoreActivityTest {
 	private static final String TESTNAME = "TestName";
 	private static final String TESTINDEX = "TestIndex";
+	private static final String USERNAME = "UserX";
 
 	private FileStore<Activity> testee;
 
@@ -93,7 +94,7 @@ public class FileStoreActivityTest {
 	}
 
 	private static final Activity testData = Activity.newActivity().setActivityName(TESTNAME)
-			.setBookingNumber(TESTINDEX).setUser(1L).build();
+			.setBookingNumber(TESTINDEX).setUser(USERNAME).build();
 
 	@Test
 	public void testStore() {

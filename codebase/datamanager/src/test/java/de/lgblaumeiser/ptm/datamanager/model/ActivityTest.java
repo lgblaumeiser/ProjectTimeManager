@@ -24,27 +24,29 @@ public class ActivityTest {
 	private final static String BOOKINGN_1 = "A1";
 	private final static String ACTIVITY_2 = "ActivityId11";
 	private final static String BOOKINGN_2 = "A2";
+	private final static String USERNAME = "UserX";
+	private final static String USERNAME2 = "UserY";
 
 	/**
 	 * Positive test method for newLineActivity with activity id
 	 */
 	@Test
 	public final void testNewActivityPositive() {
-		Activity newActivity = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(1L)
-				.build();
+		Activity newActivity = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
+				.setUser(USERNAME).build();
 		assertEquals(ACTIVITY_1_1, newActivity.getActivityName());
 		assertEquals(BOOKINGN_1, newActivity.getBookingNumber());
-		assertEquals(Long.valueOf(1L), newActivity.getUser());
+		assertEquals(USERNAME, newActivity.getUser());
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithBlankName() {
-		newActivity().setActivityName(emptyString()).setBookingNumber(BOOKINGN_1).setUser(1L).build();
+		newActivity().setActivityName(emptyString()).setBookingNumber(BOOKINGN_1).setUser(USERNAME).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithBlankNumber() {
-		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(emptyString()).setUser(1L).build();
+		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(emptyString()).setUser(USERNAME).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
@@ -54,7 +56,7 @@ public class ActivityTest {
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithWrongUser() {
-		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(-1L).build();
+		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(emptyString()).build();
 	}
 
 	/**
@@ -62,16 +64,16 @@ public class ActivityTest {
 	 */
 	@Test
 	public final void testEquals() {
-		Activity newActivity1 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(1L)
+		Activity newActivity1 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
+				.setUser(USERNAME).build();
+		Activity newActivity2 = newActivity().setActivityName(ACTIVITY_1_2).setBookingNumber(BOOKINGN_1)
+				.setUser(USERNAME).build();
+		Activity newActivity3 = newActivity().setActivityName(ACTIVITY_2).setBookingNumber(BOOKINGN_2).setUser(USERNAME)
 				.build();
-		Activity newActivity2 = newActivity().setActivityName(ACTIVITY_1_2).setBookingNumber(BOOKINGN_1).setUser(1L)
-				.build();
-		Activity newActivity3 = newActivity().setActivityName(ACTIVITY_2).setBookingNumber(BOOKINGN_2).setUser(1L)
-				.build();
-		Activity newActivity4 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(1L)
-				.build();
-		Activity newActivity5 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(2L)
-				.build();
+		Activity newActivity4 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
+				.setUser(USERNAME).build();
+		Activity newActivity5 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
+				.setUser(USERNAME2).build();
 
 		assertTrue(newActivity1.equals(newActivity4));
 		assertTrue(newActivity1.hashCode() == newActivity4.hashCode());

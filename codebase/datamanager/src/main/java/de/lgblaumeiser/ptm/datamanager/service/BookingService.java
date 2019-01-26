@@ -52,10 +52,10 @@ public class BookingService {
 			}
 		});
 		assertState(!activity.isHidden());
-		return createBooking(bookingday, user.getId(), activity.getId(), starttime, endtime, comment);
+		return createBooking(bookingday, user.getUsername(), activity.getId(), starttime, endtime, comment);
 	}
 
-	private Booking createBooking(final LocalDate bookingday, final Long user, final Long activity,
+	private Booking createBooking(final LocalDate bookingday, final String user, final Long activity,
 			final LocalTime starttime, final Optional<LocalTime> endtime, final Optional<String> comment) {
 		Booking.BookingBuilder newBookingBuilder = newBooking().setBookingday(bookingday).setUser(user)
 				.setStarttime(starttime).setActivity(activity);

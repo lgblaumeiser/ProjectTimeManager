@@ -82,16 +82,6 @@ public class User {
 	private String password;
 	private Long id = valueOf(-1);
 
-	private User(final Long id, final String username, final String password) {
-		this.id = id;
-		this.username = username;
-		this.password = password;
-	}
-
-	private User() {
-		// Only needed for deserialization
-	}
-
 	/**
 	 * @return The internal id of the activity. Automatically created by storage
 	 *         system
@@ -131,5 +121,15 @@ public class User {
 	@Override
 	public int hashCode() {
 		return hash(id, username, password);
+	}
+
+	private User(final Long id, final String username, final String password) {
+		this.id = id;
+		this.username = username;
+		this.password = password;
+	}
+
+	private User() {
+		// Only needed for deserialization
 	}
 }

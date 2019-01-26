@@ -106,12 +106,12 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		booking.starttime = LocalTime.of(15, 30).format(ISO_LOCAL_TIME);
@@ -121,7 +121,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
 
@@ -138,7 +138,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/2").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("Test Comment")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
@@ -227,27 +227,27 @@ public class BookingControllerTest {
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/2").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/3").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		mockMvc.perform(get("/bookings/id/4").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")));
 
 		booking.starttime = LocalTime.of(9, 15).format(ISO_LOCAL_TIME);
@@ -257,7 +257,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/3").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity\":2")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
 
@@ -294,7 +294,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString(booking.starttime)))
 				.andExpect(content().string(containsString(booking.endtime)))
 				.andExpect(content().string(containsString(booking.breakstart)))
@@ -307,7 +307,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString).contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("activity\":1")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString(booking.breakstart)))
 				.andExpect(content().string(containsString(LocalTime.of(15, 45).format(ISO_LOCAL_TIME))));
 	}

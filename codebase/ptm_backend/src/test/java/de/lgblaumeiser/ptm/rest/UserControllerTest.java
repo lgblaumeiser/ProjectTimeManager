@@ -69,5 +69,21 @@ public class UserControllerTest {
 						.content(objectMapper.writeValueAsString(data)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
 		assertTrue(result.getResponse().getRedirectedUrl().contains("/users/1"));
+
+	}
+
+	@Test
+	public void testRegisterUserTwiceFails() throws Exception {
+		UserRestController.UserBody data = new UserRestController.UserBody();
+		data.username = "TestUser";
+		data.password = "DummyPwd";
+		MvcResult result = mockMvc
+				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+						.content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isCreated()).andReturn();
+		assertTrue(result.getResponse().getRedirectedUrl().contains("/users/1"));
+		data.password = "AnotherPasswd";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(data))).andDo(print()).andExpect(status().is4xxClientError());
 	}
 }

@@ -23,6 +23,8 @@ import de.lgblaumeiser.ptm.datamanager.model.Booking.BookingBuilder;
  */
 @Parameters(commandDescription = "Add a new booking")
 public class AddBooking extends AbstractCommandHandler {
+	private final static String DUMMYUSER = "Dummy";
+
 	@Parameter(names = { "-d",
 			"--day" }, description = "Optional day for booking, either a iso date format or -<days>", converter = LocalDateConverter.class)
 	private LocalDate bookingDay = LocalDate.now();
@@ -46,7 +48,7 @@ public class AddBooking extends AbstractCommandHandler {
 	public void handleCommand() {
 		getLogger().log("Add new booking ...");
 		BookingBuilder newBooking = Booking.newBooking().setBookingday(bookingDay).setActivity(activityId)
-				.setStarttime(starttime.get()).setUser(-1L);
+				.setStarttime(starttime.get()).setUser(DUMMYUSER);
 		endtime.ifPresent(newBooking::setEndtime);
 		comment.ifPresent(newBooking::setComment);
 		Booking addedBooking = getServices().getBookingsStore().store(newBooking.build());

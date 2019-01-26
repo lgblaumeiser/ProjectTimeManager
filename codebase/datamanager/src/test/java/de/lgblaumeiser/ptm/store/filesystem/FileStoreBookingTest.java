@@ -30,12 +30,12 @@ import org.junit.Test;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 
 public class FileStoreBookingTest {
-	private static final Long TESTUSER = 456L;
 	private static final Long TESTACTID = 105L;
 	private static final LocalDate TESTDATE = LocalDate.of(2018, 9, 3);
 	private static final LocalTime TESTSTARTTIME = LocalTime.of(8, 15);
 	private static final LocalTime TESTENDTIME = LocalTime.of(17, 00);
 	private static final String TESTCOMMENT = "TestComment";
+	private static final String USERNAME = "UserX";
 
 	private FileStore<Booking> testee;
 
@@ -99,7 +99,7 @@ public class FileStoreBookingTest {
 	}
 
 	private static final Booking testData = Booking.newBooking().setActivity(TESTACTID).setBookingday(TESTDATE)
-			.setComment(TESTCOMMENT).setEndtime(TESTENDTIME).setStarttime(TESTSTARTTIME).setUser(TESTUSER).build();
+			.setComment(TESTCOMMENT).setEndtime(TESTENDTIME).setStarttime(TESTSTARTTIME).setUser(USERNAME).build();
 
 	@Test
 	public void testStore() {
