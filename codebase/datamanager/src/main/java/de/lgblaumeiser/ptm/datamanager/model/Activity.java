@@ -21,7 +21,7 @@ import static java.util.Objects.hash;
 public class Activity {
 	public static class ActivityBuilder {
 		private Long id = valueOf(-1);
-		private Long user;
+		private String user;
 		private String activityName;
 		private String bookingNumber;
 		private boolean hidden = false;
@@ -38,7 +38,7 @@ public class Activity {
 			// Nothing to do
 		}
 
-		public ActivityBuilder setUser(final Long user) {
+		public ActivityBuilder setUser(final String user) {
 			this.user = user;
 			return this;
 		}
@@ -68,7 +68,7 @@ public class Activity {
 		}
 
 		private void checkData() {
-			assertState(user != null && user > 0);
+			assertState(stringHasContent(user));
 			assertState(stringHasContent(activityName));
 			assertState(stringHasContent(bookingNumber));
 		}
@@ -96,21 +96,8 @@ public class Activity {
 	private String activityName;
 	private String bookingNumber;
 	private boolean hidden = false;
-	private Long user;
+	private String user;
 	private Long id = valueOf(-1);
-
-	private Activity(final Long id, final Long user, final String activityName, final String bookingNumber,
-			final boolean hidden) {
-		this.id = id;
-		this.activityName = activityName;
-		this.bookingNumber = bookingNumber;
-		this.hidden = hidden;
-		this.user = user;
-	}
-
-	private Activity() {
-		// Only needed for deserialization
-	}
 
 	/**
 	 * @return The internal id of the activity. Automatically created by storage
@@ -144,13 +131,13 @@ public class Activity {
 	/**
 	 * @return User owning the activity
 	 */
-	public Long getUser() {
+	public String getUser() {
 		return user;
 	}
 
 	@Override
 	public String toString() {
-		return format("Activity: Booking Number: %s, Name: %s, Hidden: %b, User: %d, Id: %d", bookingNumber,
+		return format("Activity: Booking Number: %s, Name: %s, Hidden: %b, User: %s, Id: %d", bookingNumber,
 				activityName, hidden, user, id);
 	}
 
@@ -167,5 +154,18 @@ public class Activity {
 	@Override
 	public int hashCode() {
 		return hash(id, activityName, bookingNumber, user);
+	}
+
+	private Activity(final Long id, final String user, final String activityName, final String bookingNumber,
+			final boolean hidden) {
+		this.id = id;
+		this.activityName = activityName;
+		this.bookingNumber = bookingNumber;
+		this.hidden = hidden;
+		this.user = user;
+	}
+
+	private Activity() {
+		// Only needed for deserialization
 	}
 }

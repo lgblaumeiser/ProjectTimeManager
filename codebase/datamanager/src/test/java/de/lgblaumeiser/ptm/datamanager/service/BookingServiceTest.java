@@ -39,11 +39,13 @@ public class BookingServiceTest {
 	private static final LocalTime TIME1 = LocalTime.of(10, 12);
 	private static final LocalTime TIME2 = LocalTime.of(12, 15);
 	private static final LocalTime TIME3 = LocalTime.of(13, 45);
-	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setBookingNumber("b").setUser(1L)
+	private static final String USERNAME = "UserX";
+
+	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setBookingNumber("b").setUser(USERNAME)
 			.build();
-	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setBookingNumber("c").setUser(1L)
-			.build();
-	private static final User USER = newUser().setUsername("TestUser").setPassword("DummyPwd").build();
+	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setBookingNumber("c")
+			.setUser(USERNAME).build();
+	private static final User USER = newUser().setUsername(USERNAME).setPassword("DummyPwd").build();
 	private static final String COMMENT1 = "Test Comment";
 	private static final String COMMENT2 = "";
 	private static final Integer BREAKDURATION = 45;

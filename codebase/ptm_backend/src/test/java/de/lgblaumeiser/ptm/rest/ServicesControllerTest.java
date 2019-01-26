@@ -104,7 +104,7 @@ public class ServicesControllerTest {
 
 		mockMvc.perform(get("/bookings/id/1").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("activity")))
-				.andExpect(content().string(containsString("user\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
 

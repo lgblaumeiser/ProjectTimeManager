@@ -61,7 +61,7 @@ public class ActivityRestController {
 		// Temporary concept for user, replaced by security mechanism
 		User user = services.userStore().retrieveById(1L).orElseThrow(IllegalStateException::new);
 		Activity newActivity = services.activityStore()
-				.store(newActivity().setUser(user.getId()).setActivityName(activityData.activityName)
+				.store(newActivity().setUser(user.getUsername()).setActivityName(activityData.activityName)
 						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newActivity.getId()).toUri();
