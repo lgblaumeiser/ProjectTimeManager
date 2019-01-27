@@ -71,9 +71,15 @@ public class BookingControllerTest {
 	}
 
 	@Test
-	public void testWithInitialSetupNoActivities() throws Exception {
+	public void testWithInitialSetupNoBookings() throws Exception {
+		UserRestController.UserBody user = new UserRestController.UserBody();
+		user.username = "MyTestUser";
+		user.password = "DummyPwd";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
 		mockMvc.perform(get("/bookings").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))).andDo(print())
+				"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))).andDo(print())
 				.andExpect(status().isOk()).andExpect(content().string(containsString("[]")));
 	}
 
@@ -90,7 +96,7 @@ public class BookingControllerTest {
 		data.bookingNumber = "0815";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(data))).andDo(print())
 				.andExpect(status().isCreated());
 
@@ -103,7 +109,7 @@ public class BookingControllerTest {
 		MvcResult result = mockMvc
 				.perform(post("/bookings/day/" + dateString)
 						.header(HttpHeaders.AUTHORIZATION,
-								"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
@@ -111,13 +117,13 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString(dateString)));
 
 		mockMvc.perform(get("/bookings/day/" + dateString)
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -125,7 +131,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/1")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -135,13 +141,13 @@ public class BookingControllerTest {
 		booking.endtime = LocalTime.of(16, 30).format(ISO_LOCAL_TIME);
 		mockMvc.perform(post("/bookings/id/1")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isOk());
 
 		mockMvc.perform(get("/bookings/id/1")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -158,13 +164,13 @@ public class BookingControllerTest {
 		booking.comment = "Test Comment";
 		mockMvc.perform(post("/bookings/day/" + dateString2)
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated());
 
 		mockMvc.perform(get("/bookings/id/2")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -174,21 +180,21 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString(dateString)))
 				.andExpect(content().string(containsString(dateString2)));
 
 		mockMvc.perform(delete("/bookings/id/1").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))).andDo(print())
+				"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))).andDo(print())
 				.andExpect(status().isOk());
 		mockMvc.perform(delete("/bookings/id/2").header(HttpHeaders.AUTHORIZATION,
-				"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))).andDo(print())
+				"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))).andDo(print())
 				.andExpect(status().isOk());
 
 		mockMvc.perform(get("/bookings")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("[]")));
 	}
@@ -206,7 +212,7 @@ public class BookingControllerTest {
 		data1.bookingNumber = "0815";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(data1))).andDo(print())
 				.andExpect(status().isCreated());
 
@@ -215,7 +221,7 @@ public class BookingControllerTest {
 		data2.bookingNumber = "4711";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(data2))).andDo(print())
 				.andExpect(status().isCreated());
 
@@ -229,7 +235,7 @@ public class BookingControllerTest {
 		MvcResult result = mockMvc
 				.perform(post("/bookings/day/" + dateString)
 						.header(HttpHeaders.AUTHORIZATION,
-								"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
@@ -242,7 +248,7 @@ public class BookingControllerTest {
 		result = mockMvc
 				.perform(post("/bookings/day/" + dateString)
 						.header(HttpHeaders.AUTHORIZATION,
-								"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
@@ -256,7 +262,7 @@ public class BookingControllerTest {
 		result = mockMvc
 				.perform(post("/bookings/day/" + dateString)
 						.header(HttpHeaders.AUTHORIZATION,
-								"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
@@ -270,7 +276,7 @@ public class BookingControllerTest {
 		result = mockMvc
 				.perform(post("/bookings/day/" + dateString)
 						.header(HttpHeaders.AUTHORIZATION,
-								"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
@@ -278,13 +284,13 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString(dateString)));
 
 		mockMvc.perform(get("/bookings/day/" + dateString)
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("activity\":2")))
@@ -293,7 +299,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/1")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -301,7 +307,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/2")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -309,7 +315,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/3")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":2")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -317,7 +323,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/id/4")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":2")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -327,13 +333,13 @@ public class BookingControllerTest {
 		booking.endtime = LocalTime.of(10, 0).format(ISO_LOCAL_TIME);
 		mockMvc.perform(post("/bookings/id/3")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isOk());
 
 		mockMvc.perform(get("/bookings/id/3")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":2")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -355,7 +361,7 @@ public class BookingControllerTest {
 		data.bookingNumber = "0815";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(data))).andDo(print())
 				.andExpect(status().isCreated());
 
@@ -370,7 +376,7 @@ public class BookingControllerTest {
 		MvcResult result = mockMvc
 				.perform(post("/bookings/day/" + dateString)
 						.header(HttpHeaders.AUTHORIZATION,
-								"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
@@ -378,7 +384,7 @@ public class BookingControllerTest {
 
 		mockMvc.perform(get("/bookings/day/" + dateString)
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
@@ -391,13 +397,13 @@ public class BookingControllerTest {
 		booking.breaklength = "15";
 		mockMvc.perform(post("/bookings/id/2")
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
 				.andDo(print()).andExpect(status().isOk());
 
 		mockMvc.perform(get("/bookings/day/" + dateString)
 				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("DummyUser:DummyPwd".getBytes()))
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
 				.andExpect(content().string(containsString("activity\":1")))
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))

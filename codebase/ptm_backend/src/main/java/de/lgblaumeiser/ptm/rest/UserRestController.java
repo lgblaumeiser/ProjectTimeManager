@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import de.lgblaumeiser.ptm.ServiceMapper;
 import de.lgblaumeiser.ptm.datamanager.model.User;
 
 @RestController
@@ -43,11 +44,15 @@ public class UserRestController {
 		logger.info("Request: Register new User");
 		checkUsername(userData.username);
 		User newUser = services.userStore()
-				.store(newUser().setUsername(userData.username).setPassword(userData.password).build());
+				.store(newUser().setUsername(userData.username).setPassword(encrypt(userData.password)).build());
 		URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/users/"
 				+ newUser.getId());
 		logger.info("Result: User Created with Id " + newUser.getId());
 		return ResponseEntity.created(location).build();
+	}
+
+	private String encrypt(String password) {
+		return services.passwordEncodingService().encode(password);
 	}
 
 	private void checkUsername(String username) {

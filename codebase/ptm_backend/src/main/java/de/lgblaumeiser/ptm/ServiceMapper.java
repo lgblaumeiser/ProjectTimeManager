@@ -5,7 +5,7 @@
  * 
  * SPDX-License-Identifier: MIT
  */
-package de.lgblaumeiser.ptm.rest;
+package de.lgblaumeiser.ptm;
 
 import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
@@ -14,6 +14,8 @@ import java.io.File;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import de.lgblaumeiser.ptm.analysis.AnalysisProvider;
@@ -45,6 +47,8 @@ public class ServiceMapper {
 
 	private final DataAnalysisService analysisService;
 
+	private final PasswordEncoder passwordEncoder;
+
 	public ServiceMapper() {
 		setProperty("filestore.folder", new File(getProperty("user.home"), ".ptm").getAbsolutePath());
 		FileStoreProvider storageProvider = new FileStoreProvider();
@@ -54,6 +58,7 @@ public class ServiceMapper {
 		bookingService = new BookingServiceProvider().getBookingService(bookingStore);
 		backupService = storageProvider.getZipBackupRestore();
 		analysisService = new AnalysisProvider().getAnalysisService(activityStore, bookingStore);
+		passwordEncoder = new BCryptPasswordEncoder();
 		logger.info("PTM services initialized");
 	}
 
@@ -79,5 +84,9 @@ public class ServiceMapper {
 
 	public DataAnalysisService analysisService() {
 		return analysisService;
+	}
+
+	public PasswordEncoder passwordEncodingService() {
+		return passwordEncoder;
 	}
 }
