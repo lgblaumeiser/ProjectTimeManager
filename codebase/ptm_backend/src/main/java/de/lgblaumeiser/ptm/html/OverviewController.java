@@ -69,7 +69,7 @@ public class OverviewController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, value = "/")
+	@RequestMapping(method = RequestMethod.GET)
 	public String dataPageForToday(final Model model) {
 		return createPage(model, LocalDate.now());
 	}
