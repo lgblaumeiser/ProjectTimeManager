@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import de.lgblaumeiser.ptm.ServiceMapper;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
-import de.lgblaumeiser.ptm.rest.ServiceMapper;
 import de.lgblaumeiser.ptm.util.Utils;
 
 /**
