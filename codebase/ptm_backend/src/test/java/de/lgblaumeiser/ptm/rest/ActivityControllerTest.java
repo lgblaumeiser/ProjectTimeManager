@@ -10,6 +10,7 @@ package de.lgblaumeiser.ptm.rest;
 import static java.lang.System.setProperty;
 import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -126,5 +127,97 @@ public class ActivityControllerTest {
 				.andExpect(content().string(containsString("MyOtherTestActivity")))
 				.andExpect(content().string(containsString("4711")))
 				.andExpect(content().string(containsString("\"id\":1")));
+	}
+
+	@Test
+	public void testActivitiesWithDifferentUser() throws Exception {
+		UserRestController.UserBody user = new UserRestController.UserBody();
+		user.username = "MyTestUser";
+		user.password = "DummyPwd";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
+		user = new UserRestController.UserBody();
+		user.username = "MyTestUser2";
+		user.password = "DummyPwd2";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
+		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
+		data.activityName = "MyTestActivity";
+		data.bookingNumber = "0815";
+		data.hidden = false;
+		mockMvc.perform(post("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isCreated());
+
+		data = new ActivityRestController.ActivityBody();
+		data.activityName = "MyOtherTestActivity";
+		data.bookingNumber = "4711";
+		data.hidden = false;
+		mockMvc.perform(post("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isCreated());
+
+		mockMvc.perform(get("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("MyTestActivity")))
+				.andExpect(content().string(containsString("0815")))
+				.andExpect(content().string(not(containsString("4711"))));
+
+		mockMvc.perform(get("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("MyOtherTestActivity")))
+				.andExpect(content().string(containsString("4711")))
+				.andExpect(content().string(not(containsString("0815"))));
+
+		mockMvc.perform(get("/activities/1")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("MyTestActivity")))
+				.andExpect(content().string(containsString("0815")));
+
+		mockMvc.perform(get("/activities/2")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("MyOtherTestActivity")))
+				.andExpect(content().string(containsString("4711")));
+
+		mockMvc.perform(get("/activities/1")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
+				.andExpect(status().is4xxClientError());
+
+		mockMvc.perform(get("/activities/2")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
+				.andExpect(status().is4xxClientError());
+
+		data.hidden = true;
+		data.activityName = "MyOtherOtherTestActivity";
+		data.bookingNumber = "47110815";
+		mockMvc.perform(post("/activities/2")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().is4xxClientError());
+
+		mockMvc.perform(post("/activities/1")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isOk());
 	}
 }

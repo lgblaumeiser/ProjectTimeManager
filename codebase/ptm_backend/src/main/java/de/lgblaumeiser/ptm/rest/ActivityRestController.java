@@ -12,6 +12,7 @@ import static java.lang.Long.valueOf;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import de.lgblaumeiser.ptm.ServiceMapper;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
-import de.lgblaumeiser.ptm.datamanager.model.User;
 
 /**
  * Rest Controller for management of activities
@@ -43,9 +43,9 @@ public class ActivityRestController {
 	private ServiceMapper services;
 
 	@RequestMapping(method = RequestMethod.GET)
-	Collection<Activity> getActivities() {
-		logger.info("Request: Get all Activities");
-		return services.activityStore().retrieveAll().stream()
+	Collection<Activity> getActivities(final Principal principal) {
+		logger.info("Request: Get all Activities of user " + principal.getName());
+		return services.activityStore().retrieveAll().stream().filter(act -> act.getUser().equals(principal.getName()))
 				.sorted((a1, a2) -> a1.getBookingNumber().compareToIgnoreCase(a2.getBookingNumber()))
 				.collect(Collectors.toList());
 	}
@@ -57,12 +57,10 @@ public class ActivityRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
-	ResponseEntity<?> addActivity(@RequestBody final ActivityBody activityData) {
-		logger.info("Request: Post new Activity");
-		// Temporary concept for user, replaced by security mechanism
-		User user = services.userStore().retrieveById(1L).orElseThrow(IllegalStateException::new);
+	ResponseEntity<?> addActivity(final Principal principal, @RequestBody final ActivityBody activityData) {
+		logger.info("Request: Post new Activity for user " + principal.getName());
 		Activity newActivity = services.activityStore()
-				.store(newActivity().setUser(user.getUsername()).setActivityName(activityData.activityName)
+				.store(newActivity().setUser(principal.getName()).setActivityName(activityData.activityName)
 						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newActivity.getId()).toUri();
@@ -71,18 +69,29 @@ public class ActivityRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{activityId}")
-	Activity getActivity(@PathVariable final String activityId) {
-		logger.info("Request: Get Activity with Id " + activityId);
-		return services.activityStore().retrieveById(valueOf(activityId)).orElseThrow(IllegalStateException::new);
+	Activity getActivity(final Principal principal, @PathVariable final String activityId) {
+		logger.info("Request: Get Activity with Id " + activityId + " for user " + principal.getName());
+		Activity foundAct = services.activityStore().retrieveById(valueOf(activityId))
+				.orElseThrow(IllegalStateException::new);
+		if (!foundAct.getUser().equals(principal.getName())) {
+			throw new IllegalStateException();
+		}
+		return foundAct;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/{activityId}")
-	ResponseEntity<?> changeActivity(@PathVariable final String activityId,
+	ResponseEntity<?> changeActivity(final Principal principal, @PathVariable final String activityId,
 			@RequestBody final ActivityBody activityData) {
-		logger.info("Request: Post changed Activity, id Id for change: " + activityId);
-		services.activityStore().retrieveById(valueOf(activityId)).ifPresent(
-				a -> services.activityStore().store(a.changeActivity().setActivityName(activityData.activityName)
-						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build()));
+		logger.info(
+				"Request: Post changed Activity, id Id for change: " + activityId + " for user " + principal.getName());
+		services.activityStore().retrieveById(valueOf(activityId)).ifPresent(a -> {
+			if (a.getUser().equals(principal.getName())) {
+				services.activityStore().store(a.changeActivity().setActivityName(activityData.activityName)
+						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
+			} else {
+				throw new IllegalStateException();
+			}
+		});
 		logger.info("Result: Activity changed");
 		return ResponseEntity.ok().build();
 	}
