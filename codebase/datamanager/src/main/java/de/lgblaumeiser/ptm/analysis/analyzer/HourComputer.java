@@ -15,7 +15,6 @@ import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,10 +37,8 @@ public class HourComputer extends AbstractBaseComputer {
 
 	@Override
 	public Collection<Collection<Object>> analyze(final Collection<String> parameter) {
-		CalculationPeriod requestedPeriod = getMonthPeriod(YearMonth.now());
-		if (parameter.size() > 1) {
-			requestedPeriod = getCalculationPeriod(parameter);
-		}
+		CalculationPeriod requestedPeriod = getCalculationPeriod(parameter);
+		String user = getLastFromCollection(parameter);
 		Collection<Collection<Object>> result = new ArrayList<>();
 		result.add(Arrays.asList("Work Day", "Starttime", "Endtime", "Presence", "Worktime", "Breaktime", "Total",
 				"Overtime", "Comment"));
@@ -49,7 +46,7 @@ public class HourComputer extends AbstractBaseComputer {
 		Duration totaltime = Duration.ZERO;
 		LocalDate currentday = requestedPeriod.firstDay;
 		while (currentday.isBefore(requestedPeriod.firstDayAfter)) {
-			Collection<Booking> currentBookings = getBookingsForDay(currentday);
+			Collection<Booking> currentBookings = getBookingsForDay(currentday, user);
 			if (!currentBookings.isEmpty()) {
 				String day = currentday.format(DateTimeFormatter.ISO_LOCAL_DATE);
 				if (hasCompleteBookings(currentBookings)) {
@@ -97,8 +94,9 @@ public class HourComputer extends AbstractBaseComputer {
 		return false;
 	}
 
-	private Collection<Booking> getBookingsForDay(final LocalDate currentday) {
-		return store.retrieveAll().stream().filter(b -> b.getBookingday().equals(currentday))
+	private Collection<Booking> getBookingsForDay(final LocalDate currentday, final String user) {
+		return store.retrieveAll().stream()
+				.filter(b -> b.getBookingday().equals(currentday) && b.getUser().equals(user))
 				.sorted((b1, b2) -> b1.getStarttime().compareTo(b2.getStarttime())).collect(Collectors.toList());
 	}
 

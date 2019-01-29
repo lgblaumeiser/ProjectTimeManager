@@ -30,7 +30,7 @@ public class ProjectComputerTest extends AbstractComputerTest {
 
 	@Test
 	public void testProjectComputerFixed() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("month", "2017-03"));
+		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("month", "2017-03", USERNAME));
 		assertEquals(5, analysisResults.size());
 		assertEquals(200.0,
 				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 3).toString()
@@ -46,7 +46,7 @@ public class ProjectComputerTest extends AbstractComputerTest {
 
 	@Test
 	public void testProjectComputerDay() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("day", "2017-03-15"));
+		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("day", "2017-03-15", USERNAME));
 		assertEquals(4, analysisResults.size());
 		assertEquals(200.0,
 				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 3).toString()
@@ -60,7 +60,7 @@ public class ProjectComputerTest extends AbstractComputerTest {
 
 	@Test
 	public void testProjectComputerWeek() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("week", "2017-03-09"));
+		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("week", "2017-03-09", USERNAME));
 		assertEquals(5, analysisResults.size());
 		assertEquals(200.0,
 				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 3).toString()
