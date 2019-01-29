@@ -31,7 +31,7 @@ public abstract class AbstractComputerTest {
 	private static final String ACTIVITYNAME3 = "c";
 	private static final String BOOKINGNUMBER1 = "d";
 	private static final String BOOKINGNUMBER2 = "e";
-	private static final String USERNAME = "f";
+	protected static final String USERNAME = "f";
 
 	private static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITYNAME1)
 			.setBookingNumber(BOOKINGNUMBER1).setUser(USERNAME).build();

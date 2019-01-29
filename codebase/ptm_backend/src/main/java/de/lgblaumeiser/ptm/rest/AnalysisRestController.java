@@ -10,6 +10,7 @@ package de.lgblaumeiser.ptm.rest;
 import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
+import java.security.Principal;
 import java.util.Collection;
 
 import org.slf4j.Logger;
@@ -36,10 +37,12 @@ public class AnalysisRestController {
 	private ServiceMapper services;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{analyzerId}/{timeframe}/{param}")
-	Collection<Collection<Object>> runAnalysis(@PathVariable final String analyzerId,
+	Collection<Collection<Object>> runAnalysis(Principal principal, @PathVariable final String analyzerId,
 			@PathVariable final String timeframe, @PathVariable final String param) {
-		logger.info("Request: Get Analysis Data for " + analyzerId + " for time frame " + timeframe + " " + param);
-		return services.analysisService().analyze(analyzerId.toUpperCase(), asList(timeframe, param));
+		logger.info("Request: Get Analysis Data for " + analyzerId + " for time frame " + timeframe + " " + param
+				+ " and user " + principal.getName());
+		return services.analysisService().analyze(analyzerId.toUpperCase(),
+				asList(timeframe, param, principal.getName()));
 	}
 
 	@ExceptionHandler(IllegalStateException.class)

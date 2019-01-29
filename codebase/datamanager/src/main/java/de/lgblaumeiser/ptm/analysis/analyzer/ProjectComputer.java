@@ -7,6 +7,10 @@
  */
 package de.lgblaumeiser.ptm.analysis.analyzer;
 
+import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
+import static de.lgblaumeiser.ptm.util.Utils.getLastFromCollection;
+import static de.lgblaumeiser.ptm.util.Utils.stringHasContent;
+
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +24,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.datamanager.model.TimeSpan;
 import de.lgblaumeiser.ptm.store.ObjectStore;
-import de.lgblaumeiser.ptm.util.Utils;
+//import de.lgblaumeiser.ptm.util.Utils;
 
 /**
  * An analysis to compute the amount of hours per a activity. The computer
@@ -38,7 +42,8 @@ public class ProjectComputer extends AbstractBaseComputer {
 		Map<Long, Duration> activityToMinutesMap = new HashMap<>();
 		Map<Long, String> activityToCommentMap = new HashMap<>();
 		CalculationPeriod calcPeriod = getCalculationPeriod(parameter);
-		for (Booking current : getBookingsForPeriod(calcPeriod)) {
+		String user = getLastFromCollection(parameter);
+		for (Booking current : getBookingsForPeriod(calcPeriod, user)) {
 			if (current.hasEndtime()) {
 				Long currentActivity = current.getActivity();
 				Duration accumulatedMinutes = activityToMinutesMap.get(currentActivity);
@@ -51,9 +56,9 @@ public class ProjectComputer extends AbstractBaseComputer {
 				activityToMinutesMap.put(currentActivity, accumulatedMinutes);
 				if (calcPeriod.isDayPeriod) {
 					String currentComments = activityToCommentMap.get(currentActivity);
-					if (!Utils.stringHasContent(currentComments)) {
+					if (!stringHasContent(currentComments)) {
 						currentComments = current.getComment();
-					} else if (Utils.stringHasContent(current.getComment())) {
+					} else if (stringHasContent(current.getComment())) {
 						currentComments = currentComments + ", " + current.getComment();
 					}
 					activityToCommentMap.put(currentActivity, currentComments);
@@ -92,14 +97,13 @@ public class ProjectComputer extends AbstractBaseComputer {
 						formatDuration(totalMinutesId), percentageString, comments));
 			}
 		}
-		return valueList.stream()
-				.sorted((line1, line2) -> Utils.getIndexFromCollection(line1, 1).toString()
-						.compareToIgnoreCase(Utils.getIndexFromCollection(line2, 1).toString()))
-				.collect(Collectors.toList());
+		return valueList.stream().sorted((line1, line2) -> getIndexFromCollection(line1, 1).toString()
+				.compareToIgnoreCase(getIndexFromCollection(line2, 1).toString())).collect(Collectors.toList());
 	}
 
-	private Collection<Booking> getBookingsForPeriod(final CalculationPeriod period) {
-		return store.retrieveAll().stream().filter(b -> isInPeriod(period, b.getBookingday()))
+	private Collection<Booking> getBookingsForPeriod(final CalculationPeriod period, String user) {
+		return store.retrieveAll().stream()
+				.filter(b -> b.getUser().equals(user) && isInPeriod(period, b.getBookingday()))
 				.collect(Collectors.toList());
 	}
 
