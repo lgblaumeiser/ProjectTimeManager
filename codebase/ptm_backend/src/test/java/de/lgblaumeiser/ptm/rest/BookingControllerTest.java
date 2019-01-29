@@ -410,4 +410,90 @@ public class BookingControllerTest {
 				.andExpect(content().string(containsString(booking.breakstart)))
 				.andExpect(content().string(containsString(LocalTime.of(15, 45).format(ISO_LOCAL_TIME))));
 	}
+
+	@Test
+	public void testBookingsWithDifferentUsers() throws Exception {
+		UserRestController.UserBody user = new UserRestController.UserBody();
+		user.username = "MyTestUser";
+		user.password = "DummyPwd";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
+		user = new UserRestController.UserBody();
+		user.username = "MyTestUser2";
+		user.password = "DummyPwd2";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
+		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
+		data.activityName = "MyTestActivity";
+		data.bookingNumber = "0815";
+		mockMvc.perform(post("/activities")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(APPLICATION_JSON).content(objectMapper.writeValueAsString(data))).andDo(print())
+				.andExpect(status().isCreated());
+
+		LocalDate date = LocalDate.now();
+		String dateString = date.format(ISO_LOCAL_DATE);
+		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
+		booking.activityId = "1";
+		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
+		booking.endtime = LocalTime.of(17, 0).format(ISO_LOCAL_TIME);
+		booking.breakstart = LocalTime.of(10, 30).format(ISO_LOCAL_TIME);
+		booking.comment = "";
+		MvcResult result = mockMvc
+				.perform(post("/bookings/day/" + dateString)
+						.header(HttpHeaders.AUTHORIZATION,
+								"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+						.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+						.content(objectMapper.writeValueAsString(booking)))
+				.andDo(print()).andExpect(status().isCreated()).andReturn();
+		assertTrue(result.getResponse().getRedirectedUrl().contains("/bookings/id/2"));
+
+		mockMvc.perform(post("/bookings/day/" + dateString)
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
+				.andDo(print()).andExpect(status().is4xxClientError());
+
+		mockMvc.perform(get("/bookings/day/" + dateString)
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("activity\":1")))
+				.andExpect(content().string(containsString("user\":\"MyTestUser")))
+				.andExpect(content().string(containsString(booking.starttime)))
+				.andExpect(content().string(containsString(booking.endtime)))
+				.andExpect(content().string(containsString(booking.breakstart)))
+				.andExpect(content().string(containsString(LocalTime.of(11, 0).format(ISO_LOCAL_TIME))));
+
+		mockMvc.perform(get("/bookings/day/" + dateString)
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("[]")));
+
+		booking.breakstart = LocalTime.of(15, 30).format(ISO_LOCAL_TIME);
+		booking.breaklength = "15";
+		mockMvc.perform(post("/bookings/id/2")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
+				.andDo(print()).andExpect(status().is4xxClientError());
+
+		mockMvc.perform(post("/bookings/id/2")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
+				.andDo(print()).andExpect(status().isOk());
+
+		mockMvc.perform(delete("/bookings/id/2").header(HttpHeaders.AUTHORIZATION,
+				"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))).andDo(print())
+				.andExpect(status().is4xxClientError());
+
+		mockMvc.perform(delete("/bookings/id/2").header(HttpHeaders.AUTHORIZATION,
+				"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))).andDo(print())
+				.andExpect(status().isOk());
+	}
 }
