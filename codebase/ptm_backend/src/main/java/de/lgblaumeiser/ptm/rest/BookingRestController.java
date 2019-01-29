@@ -14,6 +14,7 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.net.URI;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Comparator;
@@ -48,17 +49,18 @@ public class BookingRestController {
 	private ServiceMapper services;
 
 	@RequestMapping(method = RequestMethod.GET)
-	public Collection<String> getDaysForWhichBookingsExist() {
-		logger.info("Request: Get all days for which bookings exist");
-		return services.bookingStore().retrieveAll().stream().map(Booking::getBookingday).distinct()
-				.map(d -> d.format(ISO_LOCAL_DATE)).sorted().collect(toList());
+	public Collection<String> getDaysForWhichBookingsExist(final Principal principal) {
+		logger.info("Request: Get all days for which bookings exist for user " + principal.getName());
+		return services.bookingStore().retrieveAll().stream().filter(b -> b.getUser().equals(principal.getName()))
+				.map(Booking::getBookingday).distinct().map(d -> d.format(ISO_LOCAL_DATE)).sorted().collect(toList());
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/day/{dayString}")
-	public Collection<Booking> getBookingsForDay(@PathVariable final String dayString) {
-		logger.info("Request: Get Bookings for Day " + dayString);
+	public Collection<Booking> getBookingsForDay(final Principal principal, @PathVariable final String dayString) {
+		logger.info("Request: Get Bookings for Day " + dayString + " and user " + principal.getName());
 		LocalDate day = LocalDate.parse(dayString);
 		return services.bookingStore().retrieveAll().stream().filter(b -> b.getBookingday().equals(day))
+				.filter(b -> checkUser(b.getUser(), principal.getName()))
 				.sorted(Comparator.comparing(Booking::getStarttime)).collect(toList());
 	}
 
@@ -72,13 +74,15 @@ public class BookingRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/day/{dayString}")
-	public ResponseEntity<?> addBooking(@PathVariable final String dayString, @RequestBody final BookingBody newData) {
-		logger.info("Request: Post new Booking for day " + dayString);
+	public ResponseEntity<?> addBooking(Principal principal, @PathVariable final String dayString,
+			@RequestBody final BookingBody newData) {
+		logger.info("Request: Post new Booking for day " + dayString + " by user " + principal.getName());
 		LocalDate day = LocalDate.parse(dayString);
-		// Temporary concept for user, replaced by security mechanism
-		User user = services.userStore().retrieveById(1L).orElseThrow(IllegalStateException::new);
 		Activity activity = services.activityStore().retrieveById(valueOf(newData.activityId))
 				.orElseThrow(IllegalStateException::new);
+		checkState(checkUser(activity.getUser(), principal.getName()));
+		User user = services.userStore().retrieveAll().stream().filter(u -> u.getUsername().equals(principal.getName()))
+				.findFirst().orElseThrow(IllegalStateException::new);
 		Booking newBooking = services.bookingService().addBooking(day, user, activity, parse(newData.starttime),
 				newData.endtime != null ? Optional.of(parse(newData.endtime)) : Optional.empty(),
 				stringHasContent(newData.comment) ? Optional.of(newData.comment) : Optional.empty());
@@ -94,21 +98,28 @@ public class BookingRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/id/{booking}")
-	public Booking getBooking(@PathVariable final String booking) {
-		logger.info("Request: Get booking with Id " + booking);
-		return services.bookingStore().retrieveById(valueOf(booking)).orElseThrow(IllegalStateException::new);
+	public Booking getBooking(final Principal principal, @PathVariable final String booking) {
+		logger.info("Request: Get booking with Id " + booking + " if user is " + principal.getName());
+		Booking foundBooking = services.bookingStore().retrieveById(valueOf(booking))
+				.orElseThrow(IllegalStateException::new);
+		checkState(checkUser(foundBooking.getUser(), principal.getName()));
+		return foundBooking;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/id/{booking}")
-	public ResponseEntity<?> changeBooking(@PathVariable final String booking,
+	public ResponseEntity<?> changeBooking(final Principal principal, @PathVariable final String booking,
 			@RequestBody final BookingBody changeData) {
-		logger.info("Request: Post changes for Booking with Id " + booking);
+		logger.info("Request: Post changes for Booking with Id " + booking + " if user is " + principal.getName());
 		Optional<Activity> activity = services.activityStore().retrieveById(valueOf(changeData.activityId));
+		activity.ifPresent(a -> checkState(checkUser(a.getUser(), principal.getName())));
 		Optional<Booking> relevantBooking = services.bookingStore().retrieveById(valueOf(booking));
-		relevantBooking.ifPresent(b -> services.bookingService().changeBooking(b, Optional.empty(), activity,
-				changeData.starttime != null ? Optional.of(parse(changeData.starttime)) : Optional.empty(),
-				changeData.endtime != null ? Optional.of(parse(changeData.endtime)) : Optional.empty(),
-				stringHasContent(changeData.comment) ? Optional.of(changeData.comment) : Optional.empty()));
+		relevantBooking.ifPresent(b -> {
+			checkState(checkUser(b.getUser(), principal.getName()));
+			services.bookingService().changeBooking(b, Optional.empty(), activity,
+					changeData.starttime != null ? Optional.of(parse(changeData.starttime)) : Optional.empty(),
+					changeData.endtime != null ? Optional.of(parse(changeData.endtime)) : Optional.empty(),
+					stringHasContent(changeData.comment) ? Optional.of(changeData.comment) : Optional.empty());
+		});
 		if (changeData.breakstart != null) {
 			relevantBooking.ifPresent(b -> services.bookingService().addBreakToBooking(b, parse(changeData.breakstart),
 					changeData.breaklength != null ? Optional.of(Integer.parseInt(changeData.breaklength))
@@ -119,10 +130,13 @@ public class BookingRestController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/id/{booking}")
-	public ResponseEntity<?> deleteBooking(@PathVariable final String booking) {
-		logger.info("Request: Delete Booking with Id " + booking);
-		services.bookingStore().deleteById(valueOf(booking));
-		logger.info("Result: Booking deleted");
+	public ResponseEntity<?> deleteBooking(final Principal principal, @PathVariable final String booking) {
+		logger.info("Request: Delete Booking with Id " + booking + " if user is " + principal.getName());
+		services.bookingStore().retrieveById(valueOf(booking)).ifPresent(b -> {
+			checkState(checkUser(b.getUser(), principal.getName()));
+			services.bookingStore().deleteById(valueOf(booking));
+			logger.info("Result: Booking deleted");
+		});
 		return ResponseEntity.ok().build();
 	}
 
@@ -134,5 +148,15 @@ public class BookingRestController {
 
 	private boolean stringHasContent(final String string) {
 		return (string != null) && !string.isEmpty();
+	}
+
+	private void checkState(boolean state) {
+		if (!state) {
+			throw new IllegalStateException();
+		}
+	}
+
+	private boolean checkUser(String objectUser, String authenticatedUser) {
+		return objectUser.equals(authenticatedUser);
 	}
 }
