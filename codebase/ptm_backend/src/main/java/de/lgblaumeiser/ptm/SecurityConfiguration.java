@@ -2,7 +2,7 @@
  * Copyright by Lars Geyer-Blaumeiser <lars@lgblaumeiser.de>
  *
  * Licensed under MIT license
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 package de.lgblaumeiser.ptm;
@@ -27,8 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/services/license", "/users/register").permitAll().anyRequest()
-				.authenticated();
+		http.authorizeRequests().antMatchers("/services/license", "/users/register").permitAll()
+				.antMatchers("/services/backup", "/services/restore").hasAuthority("ADMIN")
+				.anyRequest().authenticated();
 		http.httpBasic();
 		http.csrf().disable();
 	}

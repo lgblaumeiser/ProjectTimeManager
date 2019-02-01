@@ -2,12 +2,13 @@
  * Copyright by Lars Geyer-Blaumeiser <lars@lgblaumeiser.de>
  *
  * Licensed under MIT license
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 package de.lgblaumeiser.ptm;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -18,6 +19,8 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+
 import org.springframework.stereotype.Component;
 
 import de.lgblaumeiser.ptm.datamanager.model.User;
@@ -31,7 +34,7 @@ public class UserPasswordAuthenticationProvider implements AuthenticationProvide
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.security.authentication.AuthenticationProvider#
 	 * authenticate(org.springframework.security.core.Authentication)
 	 */
@@ -47,7 +50,11 @@ public class UserPasswordAuthenticationProvider implements AuthenticationProvide
 				.findFirst();
 		if (user.isPresent() && checkPasswords(user.get().getPassword(), password)) {
 			logger.info("Authenticating successful");
-			return new UsernamePasswordAuthenticationToken(username, password, new ArrayList<>());
+			List<GrantedAuthority> grantedAuths = new ArrayList<>();
+			if (user.get().isAdmin()) {
+				grantedAuths.add(() -> "ADMIN");
+			}
+			return new UsernamePasswordAuthenticationToken(username, password, grantedAuths);
 		}
 		logger.info("Authentication failed");
 		return null;
@@ -59,7 +66,7 @@ public class UserPasswordAuthenticationProvider implements AuthenticationProvide
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.springframework.security.authentication.AuthenticationProvider#supports(
 	 * java.lang.Class)

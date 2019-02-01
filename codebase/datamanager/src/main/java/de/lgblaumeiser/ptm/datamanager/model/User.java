@@ -2,7 +2,7 @@
  * Copyright by Lars Geyer-Blaumeiser <lars@lgblaumeiser.de>
  *
  * Licensed under MIT license
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 package de.lgblaumeiser.ptm.datamanager.model;
@@ -21,6 +21,7 @@ import static java.util.Objects.hash;
 public class User {
 	public static class UserBuilder {
 		private Long id = valueOf(-1);
+		private boolean admin = false;
 		private String username;
 		private String password;
 
@@ -44,13 +45,18 @@ public class User {
 			return this;
 		}
 
+		public UserBuilder setAdmin(final boolean admin) {
+			this.admin = admin;
+			return this;
+		}
+		
 		/**
 		 * @return An unmodifiable activity representing the data given to the builder,
 		 *         Non null, returns with exception if the data is invalid
 		 */
 		public User build() {
 			checkData();
-			return new User(id, username, password);
+			return new User(id, username, password, admin);
 		}
 
 		private void checkData() {
@@ -80,6 +86,7 @@ public class User {
 
 	private String username;
 	private String password;
+	private boolean admin;
 	private Long id = valueOf(-1);
 
 	/**
@@ -88,6 +95,13 @@ public class User {
 	 */
 	public Long getId() {
 		return id;
+	}
+
+  /**
+	 * @return True, if user has Admin rights
+	 */
+	public boolean isAdmin() {
+		return admin;
 	}
 
 	/**
@@ -106,14 +120,14 @@ public class User {
 
 	@Override
 	public String toString() {
-		return format("User: Username: %s, Password: %s, Id: %d", username, password, id);
+		return format("User: Username: %s, Password: %s, Id: %d%s", username, password, id, admin ? ", Admin" : "");
 	}
 
 	@Override
 	public boolean equals(final Object obj) {
 		if (obj instanceof User) {
 			User user = (User) obj;
-			return id == user.id && username.equals(user.username) && password.equals(user.password);
+			return id == user.id && username.equals(user.username) && password.equals(user.password) && admin == user.admin;
 		}
 		return false;
 	}
@@ -123,8 +137,9 @@ public class User {
 		return hash(id, username, password);
 	}
 
-	private User(final Long id, final String username, final String password) {
+	private User(final Long id, final String username, final String password, final boolean admin) {
 		this.id = id;
+		this.admin = admin;
 		this.username = username;
 		this.password = password;
 	}

@@ -2,7 +2,7 @@
  * Copyright by Lars Geyer-Blaumeiser <lars@lgblaumeiser.de>
  *
  * Licensed under MIT license
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 package de.lgblaumeiser.ptm.rest;
@@ -77,6 +77,11 @@ public class ServicesControllerTest {
 		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
 
+		user.username = "MyOtherTestUser";
+		user.password = "DummyPwd2";
+		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+
 		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyTestActivity";
 		data.bookingNumber = "0815";
@@ -104,6 +109,16 @@ public class ServicesControllerTest {
 						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
 				.contentType("application/zip")).andDo(print()).andExpect(status().isOk()).andReturn();
 		byte[] zipdata = result.getResponse().getContentAsByteArray();
+
+		mockMvc.perform(get("/services/backup")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyOtherTestUser:DummyPwd2".getBytes()))
+				.contentType("application/zip")).andDo(print()).andExpect(status().is4xxClientError());
+
+		mockMvc.perform(put("/services/restore")
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyOtherTestUser:DummyPwd2".getBytes()))
+				.contentType("application/zip").content(zipdata)).andDo(print()).andExpect(status().is4xxClientError());
 
 		mockMvc.perform(put("/services/restore")
 				.header(HttpHeaders.AUTHORIZATION,

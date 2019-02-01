@@ -14,3 +14,4 @@ shippable/
 .idea/
 bin/
 .springBeans
+.DS_Store

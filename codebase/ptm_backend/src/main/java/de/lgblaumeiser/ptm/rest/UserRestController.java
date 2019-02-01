@@ -2,7 +2,7 @@
  * Copyright by Lars Geyer-Blaumeiser <lars@lgblaumeiser.de>
  *
  * Licensed under MIT license
- * 
+ *
  * SPDX-License-Identifier: MIT
  */
 package de.lgblaumeiser.ptm.rest;
@@ -45,6 +45,9 @@ public class UserRestController {
 		checkUsername(userData.username);
 		User newUser = services.userStore()
 				.store(newUser().setUsername(userData.username).setPassword(encrypt(userData.password)).build());
+		if (newUser.getId() == 1L) {
+			newUser = services.userStore().store(newUser.changeUser().setAdmin(true).build());
+		}
 		URI location = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().build().toUriString() + "/users/"
 				+ newUser.getId());
 		logger.info("Result: User Created with Id " + newUser.getId());
