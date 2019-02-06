@@ -38,7 +38,7 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 			bodyData.put("username", user.getUsername());
 			bodyData.put("password", user.getPassword());
 			String apiName = "/users/register";
-			Long id = getRestUtils().post(apiName, bodyData);
+			Long id = getRestUtils().post(apiName, Optional.empty(), bodyData);
 			Field idField = user.getClass().getDeclaredField("id");
 			idField.setAccessible(true);
 			idField.set(user, id);

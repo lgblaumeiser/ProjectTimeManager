@@ -11,8 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
@@ -27,6 +29,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import de.lgblaumeiser.ptm.datamanager.model.User;
 
 /**
  * Utils to do rest calls on the rest api
@@ -46,11 +50,12 @@ public class RestUtils {
 	 * of the creation call.
 	 * 
 	 * @param apiName  Name of the api
+	 * @param user	   Either the user information for authentication or empty, if information does not need authorization
 	 * @param bodyData Body of the post data, this is a flat map that is converted
 	 *                 into a flat json
 	 * @return The Id of the created or manipulated object
 	 */
-	public Long post(final String apiName, final Map<String, String> bodyData) {
+	public Long post(final String apiName, final Optional<User> user, final Map<String, String> bodyData) {
 		try {
 			final HttpPost request = new HttpPost(baseUrl + apiName);
 			StringEntity bodyJson = new StringEntity(jsonMapper.writeValueAsString(bodyData), "UTF-8");
@@ -58,6 +63,8 @@ public class RestUtils {
 			bodyJson.setContentEncoding("UTF-8");
 			request.setEntity(bodyJson);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+			user.ifPresent(u -> request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " +
+					Base64.encodeBase64String((u.getUsername() + ":" + u.getPassword()).getBytes())));
 			HttpResponse response = clientConnector.execute(request);
 			assertState(
 					response.getStatusLine().getStatusCode() == 201 || response.getStatusLine().getStatusCode() == 200,
@@ -77,15 +84,18 @@ public class RestUtils {
 	 * A put call to send a zipped data stream to the server
 	 * 
 	 * @param apiName  Name of the api
+	 * @param user	   User information if needed to fulfil the request
 	 * @param sendData The data to be send to the server
 	 */
-	public void put(final String apiName, final byte[] sendData) {
+	public void put(final String apiName, final Optional<User> user, final byte[] sendData) {
 		try {
 			final HttpPut request = new HttpPut(baseUrl + apiName);
 			ByteArrayEntity bodyData = new ByteArrayEntity(sendData);
 			bodyData.setContentType("application/zip");
 			request.setEntity(bodyData);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/zip");
+			user.ifPresent(u -> request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " +
+					Base64.encodeBase64String((u.getUsername() + ":" + u.getPassword()).getBytes())));
 			HttpResponse response = clientConnector.execute(request);
 			assertState(response.getStatusLine().getStatusCode() == 200, response);
 		} catch (IOException e) {
@@ -97,13 +107,16 @@ public class RestUtils {
 	 * Returns an element or an array of elements depending on the returnClass
 	 * 
 	 * @param apiName     The api name of the get call
+	 * @param user	      User information if needed to fulfil the request
 	 * @param returnClass The class object of a result type
 	 * @return The found element or array of elements
 	 */
-	public <T> T get(final String apiName, final Class<T> returnClass) {
+	public <T> T get(final String apiName, final Optional<User> user, final Class<T> returnClass) {
 		try {
 			final HttpGet request = new HttpGet(baseUrl + apiName);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+			user.ifPresent(u -> request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " +
+					Base64.encodeBase64String((u.getUsername() + ":" + u.getPassword()).getBytes())));
 			HttpResponse response = clientConnector.execute(request);
 			assertState(response.getStatusLine().getStatusCode() == 200, response);
 			return jsonMapper.readValue(new InputStreamReader(response.getEntity().getContent()), returnClass);
@@ -117,12 +130,15 @@ public class RestUtils {
 	 * Return access to the input stream for a get call with a stream return value
 	 * 
 	 * @param apiName The api name of the get call
+	 * @param user	  User information if needed to fulfil the request
 	 * @return The input stream delivered by the server
 	 */
-	public InputStream get(final String apiName) {
+	public InputStream get(final String apiName, final Optional<User> user) {
 		try {
 			final HttpGet request = new HttpGet(baseUrl + apiName);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/zip");
+			user.ifPresent(u -> request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " +
+					Base64.encodeBase64String((u.getUsername() + ":" + u.getPassword()).getBytes())));
 			HttpResponse response = clientConnector.execute(request);
 			assertState(response.getStatusLine().getStatusCode() == 200, response);
 			return response.getEntity().getContent();
@@ -135,12 +151,15 @@ public class RestUtils {
 	 * Delete an entity via a rest call
 	 * 
 	 * @param apiName The api name for the deletion
+	 * @param user	  User information if needed to fulfil the request
 	 */
-	public void delete(final String apiName) {
+	public void delete(final String apiName, final Optional<User> user) {
 		try {
 			final String requestString = baseUrl + apiName;
 			final HttpDelete request = new HttpDelete(requestString);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
+			user.ifPresent(u -> request.setHeader(HttpHeaders.AUTHORIZATION, "Basic " +
+					Base64.encodeBase64String((u.getUsername() + ":" + u.getPassword()).getBytes())));
 			HttpResponse response = clientConnector.execute(request);
 			assertState(response.getStatusLine().getStatusCode() == 200, response);
 		} catch (IOException e) {

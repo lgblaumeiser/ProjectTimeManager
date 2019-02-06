@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 
@@ -29,7 +30,8 @@ public class RestInfrastructureServices extends RestBaseService {
 	 */
 	public void backup(final File backupFile) {
 		try (FileOutputStream dataSink = new FileOutputStream(backupFile)) {
-			InputStream recevicedData = getRestUtils().get("/services/backup");
+			InputStream recevicedData = getRestUtils().get("/services/backup",
+					Optional.of(getServices().getCurrentUserStore().loadUserData()));
 			IOUtils.copy(recevicedData, dataSink);
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
@@ -46,7 +48,8 @@ public class RestInfrastructureServices extends RestBaseService {
 		try (FileInputStream dataSource = new FileInputStream(backupFile);
 				ByteArrayOutputStream sendData = new ByteArrayOutputStream()) {
 			IOUtils.copy(dataSource, sendData);
-			getRestUtils().put("/services/restore", sendData.toByteArray());
+			getRestUtils().put("/services/restore", 
+					Optional.of(getServices().getCurrentUserStore().loadUserData()), sendData.toByteArray());
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}
@@ -59,7 +62,7 @@ public class RestInfrastructureServices extends RestBaseService {
 	 */
 	public String licenses() {
 		try {
-			return IOUtils.toString(getRestUtils().get("/services/license"), "UTF-8");
+			return IOUtils.toString(getRestUtils().get("/services/license", Optional.empty()), "UTF-8");
 		} catch (IOException e) {
 			throw new IllegalStateException(e);
 		}

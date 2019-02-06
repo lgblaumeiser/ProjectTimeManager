@@ -8,6 +8,7 @@
 package de.lgblaumeiser.ptm.cli.engine.handler;
 
 import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
+import static de.lgblaumeiser.ptm.datamanager.model.User.newUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,6 +18,7 @@ import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -26,10 +28,13 @@ import de.lgblaumeiser.ptm.cli.PTMCLIConfigurator;
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 import de.lgblaumeiser.ptm.cli.engine.CommandLogger;
 import de.lgblaumeiser.ptm.cli.engine.PrettyPrinter;
+import de.lgblaumeiser.ptm.cli.engine.ServiceManager;
+import de.lgblaumeiser.ptm.cli.engine.UserStore;
 import de.lgblaumeiser.ptm.cli.rest.RestBaseService;
 import de.lgblaumeiser.ptm.cli.rest.RestUtils;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
+import de.lgblaumeiser.ptm.datamanager.model.User;
 
 public abstract class AbstractHandlerTest {
 	private static final String ID = "id";
@@ -60,13 +65,28 @@ public abstract class AbstractHandlerTest {
 		}
 	}
 
+	protected static class TestUserStore extends UserStore {
+		protected User storedUser;
+
+		@Override
+		public User loadUserData() {
+			return newUser().setUsername("DummyName").setPassword("DummyPwd").build();
+		}
+
+		@Override
+		public void storeUserData(User user) {
+			storedUser = user;
+		}
+		
+	}
+	
 	protected static class TestRestUtils extends RestUtils {
 		String apiNameGiven;
 		Map<String, String> bodyDataGiven;
 		byte[] rawDataGiven;
 
 		@Override
-		public Long post(final String apiName, final Map<String, String> bodyData) {
+		public Long post(final String apiName, final Optional<User> user, final Map<String, String> bodyData) {
 			apiNameGiven = apiName;
 			bodyDataGiven = bodyData;
 			return 2L;
@@ -78,7 +98,7 @@ public abstract class AbstractHandlerTest {
 		 * @see de.lgblaumeiser.ptm.cli.rest.RestUtils#put(java.lang.String, byte[])
 		 */
 		@Override
-		public void put(final String apiName, final byte[] sendData) {
+		public void put(final String apiName, final Optional<User> user, final byte[] sendData) {
 			apiNameGiven = apiName;
 			rawDataGiven = sendData;
 		}
@@ -89,7 +109,7 @@ public abstract class AbstractHandlerTest {
 		 * @see de.lgblaumeiser.ptm.cli.rest.RestUtils#get(java.lang.String)
 		 */
 		@Override
-		public InputStream get(final String apiName) {
+		public InputStream get(final String apiName, final Optional<User> user) {
 			apiNameGiven = apiName;
 			if (apiName.contains("services/license")) {
 				try {
@@ -103,7 +123,7 @@ public abstract class AbstractHandlerTest {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T get(final String apiName, final Class<T> returnClass) {
+		public <T> T get(final String apiName, final Optional<User> user, final Class<T> returnClass) {
 			apiNameGiven = apiName;
 			if (apiName.contains("activities")) {
 				if (apiName.contains("1")) {
@@ -127,7 +147,7 @@ public abstract class AbstractHandlerTest {
 		}
 
 		@Override
-		public void delete(final String apiName) {
+		public void delete(final String apiName, final Optional<User> user) {
 			apiNameGiven = apiName;
 		}
 
@@ -139,6 +159,7 @@ public abstract class AbstractHandlerTest {
 
 	TestCommandLogger logger = new TestCommandLogger();
 	TestRestUtils restutils = new TestRestUtils().configure();
+	TestUserStore userstoreutils = new TestUserStore();
 	CLI commandline = new PTMCLIConfigurator().configure();
 
 	@Before
@@ -159,6 +180,11 @@ public abstract class AbstractHandlerTest {
 			f.setAccessible(true);
 			f.set(ACTIVITY2, 2L);
 			f.setAccessible(false);
+			f = AbstractCommandHandler.class.getDeclaredField("services");
+			f.setAccessible(true);
+			ServiceManager manager = (ServiceManager) f.get(null);
+			f.setAccessible(false);
+			manager.setCurrentUserStore(userstoreutils);
 		} catch (IllegalAccessException | IllegalArgumentException | ClassCastException | NoSuchFieldException
 				| SecurityException e) {
 			throw new IllegalStateException(e);

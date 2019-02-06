@@ -25,12 +25,14 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
 public class RestActivityStore extends RestBaseService implements ObjectStore<Activity> {
 	@Override
 	public Collection<Activity> retrieveAll() {
-		return asList(getRestUtils().<Activity[]>get("/activities", Activity[].class));
+		return asList(getRestUtils().<Activity[]>get("/activities",
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), Activity[].class));
 	}
 
 	@Override
 	public Optional<Activity> retrieveById(final Long id) {
-		return Optional.ofNullable(getRestUtils().<Activity>get("/activities/" + id.toString(), Activity.class));
+		return Optional.ofNullable(getRestUtils().<Activity>get("/activities/" + id.toString(),
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), Activity.class));
 	}
 
 	@Override
@@ -44,7 +46,8 @@ public class RestActivityStore extends RestBaseService implements ObjectStore<Ac
 			if (activity.getId() > 0) {
 				apiName = apiName + "/" + activity.getId().toString();
 			}
-			Long id = getRestUtils().post(apiName, bodyData);
+			Long id = getRestUtils().post(apiName,
+					Optional.of(getServices().getCurrentUserStore().loadUserData()), bodyData);
 			Field idField = activity.getClass().getDeclaredField("id");
 			idField.setAccessible(true);
 			idField.set(activity, id);
