@@ -27,6 +27,7 @@ import de.lgblaumeiser.ptm.cli.engine.handler.RegisterUser;
 import de.lgblaumeiser.ptm.cli.engine.handler.Restore;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunHourAnalysis;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunProjectAnalysis;
+import de.lgblaumeiser.ptm.cli.engine.handler.SetUser;
 import de.lgblaumeiser.ptm.cli.rest.RestActivityStore;
 import de.lgblaumeiser.ptm.cli.rest.RestAnalysisService;
 import de.lgblaumeiser.ptm.cli.rest.RestBaseService;
@@ -49,6 +50,8 @@ public class PTMCLIConfigurator {
 	private static final String LIST_ACTIVITY_COMMAND_ABBRV = "la";
 	private static final String REGISTER_USER_COMMAND = "register_user";
 	private static final String REGISTER_USER_COMMAND_ABBRV = "ru";
+	private static final String SET_USER_COMMAND = "set_user";
+	private static final String SET_USER_COMMAND_ABBRV = "su";
 	private static final String ADD_BOOKING_COMMAND = "add_booking";
 	private static final String ADD_BOOKING_COMMAND_ABBRV = "ab";
 	private static final String DELETE_BOOKING_COMMAND = "delete_booking";
@@ -103,6 +106,7 @@ public class PTMCLIConfigurator {
 				.addCommand(CHANGE_ACTIVITY_COMMAND, new ChangeActivity(), CHANGE_ACTIVITY_COMMAND_ABBRV)
 				.addCommand(LIST_ACTIVITY_COMMAND, new ListActivity(), LIST_ACTIVITY_COMMAND_ABBRV)
 				.addCommand(REGISTER_USER_COMMAND, new RegisterUser(), REGISTER_USER_COMMAND_ABBRV)
+				.addCommand(SET_USER_COMMAND, new SetUser(), SET_USER_COMMAND_ABBRV)
 				.addCommand(ADD_BOOKING_COMMAND, new AddBooking(), ADD_BOOKING_COMMAND_ABBRV)
 				.addCommand(DELETE_BOOKING_COMMAND, new DeleteBooking(), DELETE_BOOKING_COMMAND_ABBRV)
 				.addCommand(CHANGE_BOOKING_COMMAND, new ChangeBooking(), CHANGE_BOOKING_COMMAND_ABBRV)

@@ -33,12 +33,13 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 
 	public Collection<Booking> retrieveForDay(final LocalDate day) {
 		return asList(getRestUtils().<Booking[]>get("/bookings/day/" + day.format(DateTimeFormatter.ISO_LOCAL_DATE),
-				Booking[].class));
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), Booking[].class));
 	}
 
 	@Override
 	public Optional<Booking> retrieveById(final Long id) {
-		return Optional.ofNullable(getRestUtils().<Booking>get("/bookings/id/" + id.toString(), Booking.class));
+		return Optional.ofNullable(getRestUtils().<Booking>get("/bookings/id/" + id.toString(),
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), Booking.class));
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 			} else {
 				apiName = apiName + "day/" + booking.getBookingday().format(DateTimeFormatter.ISO_LOCAL_DATE);
 			}
-			Long id = getRestUtils().post(apiName, bodyData);
+			Long id = getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()), bodyData);
 			if (booking.getId() < 0) {
 				Field idField = booking.getClass().getDeclaredField("id");
 				idField.setAccessible(true);
@@ -85,7 +86,7 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 			}
 			String apiName = "/bookings/";
 			apiName = apiName + "id/" + booking.getId().toString();
-			return getRestUtils().post(apiName, bodyData);
+			return getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()), bodyData);
 		} catch (SecurityException | IllegalArgumentException e) {
 			throw new IllegalStateException(e);
 		}
@@ -93,6 +94,6 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 
 	@Override
 	public void deleteById(final Long id) {
-		getRestUtils().delete("/bookings/id/" + id);
+		getRestUtils().delete("/bookings/id/" + id, Optional.of(getServices().getCurrentUserStore().loadUserData()));
 	}
 }

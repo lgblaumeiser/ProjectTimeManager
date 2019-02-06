@@ -24,6 +24,7 @@ public class ServiceManager {
 	private RestUserStore userStore;
 	private RestBookingStore bookingsStore;
 	private RestInfrastructureServices infrastructureServices;
+	private UserStore currentUserStore;
 
 	public RestAnalysisService getAnalysisService() {
 		return analysisService;
@@ -63,5 +64,13 @@ public class ServiceManager {
 
 	public void setInfrastructureServices(final RestInfrastructureServices infrastructureServices) {
 		this.infrastructureServices = infrastructureServices;
+	}
+
+	public UserStore getCurrentUserStore() {
+		return currentUserStore;
+	}
+
+	public void setCurrentUserStore(UserStore currentUserStore) {
+		this.currentUserStore = currentUserStore;
 	}
 }
