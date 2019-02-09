@@ -50,7 +50,7 @@ public class ActivityRestController {
 				.collect(Collectors.toList());
 	}
 
-	static class ActivityBody {
+	public static class ActivityBody {
 		public String activityName;
 		public String bookingNumber;
 		public boolean hidden;

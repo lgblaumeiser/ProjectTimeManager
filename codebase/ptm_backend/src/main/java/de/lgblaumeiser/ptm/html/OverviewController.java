@@ -9,6 +9,7 @@ package de.lgblaumeiser.ptm.html;
 
 import static java.util.stream.Collectors.toList;
 
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -70,44 +71,46 @@ public class OverviewController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public String dataPageForToday(final Model model) {
-		return createPage(model, LocalDate.now());
+	public String dataPageForToday(final Principal principal, final Model model) {
+		return createPage(model, principal.getName(), LocalDate.now());
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{dayString}")
-	public String dataPageForDay(@PathVariable final String dayString, final Model model) {
-		return createPage(model, LocalDate.parse(dayString));
+	public String dataPageForDay(final Principal principal, @PathVariable final String dayString, final Model model) {
+		return createPage(model, principal.getName(), LocalDate.parse(dayString));
 	}
 
-	private String createPage(final Model model, final LocalDate dateToShow) {
+	private String createPage(final Model model, final String username, final LocalDate dateToShow) {
 		model.addAttribute(DATEATTRIBUTE, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE));
 		model.addAttribute(MONTHATTRIBUTE, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")));
 		model.addAttribute(ALLACTIVITIESATTRIBUTE,
-				services.activityStore().retrieveAll().stream().filter(act -> !act.isHidden())
+				services.activityStore().retrieveAll().stream()
+						.filter(act -> !act.isHidden() && act.getUser().equals(username))
 						.sorted((a1, a2) -> a1.getBookingNumber().compareToIgnoreCase(a2.getBookingNumber()))
 						.collect(toList()));
 		model.addAttribute(BOOKINGSFORDAYATTRIBUTE, services.bookingStore().retrieveAll().stream()
-				.filter(b -> b.getBookingday().equals(dateToShow)).sorted(Comparator.comparing(Booking::getStarttime))
+				.filter(b -> b.getBookingday().equals(dateToShow) && b.getUser().equals(username))
+				.sorted(Comparator.comparing(Booking::getStarttime))
 				.map(b -> new BookingStruct(b.getId(), b.getStarttime().format(DateTimeFormatter.ofPattern("HH:mm")),
 						b.hasEndtime() ? b.getEndtime().format(DateTimeFormatter.ofPattern("HH:mm")) : "",
 						b.getActivity(), b.getComment()))
 				.collect(toList()));
 
 		setAnalysisData(model, HOURSANALYSISHEADLINEATTRIBUTE, HOURSANALYSISATTRIBUTE, HOURANALYSISID, MONTHTIMEFRAME,
-				dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")));
+				dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
 
 		setAnalysisData(model, PROJECTANALYSISTODAYHEADLINEATTRIBUTE, PROJECTANALYSISTODAYATTRIBUTE, PROJECTANALYSISID,
-				DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE));
+				DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
 
 		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE, PROJECTANALYSISID,
-				MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")));
+				MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
 		return TEMPLATENAME;
 	}
 
 	private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
-			final String analysisId, final String timeFrameType, final String timeFrame) {
+			final String analysisId, final String timeFrameType, final String timeFrame, final String username) {
 		Collection<Collection<Object>> analysisResult = services.analysisService().analyze(analysisId,
-				Arrays.asList(timeFrameType, timeFrame));
+				Arrays.asList(timeFrameType, timeFrame, username));
 		Collection<String> headline = mapToString(Utils.getFirstFromCollection(analysisResult));
 		Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).map(col -> mapToString(col))
 				.collect(toList());
