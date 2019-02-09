@@ -64,7 +64,7 @@ public class BookingRestController {
 				.sorted(Comparator.comparing(Booking::getStarttime)).collect(toList());
 	}
 
-	static class BookingBody {
+	public static class BookingBody {
 		public String activityId;
 		public String starttime;
 		public String endtime;

@@ -34,7 +34,7 @@ public class UserRestController {
 	@Autowired
 	private ServiceMapper services;
 
-	static class UserBody {
+	public static class UserBody {
 		public String username;
 		public String password;
 	}
