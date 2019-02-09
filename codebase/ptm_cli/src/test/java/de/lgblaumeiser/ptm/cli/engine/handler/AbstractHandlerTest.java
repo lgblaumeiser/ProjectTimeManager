@@ -66,6 +66,10 @@ public abstract class AbstractHandlerTest {
 	}
 
 	protected static class TestUserStore extends UserStore {
+		public TestUserStore() {
+			super("donotcare");
+		}
+
 		protected User storedUser;
 
 		@Override
@@ -77,9 +81,9 @@ public abstract class AbstractHandlerTest {
 		public void storeUserData(User user) {
 			storedUser = user;
 		}
-		
+
 	}
-	
+
 	protected static class TestRestUtils extends RestUtils {
 		String apiNameGiven;
 		Map<String, String> bodyDataGiven;

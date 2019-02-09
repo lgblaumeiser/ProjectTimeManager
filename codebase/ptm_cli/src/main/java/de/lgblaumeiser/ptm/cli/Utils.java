@@ -27,6 +27,12 @@ public class Utils {
 		}
 	}
 
+	public static void assertState(final boolean condition, final Object message) {
+		if (!condition) {
+			throw new IllegalStateException(message.toString());
+		}
+	}
+
 	public static <T> T getIndexFromCollection(final Collection<T> col, final int index) {
 		Iterator<T> iter = col.iterator();
 		int cur = 0;

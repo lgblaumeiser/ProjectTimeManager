@@ -70,7 +70,7 @@ public class ServiceManager {
 		return currentUserStore;
 	}
 
-	public void setCurrentUserStore(UserStore currentUserStore) {
+	public void setCurrentUserStore(final UserStore currentUserStore) {
 		this.currentUserStore = currentUserStore;
 	}
 }

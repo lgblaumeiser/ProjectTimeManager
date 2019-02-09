@@ -7,11 +7,14 @@
  */
 package de.lgblaumeiser.ptm.cli;
 
+import static java.lang.System.getProperty;
+
 import com.beust.jcommander.JCommander;
 
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 import de.lgblaumeiser.ptm.cli.engine.PrettyPrinter;
 import de.lgblaumeiser.ptm.cli.engine.ServiceManager;
+import de.lgblaumeiser.ptm.cli.engine.UserStore;
 import de.lgblaumeiser.ptm.cli.engine.handler.AddActivity;
 import de.lgblaumeiser.ptm.cli.engine.handler.AddBooking;
 import de.lgblaumeiser.ptm.cli.engine.handler.AddBreakToBooking;
@@ -75,10 +78,11 @@ public class PTMCLIConfigurator {
 		RestBookingStore bookingStore = new RestBookingStore();
 		ObjectStore<Activity> activityStore = new RestActivityStore();
 		RestAnalysisService analysisService = new RestAnalysisService();
-		RestUserStore userStore = new RestUserStore();
+		RestUserStore restUserStore = new RestUserStore();
+		UserStore localUserStore = new UserStore(getProperty("user.home") + ".ptm");
 		RestInfrastructureServices infrastructureServices = new RestInfrastructureServices();
-		ServiceManager manager = createServiceManager(bookingStore, activityStore, userStore, analysisService,
-				infrastructureServices);
+		ServiceManager manager = createServiceManager(bookingStore, activityStore, restUserStore, analysisService,
+				infrastructureServices, localUserStore);
 		RestBaseService.setRestUtils(new RestUtils().configure());
 		RestBaseService.setServices(manager);
 		return createCLI(createCommandInterpreter(manager));
@@ -86,13 +90,15 @@ public class PTMCLIConfigurator {
 
 	private ServiceManager createServiceManager(final RestBookingStore bookingStore,
 			final ObjectStore<Activity> activityStore, final RestUserStore userStore,
-			final RestAnalysisService analysisService, final RestInfrastructureServices infrastructureServices) {
+			final RestAnalysisService analysisService, final RestInfrastructureServices infrastructureServices,
+			final UserStore localUserStore) {
 		ServiceManager serviceManager = new ServiceManager();
 		serviceManager.setActivityStore(activityStore);
 		serviceManager.setBookingsStore(bookingStore);
 		serviceManager.setUserStore(userStore);
 		serviceManager.setAnalysisService(analysisService);
 		serviceManager.setInfrastructureServices(infrastructureServices);
+		serviceManager.setCurrentUserStore(localUserStore);
 		return serviceManager;
 	}
 
