@@ -59,6 +59,15 @@ public class UserRestController {
 		return ResponseEntity.created(location).build();
 	}
 
+	@RequestMapping(method = RequestMethod.GET, value = "/name")
+	User getUser(final Principal principal) {
+		logger.info("Request: Get User item for user " + principal.getName());
+		User foundUser = services.userStore().retrieveAll().stream()
+				.filter(u -> u.getUsername().equals(principal.getName())).findFirst()
+				.orElseThrow(IllegalStateException::new);
+		return foundUser;
+	}
+
 	@RequestMapping(method = RequestMethod.POST, value = "/name")
 	ResponseEntity<?> changePassword(final Principal principal, @RequestBody final UserBody userData) {
 		logger.info("Request: Change Password for User " + principal.getName());

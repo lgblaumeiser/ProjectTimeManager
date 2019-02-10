@@ -21,8 +21,10 @@ import de.lgblaumeiser.ptm.cli.engine.handler.AddBreakToBooking;
 import de.lgblaumeiser.ptm.cli.engine.handler.Backup;
 import de.lgblaumeiser.ptm.cli.engine.handler.ChangeActivity;
 import de.lgblaumeiser.ptm.cli.engine.handler.ChangeBooking;
+import de.lgblaumeiser.ptm.cli.engine.handler.ChangePassword;
 import de.lgblaumeiser.ptm.cli.engine.handler.ControlBackend;
 import de.lgblaumeiser.ptm.cli.engine.handler.DeleteBooking;
+import de.lgblaumeiser.ptm.cli.engine.handler.DeleteUser;
 import de.lgblaumeiser.ptm.cli.engine.handler.License;
 import de.lgblaumeiser.ptm.cli.engine.handler.ListActivity;
 import de.lgblaumeiser.ptm.cli.engine.handler.ListBookings;
@@ -53,6 +55,9 @@ public class PTMCLIConfigurator {
 	private static final String LIST_ACTIVITY_COMMAND_ABBRV = "la";
 	private static final String REGISTER_USER_COMMAND = "register_user";
 	private static final String REGISTER_USER_COMMAND_ABBRV = "ru";
+	private static final String CHANGE_PASSWORD_COMMAND = "change_password";
+	private static final String CHANGE_PASSWORD_COMMAND_ABBRV = "cp";
+	private static final String DELETE_USER_COMMAND = "delete_user";
 	private static final String SET_USER_COMMAND = "set_user";
 	private static final String SET_USER_COMMAND_ABBRV = "su";
 	private static final String ADD_BOOKING_COMMAND = "add_booking";
@@ -113,6 +118,8 @@ public class PTMCLIConfigurator {
 				.addCommand(LIST_ACTIVITY_COMMAND, new ListActivity(), LIST_ACTIVITY_COMMAND_ABBRV)
 				.addCommand(REGISTER_USER_COMMAND, new RegisterUser(), REGISTER_USER_COMMAND_ABBRV)
 				.addCommand(SET_USER_COMMAND, new SetUser(), SET_USER_COMMAND_ABBRV)
+				.addCommand(CHANGE_PASSWORD_COMMAND, new ChangePassword(), CHANGE_PASSWORD_COMMAND_ABBRV)
+				.addCommand(DELETE_USER_COMMAND, new DeleteUser())
 				.addCommand(ADD_BOOKING_COMMAND, new AddBooking(), ADD_BOOKING_COMMAND_ABBRV)
 				.addCommand(DELETE_BOOKING_COMMAND, new DeleteBooking(), DELETE_BOOKING_COMMAND_ABBRV)
 				.addCommand(CHANGE_BOOKING_COMMAND, new ChangeBooking(), CHANGE_BOOKING_COMMAND_ABBRV)

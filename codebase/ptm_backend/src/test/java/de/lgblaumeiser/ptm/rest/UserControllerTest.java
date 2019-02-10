@@ -81,6 +81,13 @@ public class UserControllerTest {
 				.andDo(print()).andExpect(status().isCreated()).andReturn();
 		assertTrue(result.getResponse().getRedirectedUrl().contains("/users/1"));
 
+		mockMvc.perform(get("/users/name").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).header(
+				HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("TestUser:DummyPwd".getBytes())))
+				.andDo(print()).andExpect(status().isOk()).andExpect(content().string(containsString("TestUser")));
+
+		mockMvc.perform(get("/users/name").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).header(
+				HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("TestUser:DummyPwd2".getBytes())))
+				.andDo(print()).andExpect(status().is(401));
 	}
 
 	@Test
