@@ -345,7 +345,6 @@ public class BookingControllerTest {
 				.andExpect(content().string(containsString("user\":\"MyTestUser")))
 				.andExpect(content().string(containsString("starttime")))
 				.andExpect(content().string(containsString("endtime")));
-
 	}
 
 	@Test
