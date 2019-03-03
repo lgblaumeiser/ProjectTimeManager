@@ -12,7 +12,6 @@ import static java.util.stream.Collectors.toList;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -109,8 +108,8 @@ public class OverviewController {
 
 	private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
 			final String analysisId, final String timeFrameType, final String timeFrame, final String username) {
-		Collection<Collection<String>> analysisResult = services.analysisService().analyze(analysisId,
-				Arrays.asList(timeFrameType, timeFrame, username));
+		Collection<Collection<String>> analysisResult = services.analysisService().analyze(analysisId, username,
+				timeFrameType, timeFrame);
 		Collection<String> headline = Utils.getFirstFromCollection(analysisResult);
 		Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).collect(toList());
 		model.addAttribute(headlineAttr, headline);

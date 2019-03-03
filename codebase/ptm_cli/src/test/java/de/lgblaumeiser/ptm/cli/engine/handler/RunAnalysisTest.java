@@ -22,6 +22,7 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
 
 	private static final String DATE_FOR_ANALYSIS = "2018-04-05";
+	private static final String PERIOD_EXPECTED_FOR_WEEK = "2018-04-02;2018-04-09";
 	private static final String MONTH_FOR_ANALYSIS = "2018-04";
 
 	@Test
@@ -40,7 +41,7 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunHoursAnalysisGivenWeekday() {
 		commandline.runCommand(HOURS_ANALYSIS_COMMAND, "-w", DATE_FOR_ANALYSIS);
-		assertEquals("/analysis/" + ANALYSIS_HOURS_ID + "/week/" + DATE_FOR_ANALYSIS, restutils.apiNameGiven);
+		assertEquals("/analysis/" + ANALYSIS_HOURS_ID + "/period/" + PERIOD_EXPECTED_FOR_WEEK, restutils.apiNameGiven);
 	}
 
 	@Test
@@ -79,6 +80,7 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunProjectsAnalysisGivenWeek() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-w", DATE_FOR_ANALYSIS);
-		assertEquals("/analysis/" + ANALYSIS_PROJECTS_ID + "/week/" + DATE_FOR_ANALYSIS, restutils.apiNameGiven);
+		assertEquals("/analysis/" + ANALYSIS_PROJECTS_ID + "/period/" + PERIOD_EXPECTED_FOR_WEEK,
+				restutils.apiNameGiven);
 	}
 }

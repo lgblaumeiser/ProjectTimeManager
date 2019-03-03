@@ -7,7 +7,6 @@
  */
 package de.lgblaumeiser.ptm.rest;
 
-import static java.util.Arrays.asList;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.security.Principal;
@@ -41,8 +40,16 @@ public class AnalysisRestController {
 			@PathVariable final String timeframe, @PathVariable final String param) {
 		logger.info("Request: Get Analysis Data for " + analyzerId + " for time frame " + timeframe + " " + param
 				+ " and user " + principal.getName());
-		return services.analysisService().analyze(analyzerId.toUpperCase(),
-				asList(timeframe, param, principal.getName()));
+		String[] analysisTime = calculateAnalysisTime(timeframe, param);
+		return services.analysisService().analyze(analyzerId.toUpperCase(), principal.getName(), timeframe,
+				analysisTime);
+	}
+
+	private String[] calculateAnalysisTime(String timeframe, String param) {
+		if (timeframe.equals("period")) {
+			return param.split(";");
+		}
+		return new String[] { param };
 	}
 
 	@ExceptionHandler(IllegalStateException.class)

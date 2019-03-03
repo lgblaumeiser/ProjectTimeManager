@@ -10,7 +10,6 @@ package de.lgblaumeiser.ptm.analysis;
 import static de.lgblaumeiser.ptm.util.Utils.emptyString;
 import static de.lgblaumeiser.ptm.util.Utils.getFirstFromCollection;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertEquals;
 
 import java.time.format.DateTimeFormatter;
@@ -26,10 +25,12 @@ public class DataAnalysisServiceTest {
 
 	private static final String ANALYSISID = "testanalysis";
 	private static final String PERIODMONTH = "month";
-	private static final String PERIODWEEK = "week";
+	private static final String PERIODWEEK = "period";
 	private static final String PERIODDAY = "day";
 	private static final String DATESTRINGMONTH = "2017-03";
 	private static final String DATESTRINGDAY = "2017-03-08";
+	private static final String DATESTRINGDAYFIRST = "2017-03-06";
+	private static final String DATESTRINGDAYFIRSTAFTER = "2017-03-13";
 	private static final String USER = "MyFairLady";
 
 	@Before
@@ -47,15 +48,16 @@ public class DataAnalysisServiceTest {
 
 	@Test
 	public void testDataAnalysisServiceMonth() {
-		Collection<Collection<String>> result = testee.analyze(ANALYSISID, asList(PERIODMONTH, DATESTRINGMONTH, USER));
+		Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER, PERIODMONTH, DATESTRINGMONTH);
 		assertEquals(1, result.size());
 		Collection<String> content = getFirstFromCollection(result);
 		assertEquals(31, content.size());
 	}
 
 	@Test
-	public void testDataAnalysisServiceWeek() {
-		Collection<Collection<String>> result = testee.analyze(ANALYSISID, asList(PERIODWEEK, DATESTRINGDAY, USER));
+	public void testDataAnalysisServicePeriod() {
+		Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER, PERIODWEEK, DATESTRINGDAYFIRST,
+				DATESTRINGDAYFIRSTAFTER);
 		assertEquals(1, result.size());
 		Collection<String> content = getFirstFromCollection(result);
 		assertEquals(7, content.size());
@@ -63,7 +65,7 @@ public class DataAnalysisServiceTest {
 
 	@Test
 	public void testDataAnalysisServiceDay() {
-		Collection<Collection<String>> result = testee.analyze(ANALYSISID, asList(PERIODDAY, DATESTRINGDAY, USER));
+		Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER, PERIODDAY, DATESTRINGDAY);
 		assertEquals(1, result.size());
 		Collection<String> content = getFirstFromCollection(result);
 		assertEquals(1, content.size());
@@ -71,21 +73,16 @@ public class DataAnalysisServiceTest {
 
 	@Test(expected = IllegalStateException.class)
 	public void testDataAnalysisServiceUnknownId() {
-		testee.analyze(ANALYSISID, emptyList());
+		testee.analyze(ANALYSISID, emptyString(), emptyString(), emptyString());
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testDataAnalysisServiceEmptyId() {
-		testee.analyze(emptyString(), emptyList());
+		testee.analyze(emptyString(), PERIODDAY, DATESTRINGDAY, USER);
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public void testDataAnalysisServiceNullId() {
-		testee.analyze(null, emptyList());
-	}
-
-	@Test(expected = IllegalStateException.class)
-	public void testDataAnalysisServiceNullParam() {
-		testee.analyze(ANALYSISID, null);
+		testee.analyze(null, PERIODDAY, DATESTRINGDAY, USER);
 	}
 }

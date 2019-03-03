@@ -8,10 +8,8 @@
 package de.lgblaumeiser.ptm.analysis;
 
 import static de.lgblaumeiser.ptm.util.Utils.assertState;
-import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
 import static de.lgblaumeiser.ptm.util.Utils.stringHasContent;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.Collection;
@@ -22,49 +20,43 @@ import java.util.Map;
  * Service class that allows to run analysis on the data
  */
 public class DataAnalysisService {
-	private static final int INDEX_SELECTOR = 0;
-	private static final int INDEX_TIMESTRING = 1;
-	private static final int INDEX_USER = 2;
 	private final Map<String, Analysis> analysisStore = new HashMap<>();
 
 	/**
 	 * Run an analysis with id analyzerId and the given parameters
 	 *
-	 * @param analyzerId The id of the analyzer to run
-	 * @param parameter  Parameters given to the analyzer
+	 * @param analyzerId      The id of the analyzer to run
+	 * @param periodId        Identifier of period, either month, day, or period
+	 * @param user            The use whose data is used for the analysis
+	 * @param periodIndicator According to the id, the indicator which time period
+	 *                        is meant, e.g. a day or a month in ISO_LOCAL_DATE
+	 *                        notation,or two days for a period
 	 * @return The result as an implemented analysis result interface
 	 */
-	public Collection<Collection<String>> analyze(final String analyzerId, final Collection<String> parameter) {
+	public Collection<Collection<String>> analyze(final String analyzerId, String user, final String periodId,
+			String... periodIndicator) {
 		assertState(stringHasContent(analyzerId));
-		assertState(parameter != null);
+		assertState(stringHasContent(periodId));
+		assertState(periodIndicator.length > 0);
+		assertState(stringHasContent(periodIndicator[0]));
+		assertState(stringHasContent(user));
 		Analysis analysis = analysisStore.get(analyzerId);
 		assertState(analysis != null);
-		return analysis.analyze(getCalculationPeriod(getSelector(parameter), getTimestring(parameter)),
-				getUser(parameter));
+		return analysis.analyze(getCalculationPeriod(periodId, periodIndicator), user);
 	}
 
-	private String getSelector(Collection<String> parameter) {
-		return getIndexFromCollection(parameter, INDEX_SELECTOR);
-	}
-
-	private String getTimestring(Collection<String> parameter) {
-		return getIndexFromCollection(parameter, INDEX_TIMESTRING);
-	}
-
-	private String getUser(Collection<String> parameter) {
-		return getIndexFromCollection(parameter, INDEX_USER);
-	}
-
-	private CalculationPeriod getCalculationPeriod(String selector, String timestring) {
+	private CalculationPeriod getCalculationPeriod(final String selector, final String... timestring) {
 		switch (selector.toLowerCase()) {
 		case "day":
-			return getDayPeriod(LocalDate.parse(timestring));
-		case "week":
-			return getWeekPeriod(LocalDate.parse(timestring));
+			return getDayPeriod(LocalDate.parse(timestring[0]));
 		case "month":
-			return getMonthPeriod(YearMonth.parse(timestring));
+			return getMonthPeriod(YearMonth.parse(timestring[0]));
+		case "period":
+			assertState(timestring.length == 2);
+			assertState(stringHasContent(timestring[1]));
+			return getPeriod(LocalDate.parse(timestring[0]), LocalDate.parse(timestring[1]));
 		default:
-			return getMonthPeriod(YearMonth.now());
+			throw new IllegalStateException();
 		}
 	}
 
@@ -72,12 +64,8 @@ public class DataAnalysisService {
 		return new CalculationPeriod(day, day.plusDays(1L));
 	}
 
-	private CalculationPeriod getWeekPeriod(final LocalDate dayInWeek) {
-		LocalDate current = dayInWeek;
-		while (current.getDayOfWeek() != DayOfWeek.MONDAY) {
-			current = current.minusDays(1L);
-		}
-		return new CalculationPeriod(current, current.plusDays(7L));
+	private CalculationPeriod getPeriod(final LocalDate firstDay, final LocalDate firstDateAfter) {
+		return new CalculationPeriod(firstDay, firstDateAfter);
 	}
 
 	private CalculationPeriod getMonthPeriod(final YearMonth month) {
