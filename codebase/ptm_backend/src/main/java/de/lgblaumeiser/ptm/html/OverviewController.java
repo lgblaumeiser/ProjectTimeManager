@@ -109,16 +109,11 @@ public class OverviewController {
 
 	private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
 			final String analysisId, final String timeFrameType, final String timeFrame, final String username) {
-		Collection<Collection<Object>> analysisResult = services.analysisService().analyze(analysisId,
+		Collection<Collection<String>> analysisResult = services.analysisService().analyze(analysisId,
 				Arrays.asList(timeFrameType, timeFrame, username));
-		Collection<String> headline = mapToString(Utils.getFirstFromCollection(analysisResult));
-		Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).map(col -> mapToString(col))
-				.collect(toList());
+		Collection<String> headline = Utils.getFirstFromCollection(analysisResult);
+		Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).collect(toList());
 		model.addAttribute(headlineAttr, headline);
 		model.addAttribute(analysisAttr, bodydata);
-	}
-
-	private Collection<String> mapToString(final Collection<Object> source) {
-		return source.stream().map(o -> o.toString()).collect(toList());
 	}
 }

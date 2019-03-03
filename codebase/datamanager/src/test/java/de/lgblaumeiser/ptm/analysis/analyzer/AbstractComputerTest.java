@@ -9,6 +9,7 @@ package de.lgblaumeiser.ptm.analysis.analyzer;
 
 import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
 import static de.lgblaumeiser.ptm.datamanager.model.Booking.newBooking;
+import static de.lgblaumeiser.ptm.util.Utils.parseDateString;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -18,6 +19,7 @@ import java.util.Optional;
 
 import org.junit.Before;
 
+import de.lgblaumeiser.ptm.analysis.CalculationPeriod;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.store.ObjectStore;
@@ -136,4 +138,8 @@ public abstract class AbstractComputerTest {
 	}
 
 	protected abstract void createTestee(ObjectStore<Booking> bStore, ObjectStore<Activity> aStore);
+
+	protected CalculationPeriod createPeriod(String firstDay, String firstDayAfter) {
+		return new CalculationPeriod(parseDateString(firstDay), parseDateString(firstDayAfter));
+	}
 }

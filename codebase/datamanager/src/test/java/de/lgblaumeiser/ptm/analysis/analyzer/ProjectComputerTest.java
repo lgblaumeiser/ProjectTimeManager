@@ -11,7 +11,6 @@ import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
 import static java.lang.Double.parseDouble;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Test;
@@ -30,37 +29,40 @@ public class ProjectComputerTest extends AbstractComputerTest {
 
 	@Test
 	public void testProjectComputerFixed() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("month", "2017-03", USERNAME));
+		Collection<Collection<String>> analysisResults = testee.analyze(createPeriod("2017-03-01", "2017-04-01"),
+				USERNAME);
 		assertEquals(5, analysisResults.size());
 		assertEquals(200.0,
-				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).toString()
-						.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4).toString()
+				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).replaceAll(",", ".")
+						.replaceAll("%", ""))
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4)
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4)
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 4), 4).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 4), 4)
 								.replaceAll(",", ".").replaceAll("%", "")),
 				0.1);
 	}
 
 	@Test
 	public void testProjectComputerDay() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("day", "2017-03-15", USERNAME));
+		Collection<Collection<String>> analysisResults = testee.analyze(createPeriod("2017-03-15", "2017-04-16"),
+				USERNAME);
 		assertEquals(4, analysisResults.size());
 		assertEquals(200.0,
-				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).toString()
-						.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4).toString()
+				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).replaceAll(",", ".")
+						.replaceAll("%", ""))
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4)
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4)
 								.replaceAll(",", ".").replaceAll("%", "")),
 				0.1);
 	}
 
 	@Test
 	public void testProjectComputerWeek() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("week", "2017-03-09", USERNAME));
+		Collection<Collection<String>> analysisResults = testee.analyze(createPeriod("2017-03-06", "2017-03-13"),
+				USERNAME);
 		assertEquals(5, analysisResults.size());
 		assertEquals(200.0,
 				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).toString()

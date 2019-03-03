@@ -37,7 +37,7 @@ public class AnalysisRestController {
 	private ServiceMapper services;
 
 	@RequestMapping(method = RequestMethod.GET, value = "/{analyzerId}/{timeframe}/{param}")
-	Collection<Collection<Object>> runAnalysis(Principal principal, @PathVariable final String analyzerId,
+	Collection<Collection<String>> runAnalysis(Principal principal, @PathVariable final String analyzerId,
 			@PathVariable final String timeframe, @PathVariable final String param) {
 		logger.info("Request: Get Analysis Data for " + analyzerId + " for time frame " + timeframe + " " + param
 				+ " and user " + principal.getName());

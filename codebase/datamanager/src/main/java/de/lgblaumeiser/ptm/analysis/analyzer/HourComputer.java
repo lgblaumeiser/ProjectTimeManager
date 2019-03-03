@@ -21,81 +21,99 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
+import de.lgblaumeiser.ptm.analysis.Analysis;
+import de.lgblaumeiser.ptm.analysis.CalculationPeriod;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.datamanager.model.TimeSpan;
 import de.lgblaumeiser.ptm.store.ObjectStore;
-import de.lgblaumeiser.ptm.util.Utils;
 
 /**
  * An analysis that counts all hours in the month given as parameter
  */
-public class HourComputer extends AbstractBaseComputer {
+public class HourComputer implements Analysis {
 	private static final String BREAKTIME_COMMENT = "Break too short!";
 	private static final String WORKTIME_COMMENT = "> 10 hours worktime!";
 	private static final String INCOMPLETE_COMMENT = "Day has unfinished bookings!";
 	private static final String OVERLAPPING_COMMENT = "Day has overlapping bookings!";
 
-	@Override
-	public Collection<Collection<Object>> analyze(final Collection<String> parameter) {
-		CalculationPeriod requestedPeriod = getCalculationPeriod(parameter);
-		String user = getLastFromCollection(parameter);
-		Collection<Collection<Object>> result = new ArrayList<>();
-		result.add(Arrays.asList("Work Day", "Starttime", "Endtime", "Presence", "Worktime", "Breaktime", "Total",
-				"Overtime", "Comment"));
+	private final ObjectStore<Booking> bookingStore;
+
+	private static class ValidationResult {
+		boolean hasBookings = true;
+		boolean bookingsValid = true;
+		String validationComment = emptyString();
+	}
+
+	private static class AccumulatedTimes {
 		Duration overtime = Duration.ZERO;
 		Duration totaltime = Duration.ZERO;
-		LocalDate currentday = requestedPeriod.firstDay;
-		while (currentday.isBefore(requestedPeriod.firstDayAfter)) {
-			Collection<Booking> currentBookings = getBookingsForDay(currentday, user);
-			if (!currentBookings.isEmpty()) {
-				String day = currentday.format(DateTimeFormatter.ISO_LOCAL_DATE);
-				if (hasCompleteBookings(currentBookings)) {
-					if (bookingsWithOverlaps(currentBookings)) {
-						result.add(Arrays.asList(day, Utils.emptyString(), Utils.emptyString(), Utils.emptyString(),
-								Utils.emptyString(), Utils.emptyString(), Utils.emptyString(), Utils.emptyString(),
-								OVERLAPPING_COMMENT));
-					} else {
-						LocalTime starttime = getFirstFromCollection(currentBookings).getStarttime();
-						LocalTime endtime = getLastFromCollection(currentBookings).getEndtime();
-						Duration presence = calculatePresence(starttime, endtime);
-						Duration worktime = calculateWorktime(currentBookings);
-						Duration breaktime = calculateBreaktime(presence, worktime);
-						totaltime = totaltime.plus(worktime);
-						Duration currentOvertime = calculateOvertime(worktime, currentday);
-						overtime = overtime.plus(currentOvertime);
-						result.add(Arrays.asList(day, starttime.format(DateTimeFormatter.ofPattern("HH:mm")),
-								endtime.format(DateTimeFormatter.ofPattern("HH:mm")), formatDuration(presence),
-								formatDuration(worktime), formatDuration(breaktime), formatDuration(totaltime),
-								formatDuration(overtime), validate(worktime, breaktime)));
-					}
-				} else {
-					result.add(Arrays.asList(day, Utils.emptyString(), Utils.emptyString(), Utils.emptyString(),
-							Utils.emptyString(), Utils.emptyString(), Utils.emptyString(), Utils.emptyString(),
-							INCOMPLETE_COMMENT));
 
+		static AccumulatedTimes initial() {
+			return new AccumulatedTimes();
+		}
+
+		void add(final Duration overtimeAddition, final Duration totaltimeAddition) {
+			overtime = overtime.plus(overtimeAddition);
+			totaltime = totaltime.plus(totaltimeAddition);
+		}
+	}
+
+	@Override
+	public Collection<Collection<String>> analyze(final CalculationPeriod period, final String user) {
+		Collection<Collection<String>> result = new ArrayList<>();
+		result.add(Arrays.asList("Work Day", "Starttime", "Endtime", "Presence", "Worktime", "Breaktime", "Total",
+				"Overtime", "Comment"));
+		AccumulatedTimes accutimes = AccumulatedTimes.initial();
+		for (LocalDate currentday : period.days()) {
+			Collection<Booking> currentBookings = getBookingsForDay(currentday, user);
+			ValidationResult validation = validateBookings(currentBookings);
+			if (validation.hasBookings) {
+				if (validation.bookingsValid) {
+					result.add(createEntry(currentday, currentBookings, accutimes));
+				} else {
+					result.add(errorEntry(currentday, validation.validationComment));
 				}
 			}
-			currentday = currentday.plusDays(1);
 		}
 		return result;
 	}
 
-	private boolean bookingsWithOverlaps(final Collection<Booking> bookings) {
-		for (Booking current : bookings) {
-			TimeSpan currentSpan = TimeSpan.newTimeSpan(current);
-			for (Booking toCheck : bookings) {
-				if (!current.equals(toCheck)) {
-					if (currentSpan.overlapsWith(TimeSpan.newTimeSpan(toCheck))) {
-						return true;
-					}
-				}
-			}
+	private Collection<String> createEntry(final LocalDate day, final Collection<Booking> bookings,
+			final AccumulatedTimes accutimes) {
+		LocalTime starttime = getFirstFromCollection(bookings).getStarttime();
+		LocalTime endtime = getLastFromCollection(bookings).getEndtime();
+		Duration presence = calculatePresence(starttime, endtime);
+		Duration worktime = calculateWorktime(bookings);
+		Duration breaktime = calculateBreaktime(presence, worktime);
+		Duration currentOvertime = calculateOvertime(worktime, day);
+		accutimes.add(currentOvertime, worktime);
+		return Arrays.asList(formatDay(day), formatTime(starttime), formatTime(endtime), formatDuration(presence),
+				formatDuration(worktime), formatDuration(breaktime), formatDuration(accutimes.totaltime),
+				formatDuration(accutimes.overtime), validateTimes(worktime, breaktime));
+	}
+
+	private ValidationResult validateBookings(final Collection<Booking> currentBookings) {
+		ValidationResult back = new ValidationResult();
+
+		if (currentBookings.isEmpty()) {
+			back.hasBookings = false;
+			return back;
 		}
-		return false;
+		if (!hasCompleteBookings(currentBookings)) {
+			back.bookingsValid = false;
+			back.validationComment = INCOMPLETE_COMMENT;
+			return back;
+		}
+		if (bookingsWithOverlaps(currentBookings)) {
+			back.bookingsValid = false;
+			back.validationComment = OVERLAPPING_COMMENT;
+		}
+
+		return back;
 	}
 
 	private Collection<Booking> getBookingsForDay(final LocalDate currentday, final String user) {
-		return store.retrieveAll().stream()
+		return bookingStore.retrieveAll().stream()
 				.filter(b -> b.getBookingday().equals(currentday) && b.getUser().equals(user))
 				.sorted((b1, b2) -> b1.getStarttime().compareTo(b2.getStarttime())).collect(Collectors.toList());
 	}
@@ -110,6 +128,20 @@ public class HourComputer extends AbstractBaseComputer {
 			}
 		}
 		return true;
+	}
+
+	private boolean bookingsWithOverlaps(final Collection<Booking> bookings) {
+		for (Booking current : bookings) {
+			TimeSpan currentSpan = TimeSpan.newTimeSpan(current);
+			for (Booking toCheck : bookings) {
+				if (!current.equals(toCheck)) {
+					if (currentSpan.overlapsWith(TimeSpan.newTimeSpan(toCheck))) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private Duration calculateBreaktime(final Duration presence, final Duration worktime) {
@@ -128,7 +160,7 @@ public class HourComputer extends AbstractBaseComputer {
 		return !(day.getDayOfWeek() == DayOfWeek.SATURDAY || day.getDayOfWeek() == DayOfWeek.SUNDAY);
 	}
 
-	private String validate(final Duration worktime, final Duration breaktime) {
+	private String validateTimes(final Duration worktime, final Duration breaktime) {
 		long worktimeMinutes = worktime.toMinutes();
 		long breaktimeMinutes = breaktime.toMinutes();
 		if (worktimeMinutes > 600) {
@@ -155,6 +187,14 @@ public class HourComputer extends AbstractBaseComputer {
 		return minutes;
 	}
 
+	private String formatDay(final LocalDate day) {
+		return day.format(DateTimeFormatter.ISO_LOCAL_DATE);
+	}
+
+	private String formatTime(final LocalTime time) {
+		return time.format(DateTimeFormatter.ofPattern("HH:mm"));
+	}
+
 	private String formatDuration(final Duration duration) {
 		long minutes = duration.toMinutes();
 		char pre = minutes < 0 ? '-' : ' ';
@@ -162,7 +202,12 @@ public class HourComputer extends AbstractBaseComputer {
 		return String.format("%c%02d:%02d", pre, minutes / 60, minutes % 60);
 	}
 
+	private Collection<String> errorEntry(final LocalDate day, final String comment) {
+		return Arrays.asList(formatDay(day), emptyString(), emptyString(), emptyString(), emptyString(), emptyString(),
+				emptyString(), emptyString(), comment);
+	}
+
 	public HourComputer(final ObjectStore<Booking> store) {
-		super(store);
+		bookingStore = store;
 	}
 }

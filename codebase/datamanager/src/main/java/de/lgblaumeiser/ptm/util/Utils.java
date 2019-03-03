@@ -7,6 +7,8 @@
  */
 package de.lgblaumeiser.ptm.util;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -29,6 +31,10 @@ public class Utils {
 		if (!condition) {
 			throw new IllegalStateException();
 		}
+	}
+
+	public static LocalDate parseDateString(String dateString) {
+		return LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
 	}
 
 	public static <T> T getIndexFromCollection(final Collection<T> col, final int index) {

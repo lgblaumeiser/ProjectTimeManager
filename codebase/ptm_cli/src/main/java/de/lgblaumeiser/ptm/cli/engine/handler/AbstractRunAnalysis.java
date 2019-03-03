@@ -22,7 +22,7 @@ abstract class AbstractRunAnalysis extends AbstractCommandHandler {
 		String frametype = extractTimeFrameType(month, week, day);
 		String timeframe = parseTimeFrame(month, week, day);
 		getLogger().log("Run analysis " + command.toLowerCase() + " analysis for " + timeframe + " ...");
-		Collection<Collection<Object>> result = getServices().getAnalysisService().analyze(command,
+		Collection<Collection<String>> result = getServices().getAnalysisService().analyze(command,
 				Arrays.asList(frametype, timeframe));
 		getPrinter().tablePrint(result);
 		getLogger().log("... analysis done");

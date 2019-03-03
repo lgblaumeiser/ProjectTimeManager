@@ -8,7 +8,6 @@
 package de.lgblaumeiser.ptm.analysis.analyzer;
 
 import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Collection;
@@ -29,14 +28,16 @@ public class HourComputerTest extends AbstractComputerTest {
 
 	@Test
 	public void testHourComputerMonth() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(asList("month", "2017-03", USERNAME));
+		Collection<Collection<String>> analysisResults = testee.analyze(createPeriod("2017-03-01", "2017-04-01"),
+				USERNAME);
 		assertEquals(7, analysisResults.size());
 		assertEquals("-07:30", getIndexFromCollection(getIndexFromCollection(analysisResults, 6), 7));
 	}
 
 	@Test
 	public void testHourComputerWeek() {
-		Collection<Collection<Object>> analysisResults = testee.analyze(asList("week", "2017-03-08", USERNAME));
+		Collection<Collection<String>> analysisResults = testee.analyze(createPeriod("2017-03-06", "2017-03-13"),
+				USERNAME);
 		assertEquals(3, analysisResults.size());
 		assertEquals("-05:04", getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 7));
 	}
