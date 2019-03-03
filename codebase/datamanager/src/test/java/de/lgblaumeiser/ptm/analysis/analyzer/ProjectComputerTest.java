@@ -33,13 +33,13 @@ public class ProjectComputerTest extends AbstractComputerTest {
 		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("month", "2017-03", USERNAME));
 		assertEquals(5, analysisResults.size());
 		assertEquals(200.0,
-				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 3).toString()
+				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).toString()
 						.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 4), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 4), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", "")),
 				0.1);
 	}
@@ -49,11 +49,11 @@ public class ProjectComputerTest extends AbstractComputerTest {
 		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("day", "2017-03-15", USERNAME));
 		assertEquals(4, analysisResults.size());
 		assertEquals(200.0,
-				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 3).toString()
+				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).toString()
 						.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", "")),
 				0.1);
 	}
@@ -63,13 +63,13 @@ public class ProjectComputerTest extends AbstractComputerTest {
 		Collection<Collection<Object>> analysisResults = testee.analyze(Arrays.asList("week", "2017-03-09", USERNAME));
 		assertEquals(5, analysisResults.size());
 		assertEquals(200.0,
-				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 3).toString()
+				parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 1), 4).toString()
 						.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 2), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 3), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", ""))
-						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 4), 3).toString()
+						+ parseDouble(getIndexFromCollection(getIndexFromCollection(analysisResults, 4), 4).toString()
 								.replaceAll(",", ".").replaceAll("%", "")),
 				0.15);
 	}

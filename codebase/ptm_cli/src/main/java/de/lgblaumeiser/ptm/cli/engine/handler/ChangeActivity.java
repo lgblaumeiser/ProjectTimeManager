@@ -28,8 +28,12 @@ public class ChangeActivity extends AbstractCommandHandler {
 	private Optional<String> name = Optional.empty();
 
 	@Parameter(names = { "-i",
-			"--identifier" }, description = "Change the project identifier of the activity", converter = OptionalStringConverter.class)
-	private Optional<String> identifier = Optional.empty();
+			"--project-id" }, description = "Change the project id", converter = OptionalStringConverter.class)
+	private Optional<String> pid = Optional.empty();
+
+	@Parameter(names = { "-s",
+			"--project-sub-id" }, description = "Change the project sub id", converter = OptionalStringConverter.class)
+	private Optional<String> pactivity = Optional.empty();
 
 	@Parameter(names = { "--hidden" }, description = "Hide the activity")
 	private boolean hidden = false;
@@ -43,7 +47,8 @@ public class ChangeActivity extends AbstractCommandHandler {
 		Activity oldAct = getActivityById(id);
 		Activity.ActivityBuilder chgAct = oldAct.changeActivity();
 		name.ifPresent(chgAct::setActivityName);
-		identifier.ifPresent(chgAct::setBookingNumber);
+		pid.ifPresent(chgAct::setProjectId);
+		pactivity.ifPresent(chgAct::setProjectActivity);
 		if (oldAct.isHidden() && visible)
 			chgAct.setHidden(false);
 		if (!oldAct.isHidden() && hidden)

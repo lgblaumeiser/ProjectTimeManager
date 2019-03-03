@@ -46,13 +46,14 @@ public class ActivityRestController {
 	Collection<Activity> getActivities(final Principal principal) {
 		logger.info("Request: Get all Activities of user " + principal.getName());
 		return services.activityStore().retrieveAll().stream().filter(act -> act.getUser().equals(principal.getName()))
-				.sorted((a1, a2) -> a1.getBookingNumber().compareToIgnoreCase(a2.getBookingNumber()))
+				.sorted((a1, a2) -> a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity()))
 				.collect(Collectors.toList());
 	}
 
 	public static class ActivityBody {
 		public String activityName;
-		public String bookingNumber;
+		public String projectId;
+		public String projectActivity;
 		public boolean hidden;
 	}
 
@@ -61,7 +62,8 @@ public class ActivityRestController {
 		logger.info("Request: Post new Activity for user " + principal.getName());
 		Activity newActivity = services.activityStore()
 				.store(newActivity().setUser(principal.getName()).setActivityName(activityData.activityName)
-						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
+						.setProjectId(activityData.projectId).setProjectActivity(activityData.projectActivity)
+						.setHidden(activityData.hidden).build());
 		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 				.buildAndExpand(newActivity.getId()).toUri();
 		logger.info("Result: Activity Created with Id " + newActivity.getId());
@@ -86,8 +88,10 @@ public class ActivityRestController {
 				"Request: Post changed Activity, id Id for change: " + activityId + " for user " + principal.getName());
 		services.activityStore().retrieveById(valueOf(activityId)).ifPresent(a -> {
 			if (a.getUser().equals(principal.getName())) {
-				services.activityStore().store(a.changeActivity().setActivityName(activityData.activityName)
-						.setBookingNumber(activityData.bookingNumber).setHidden(activityData.hidden).build());
+				services.activityStore()
+						.store(a.changeActivity().setActivityName(activityData.activityName)
+								.setProjectId(activityData.projectId).setProjectActivity(activityData.projectActivity)
+								.setHidden(activityData.hidden).build());
 			} else {
 				throw new IllegalStateException();
 			}

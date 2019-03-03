@@ -102,14 +102,16 @@
 								<tr>
 									<th class="nowrap">Id</th>
 									<th class="nowrap">Activity Name</th>
-									<th class="nowrap">Booking Number</th>
+									<th class="nowrap">Project Id</th>
+									<th class="nowrap">Project Activity</th>
 								</tr>
 							</thead>
 							<tbody>
  	  							<tr th:each="act : ${allActivities}">
 	    							<td th:text="|${act.getId()}|" />
 		 							<td th:text="|${act.getActivityName()}|" />
-									<td th:text="|${act.getBookingNumber()}|" />
+									<td th:text="|${act.getProjectId()}|" />
+									<td th:text="|${act.getProjectActivity()}|" />
  								</tr>
   							</tbody>
    						</table>

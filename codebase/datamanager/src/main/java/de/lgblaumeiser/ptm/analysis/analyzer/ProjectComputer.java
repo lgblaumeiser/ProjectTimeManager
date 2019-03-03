@@ -66,15 +66,15 @@ public class ProjectComputer extends AbstractBaseComputer {
 			}
 		}
 		if (calcPeriod.isDayPeriod) {
-			result.add(Arrays.asList("Activity", "Booking number", "Hours", "%", "Comments"));
+			result.add(Arrays.asList("Activity", "Project Id", "Project Activity", "Hours", "%", "Comments"));
 		} else {
-			result.add(Arrays.asList("Activity", "Booking number", "Hours", "%"));
+			result.add(Arrays.asList("Activity", "Project Id", "Project Activity", "Hours", "%"));
 		}
 		result.addAll(computeResultLines(totalMinutes, activityToMinutesMap, activityToCommentMap));
 		if (calcPeriod.isDayPeriod) {
-			result.add(Arrays.asList("Total", "", formatDuration(totalMinutes), "100.0%", ""));
+			result.add(Arrays.asList("Total", "", "", formatDuration(totalMinutes), "100.0%", ""));
 		} else {
-			result.add(Arrays.asList("Total", "", formatDuration(totalMinutes), "100.0%"));
+			result.add(Arrays.asList("Total", "", "", formatDuration(totalMinutes), "100.0%"));
 		}
 		return result;
 	}
@@ -90,11 +90,11 @@ public class ProjectComputer extends AbstractBaseComputer {
 			Activity activity = activityStore.retrieveById(activityId).orElseThrow(IllegalStateException::new);
 			String comments = activityToCommentsMap.get(activityId);
 			if (comments == null) {
-				valueList.add(Arrays.asList(activity.getActivityName(), activity.getBookingNumber(),
-						formatDuration(totalMinutesId), percentageString));
+				valueList.add(Arrays.asList(activity.getActivityName(), activity.getProjectId(),
+						activity.getProjectActivity(), formatDuration(totalMinutesId), percentageString));
 			} else {
-				valueList.add(Arrays.asList(activity.getActivityName(), activity.getBookingNumber(),
-						formatDuration(totalMinutesId), percentageString, comments));
+				valueList.add(Arrays.asList(activity.getActivityName(), activity.getProjectId(),
+						activity.getProjectActivity(), formatDuration(totalMinutesId), percentageString, comments));
 			}
 		}
 		return valueList.stream().sorted((line1, line2) -> getIndexFromCollection(line1, 1).toString()

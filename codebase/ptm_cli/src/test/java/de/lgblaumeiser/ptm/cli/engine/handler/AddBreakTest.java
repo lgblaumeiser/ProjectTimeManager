@@ -63,7 +63,7 @@ public class AddBreakTest extends AbstractHandlerTest {
 
 	@Test(expected = DateTimeParseException.class)
 	public void testAddBreakTwoParamWrongTime() {
-		commandline.runCommand(ADD_BREAK_COMMAND, "-b", "10", "-s", ACTIVITY1NUMBER);
+		commandline.runCommand(ADD_BREAK_COMMAND, "-b", "10", "-s", ACTIVITY1ID);
 	}
 
 	@Test(expected = NumberFormatException.class)

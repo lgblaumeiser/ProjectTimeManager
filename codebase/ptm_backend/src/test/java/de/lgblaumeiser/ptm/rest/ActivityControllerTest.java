@@ -88,7 +88,8 @@ public class ActivityControllerTest {
 
 		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyTestActivity";
-		data.bookingNumber = "0815";
+		data.projectId = "0815";
+		data.projectActivity = "1";
 		data.hidden = false;
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
@@ -112,7 +113,8 @@ public class ActivityControllerTest {
 
 		data.hidden = true;
 		data.activityName = "MyOtherTestActivity";
-		data.bookingNumber = "4711";
+		data.projectId = "4711";
+		data.projectActivity = "2";
 		mockMvc.perform(post("/activities/1")
 				.header(HttpHeaders.AUTHORIZATION,
 						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
@@ -145,7 +147,8 @@ public class ActivityControllerTest {
 
 		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyTestActivity";
-		data.bookingNumber = "0815";
+		data.projectId = "0815";
+		data.projectActivity = "1";
 		data.hidden = false;
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
@@ -155,7 +158,8 @@ public class ActivityControllerTest {
 
 		data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyOtherTestActivity";
-		data.bookingNumber = "4711";
+		data.projectId = "4711";
+		data.projectActivity = "2";
 		data.hidden = false;
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
@@ -207,7 +211,8 @@ public class ActivityControllerTest {
 
 		data.hidden = true;
 		data.activityName = "MyOtherOtherTestActivity";
-		data.bookingNumber = "47110815";
+		data.projectId = "08154711";
+		data.projectActivity = "3";
 		mockMvc.perform(post("/activities/2")
 				.header(HttpHeaders.AUTHORIZATION,
 						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))

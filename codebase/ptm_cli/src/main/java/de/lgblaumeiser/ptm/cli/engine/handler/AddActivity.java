@@ -22,17 +22,20 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
 public class AddActivity extends AbstractCommandHandler {
 	private final static String DUMMYUSER = "Dummy";
 
-	@Parameter(names = { "-n", "--name" }, description = "Name of the new activity", required = true)
+	@Parameter(names = { "-n", "--name" }, description = "Name of the activity", required = true)
 	public String name;
 
-	@Parameter(names = { "-i", "--identifier" }, description = "Project identifier of the activity", required = true)
-	public String identifier;
+	@Parameter(names = { "-i", "--project-id" }, description = "Project identifier", required = true)
+	public String pid;
+
+	@Parameter(names = { "-s", "--project-sub-id" }, description = "Project sub activity", required = true)
+	public String pactivity;
 
 	@Override
 	public void handleCommand() {
-		getLogger().log("Add activity " + name + " with id " + identifier);
-		Activity newAct = getServices().getActivityStore()
-				.store(newActivity().setActivityName(name).setBookingNumber(identifier).setUser(DUMMYUSER).build());
+		getLogger().log("Add activity " + name + " with project id " + pid + " and sub id " + pactivity);
+		Activity newAct = getServices().getActivityStore().store(newActivity().setActivityName(name).setProjectId(pid)
+				.setProjectActivity(pactivity).setUser(DUMMYUSER).build());
 		getLogger().log("Activity added: " + newAct.toString() + "\n");
 	}
 }

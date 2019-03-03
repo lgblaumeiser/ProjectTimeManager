@@ -41,10 +41,10 @@ public class BookingServiceTest {
 	private static final LocalTime TIME3 = LocalTime.of(13, 45);
 	private static final String USERNAME = "UserX";
 
-	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setBookingNumber("b").setUser(USERNAME)
-			.build();
-	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setBookingNumber("c")
-			.setUser(USERNAME).build();
+	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setProjectId("b")
+			.setProjectActivity("c").setUser(USERNAME).build();
+	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setProjectId("b1")
+			.setProjectActivity("c1").setUser(USERNAME).build();
 	private static final User USER = newUser().setUsername(USERNAME).setPassword("DummyPwd").build();
 	private static final String COMMENT1 = "Test Comment";
 	private static final String COMMENT2 = "";

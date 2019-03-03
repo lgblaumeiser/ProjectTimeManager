@@ -77,7 +77,8 @@ public class AnalysisControllerTest {
 
 		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
 		data.activityName = "MyTestActivity";
-		data.bookingNumber = "0815";
+		data.projectId = "0815";
+		data.projectActivity = "1";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
 						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))

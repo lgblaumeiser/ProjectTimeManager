@@ -86,7 +86,7 @@ public class OverviewController {
 		model.addAttribute(ALLACTIVITIESATTRIBUTE,
 				services.activityStore().retrieveAll().stream()
 						.filter(act -> !act.isHidden() && act.getUser().equals(username))
-						.sorted((a1, a2) -> a1.getBookingNumber().compareToIgnoreCase(a2.getBookingNumber()))
+						.sorted((a1, a2) -> a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity()))
 						.collect(toList()));
 		model.addAttribute(BOOKINGSFORDAYATTRIBUTE, services.bookingStore().retrieveAll().stream()
 				.filter(b -> b.getBookingday().equals(dateToShow) && b.getUser().equals(username))

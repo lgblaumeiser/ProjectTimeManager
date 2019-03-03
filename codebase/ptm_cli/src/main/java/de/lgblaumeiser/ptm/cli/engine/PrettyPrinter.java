@@ -59,7 +59,7 @@ public class PrettyPrinter {
 
 	public void activityPrint(final Collection<Activity> data) {
 		Collection<Collection<Object>> table = new ArrayList<>();
-		table.add(asList("Activity", "Number", "Activity Id"));
+		table.add(asList("Activity", "Project Id", "Project Sub Id", "Activity Id"));
 		for (Activity activity : data) {
 			table.add(flattenActivity(activity));
 		}
@@ -77,7 +77,8 @@ public class PrettyPrinter {
 	}
 
 	private Collection<Object> flattenActivity(final Activity activity) {
-		return asList(activity.getActivityName(), activity.getBookingNumber(), activity.getId().toString());
+		return asList(activity.getActivityName(), activity.getProjectId(), activity.getProjectActivity(),
+				activity.getId().toString());
 	}
 
 	private String createString(final Collection<Object> columns, final List<Integer> sizelist) {

@@ -23,14 +23,16 @@ public class Activity {
 		private Long id = valueOf(-1);
 		private String user;
 		private String activityName;
-		private String bookingNumber;
+		private String projectId;
+		private String projectActivity;
 		private boolean hidden = false;
 
 		private ActivityBuilder(final Activity activity) {
 			id = activity.getId();
 			user = activity.getUser();
 			activityName = activity.getActivityName();
-			bookingNumber = activity.getBookingNumber();
+			projectId = activity.getProjectId();
+			projectActivity = activity.getProjectActivity();
 			hidden = activity.isHidden();
 		}
 
@@ -48,8 +50,13 @@ public class Activity {
 			return this;
 		}
 
-		public ActivityBuilder setBookingNumber(final String bookingNumber) {
-			this.bookingNumber = bookingNumber;
+		public ActivityBuilder setProjectId(final String projectId) {
+			this.projectId = projectId;
+			return this;
+		}
+
+		public ActivityBuilder setProjectActivity(final String projectActivity) {
+			this.projectActivity = projectActivity;
 			return this;
 		}
 
@@ -64,13 +71,14 @@ public class Activity {
 		 */
 		public Activity build() {
 			checkData();
-			return new Activity(id, user, activityName, bookingNumber, hidden);
+			return new Activity(id, user, activityName, projectId, projectActivity, hidden);
 		}
 
 		private void checkData() {
 			assertState(stringHasContent(user));
 			assertState(stringHasContent(activityName));
-			assertState(stringHasContent(bookingNumber));
+			assertState(stringHasContent(projectId));
+			assertState(stringHasContent(projectActivity));
 		}
 	}
 
@@ -94,7 +102,8 @@ public class Activity {
 	}
 
 	private String activityName;
-	private String bookingNumber;
+	private String projectActivity;
+	private String projectId;
 	private boolean hidden = false;
 	private String user;
 	private Long id = valueOf(-1);
@@ -115,10 +124,17 @@ public class Activity {
 	}
 
 	/**
-	 * @return Booking number of the activities category. Non null
+	 * @return Project id of the activities type. Non null
 	 */
-	public String getBookingNumber() {
-		return bookingNumber;
+	public String getProjectId() {
+		return projectId;
+	}
+
+	/**
+	 * @return Project sub category of the activities type. Non null
+	 */
+	public String getProjectActivity() {
+		return projectActivity;
 	}
 
 	/**
@@ -137,8 +153,8 @@ public class Activity {
 
 	@Override
 	public String toString() {
-		return format("Activity: Booking Number: %s, Name: %s, Hidden: %b, User: %s, Id: %d", bookingNumber,
-				activityName, hidden, user, id);
+		return format("Activity: Project Id: %s, Project Category: %s, Name: %s, Hidden: %b, User: %s, Id: %d",
+				projectId, projectActivity, activityName, hidden, user, id);
 	}
 
 	@Override
@@ -146,21 +162,23 @@ public class Activity {
 		if (obj instanceof Activity) {
 			Activity act = (Activity) obj;
 			return id == act.id && hidden == act.isHidden() && activityName.equals(act.activityName)
-					&& bookingNumber.equals(act.bookingNumber) && user.equals(act.user);
+					&& projectId.equals(act.projectId) && projectActivity.equals(act.projectActivity)
+					&& user.equals(act.user);
 		}
 		return false;
 	}
 
 	@Override
 	public int hashCode() {
-		return hash(id, activityName, bookingNumber, user);
+		return hash(id, activityName, projectId, projectActivity, user);
 	}
 
-	private Activity(final Long id, final String user, final String activityName, final String bookingNumber,
-			final boolean hidden) {
+	private Activity(final Long id, final String user, final String activityName, final String projectId,
+			final String projectActivity, final boolean hidden) {
 		this.id = id;
 		this.activityName = activityName;
-		this.bookingNumber = bookingNumber;
+		this.projectId = projectId;
+		this.projectActivity = projectActivity;
 		this.hidden = hidden;
 		this.user = user;
 	}

@@ -29,16 +29,17 @@ public abstract class AbstractComputerTest {
 	private static final String ACTIVITYNAME1 = "a";
 	private static final String ACTIVITYNAME2 = "b";
 	private static final String ACTIVITYNAME3 = "c";
-	private static final String BOOKINGNUMBER1 = "d";
-	private static final String BOOKINGNUMBER2 = "e";
-	protected static final String USERNAME = "f";
+	private static final String PROJECTID1 = "d";
+	private static final String PROJECTID2 = "e";
+	private static final String PROJECTSUBCAT = "f";
+	protected static final String USERNAME = "g";
 
-	private static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITYNAME1)
-			.setBookingNumber(BOOKINGNUMBER1).setUser(USERNAME).build();
-	private static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITYNAME2)
-			.setBookingNumber(BOOKINGNUMBER2).setUser(USERNAME).build();
-	private static final Activity ACTIVITY3 = newActivity().setActivityName(ACTIVITYNAME3)
-			.setBookingNumber(BOOKINGNUMBER1).setUser(USERNAME).build();
+	private static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITYNAME1).setProjectId(PROJECTID1)
+			.setProjectActivity(PROJECTSUBCAT).setUser(USERNAME).build();
+	private static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITYNAME2).setProjectId(PROJECTID2)
+			.setProjectActivity(PROJECTSUBCAT).setUser(USERNAME).build();
+	private static final Activity ACTIVITY3 = newActivity().setActivityName(ACTIVITYNAME3).setProjectId(PROJECTID1)
+			.setProjectActivity(PROJECTSUBCAT).setUser(USERNAME).build();
 
 	private static final LocalTime TIME1 = LocalTime.of(12, 34);
 	private static final LocalTime TIME2 = LocalTime.of(13, 57);

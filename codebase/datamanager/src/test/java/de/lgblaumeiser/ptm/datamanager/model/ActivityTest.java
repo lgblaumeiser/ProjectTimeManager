@@ -21,9 +21,11 @@ import org.junit.Test;
 public class ActivityTest {
 	private final static String ACTIVITY_1_1 = "ActivityId11";
 	private final static String ACTIVITY_1_2 = "ActivityId12";
-	private final static String BOOKINGN_1 = "A1";
+	private final static String PRJID_1 = "ID1";
+	private final static String PRJACT_1 = "Cat1";
 	private final static String ACTIVITY_2 = "ActivityId11";
-	private final static String BOOKINGN_2 = "A2";
+	private final static String PRJID_2 = "ID2";
+	private final static String PRJACT_2 = "Cat2";
 	private final static String USERNAME = "UserX";
 	private final static String USERNAME2 = "UserY";
 
@@ -32,31 +34,32 @@ public class ActivityTest {
 	 */
 	@Test
 	public final void testNewActivityPositive() {
-		Activity newActivity = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
-				.setUser(USERNAME).build();
+		Activity newActivity = newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1)
+				.setProjectActivity(PRJACT_1).setUser(USERNAME).build();
 		assertEquals(ACTIVITY_1_1, newActivity.getActivityName());
-		assertEquals(BOOKINGN_1, newActivity.getBookingNumber());
+		assertEquals(PRJID_1, newActivity.getProjectId());
+		assertEquals(PRJACT_1, newActivity.getProjectActivity());
 		assertEquals(USERNAME, newActivity.getUser());
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithBlankName() {
-		newActivity().setActivityName(emptyString()).setBookingNumber(BOOKINGN_1).setUser(USERNAME).build();
+		newActivity().setActivityName(emptyString()).setProjectId(PRJID_1).setUser(USERNAME).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithBlankNumber() {
-		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(emptyString()).setUser(USERNAME).build();
+		newActivity().setActivityName(ACTIVITY_1_1).setProjectId(emptyString()).setUser(USERNAME).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithoutUser() {
-		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).build();
+		newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1).build();
 	}
 
 	@Test(expected = IllegalStateException.class)
 	public final void testWithWrongUser() {
-		newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1).setUser(emptyString()).build();
+		newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1).setUser(emptyString()).build();
 	}
 
 	/**
@@ -64,22 +67,26 @@ public class ActivityTest {
 	 */
 	@Test
 	public final void testEquals() {
-		Activity newActivity1 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
-				.setUser(USERNAME).build();
-		Activity newActivity2 = newActivity().setActivityName(ACTIVITY_1_2).setBookingNumber(BOOKINGN_1)
-				.setUser(USERNAME).build();
-		Activity newActivity3 = newActivity().setActivityName(ACTIVITY_2).setBookingNumber(BOOKINGN_2).setUser(USERNAME)
-				.build();
-		Activity newActivity4 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
-				.setUser(USERNAME).build();
-		Activity newActivity5 = newActivity().setActivityName(ACTIVITY_1_1).setBookingNumber(BOOKINGN_1)
-				.setUser(USERNAME2).build();
+		Activity newActivity1 = newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1)
+				.setProjectActivity(PRJACT_1).setUser(USERNAME).build();
+		Activity newActivity2 = newActivity().setActivityName(ACTIVITY_1_2).setProjectId(PRJID_1)
+				.setProjectActivity(PRJACT_1).setUser(USERNAME).build();
+		Activity newActivity3 = newActivity().setActivityName(ACTIVITY_2).setProjectId(PRJID_2)
+				.setProjectActivity(PRJACT_2).setUser(USERNAME).build();
+		Activity newActivity4 = newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1)
+				.setProjectActivity(PRJACT_1).setUser(USERNAME).build();
+		Activity newActivity5 = newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1)
+				.setProjectActivity(PRJACT_1).setUser(USERNAME2).build();
+		Activity newActivity6 = newActivity().setActivityName(ACTIVITY_1_1).setProjectId(PRJID_1)
+				.setProjectActivity(PRJACT_2).setUser(USERNAME).build();
 
 		assertTrue(newActivity1.equals(newActivity4));
 		assertTrue(newActivity1.hashCode() == newActivity4.hashCode());
 		assertFalse(newActivity1.equals(newActivity2));
 		assertFalse(newActivity1.equals(newActivity3));
 		assertFalse(newActivity4.equals(newActivity5));
+		assertFalse(newActivity4.equals(newActivity6));
 		assertFalse(newActivity4.hashCode() == newActivity5.hashCode());
+		assertFalse(newActivity4.hashCode() == newActivity6.hashCode());
 	}
 }
