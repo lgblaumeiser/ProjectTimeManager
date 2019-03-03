@@ -48,10 +48,6 @@ public class HourComputer implements Analysis {
 		Duration overtime = Duration.ZERO;
 		Duration totaltime = Duration.ZERO;
 
-		static AccumulatedTimes initial() {
-			return new AccumulatedTimes();
-		}
-
 		void add(final Duration overtimeAddition, final Duration totaltimeAddition) {
 			overtime = overtime.plus(overtimeAddition);
 			totaltime = totaltime.plus(totaltimeAddition);
@@ -63,7 +59,7 @@ public class HourComputer implements Analysis {
 		Collection<Collection<String>> result = new ArrayList<>();
 		result.add(Arrays.asList("Work Day", "Starttime", "Endtime", "Presence", "Worktime", "Breaktime", "Total",
 				"Overtime", "Comment"));
-		AccumulatedTimes accutimes = AccumulatedTimes.initial();
+		AccumulatedTimes accutimes = new AccumulatedTimes();
 		for (LocalDate currentday : period.days()) {
 			Collection<Booking> currentBookings = getBookingsForDay(currentday, user);
 			ValidationResult validation = validateBookings(currentBookings);

@@ -17,9 +17,9 @@ import com.beust.jcommander.Parameters;
 /**
  * Run an analysis on the data
  */
-@Parameters(commandDescription = "Run an projects anaylsis for a month or a day")
-public class RunProjectAnalysis extends AbstractRunAnalysis {
-	private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
+@Parameters(commandDescription = "Run an anaylsis activities to hours, separated for all single activities for a month or a day")
+public class RunActivitiesAnalysis extends AbstractRunAnalysis {
+	private static final String ANALYSIS_ACTIVITIES_ID = "ACTIVITIES";
 
 	@Parameter(names = { "-m",
 			"--month" }, description = "Month for the hour analysis", converter = YearMonthConverter.class)
@@ -35,7 +35,7 @@ public class RunProjectAnalysis extends AbstractRunAnalysis {
 
 	@Override
 	public void handleCommand() {
-		runAnalysis(ANALYSIS_PROJECTS_ID, Optional.ofNullable(bookingMonth), Optional.ofNullable(bookingDayInWeek),
+		runAnalysis(ANALYSIS_ACTIVITIES_ID, Optional.ofNullable(bookingMonth), Optional.ofNullable(bookingDayInWeek),
 				Optional.ofNullable(bookingDay));
 	}
 }

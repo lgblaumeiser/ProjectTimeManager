@@ -34,7 +34,7 @@ import de.lgblaumeiser.ptm.util.Utils;
 public class OverviewController {
 	private static final String TEMPLATENAME = "overview";
 	private static final String HOURANALYSISID = "HOURS";
-	private static final String PROJECTANALYSISID = "PROJECTS";
+	private static final String ACTIVITIESANALYSISID = "ACTIVITIES";
 	private static final String MONTHTIMEFRAME = "month";
 	private static final String DAYTIMEFRAME = "day";
 
@@ -98,11 +98,12 @@ public class OverviewController {
 		setAnalysisData(model, HOURSANALYSISHEADLINEATTRIBUTE, HOURSANALYSISATTRIBUTE, HOURANALYSISID, MONTHTIMEFRAME,
 				dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
 
-		setAnalysisData(model, PROJECTANALYSISTODAYHEADLINEATTRIBUTE, PROJECTANALYSISTODAYATTRIBUTE, PROJECTANALYSISID,
-				DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
+		setAnalysisData(model, PROJECTANALYSISTODAYHEADLINEATTRIBUTE, PROJECTANALYSISTODAYATTRIBUTE,
+				ACTIVITIESANALYSISID, DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
 
-		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE, PROJECTANALYSISID,
-				MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
+		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE,
+				ACTIVITIESANALYSISID, MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")),
+				username);
 		return TEMPLATENAME;
 	}
 

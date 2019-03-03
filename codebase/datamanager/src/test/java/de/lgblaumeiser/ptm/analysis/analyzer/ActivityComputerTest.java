@@ -19,12 +19,12 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
-public class ProjectComputerTest extends AbstractComputerTest {
-	private ProjectComputer testee;
+public class ActivityComputerTest extends AbstractComputerTest {
+	private ActivityComputer testee;
 
 	@Override
 	protected void createTestee(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
-		testee = new ProjectComputer(bStore, aStore);
+		testee = new ActivityComputer(bStore, aStore);
 	}
 
 	@Test

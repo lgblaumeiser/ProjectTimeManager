@@ -34,7 +34,7 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * percentages to the amount of 8 hours per booking day. This way, this fulfills
  * the requirements of the author concerning his time keeping.
  */
-public class ProjectComputer implements Analysis {
+public class ActivityComputer implements Analysis {
 	private final ObjectStore<Booking> bookingStore;
 	private final ObjectStore<Activity> activityStore;
 
@@ -159,7 +159,7 @@ public class ProjectComputer implements Analysis {
 		return String.format("%c%02d:%02d", pre, minutes / 60, minutes % 60);
 	}
 
-	public ProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
+	public ActivityComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
 		bookingStore = bStore;
 		activityStore = aStore;
 	}

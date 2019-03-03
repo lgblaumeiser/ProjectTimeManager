@@ -31,7 +31,7 @@ import de.lgblaumeiser.ptm.cli.engine.handler.ListBookings;
 import de.lgblaumeiser.ptm.cli.engine.handler.RegisterUser;
 import de.lgblaumeiser.ptm.cli.engine.handler.Restore;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunHourAnalysis;
-import de.lgblaumeiser.ptm.cli.engine.handler.RunProjectAnalysis;
+import de.lgblaumeiser.ptm.cli.engine.handler.RunActivitiesAnalysis;
 import de.lgblaumeiser.ptm.cli.engine.handler.SetUser;
 import de.lgblaumeiser.ptm.cli.rest.RestActivityStore;
 import de.lgblaumeiser.ptm.cli.rest.RestAnalysisService;
@@ -72,8 +72,8 @@ public class PTMCLIConfigurator {
 	private static final String LIST_BOOKING_COMMAND_ABBRV = "lb";
 	private static final String HOURS_ANALYSIS_COMMAND = "hour_analysis";
 	private static final String HOURS_ANALYSIS_COMMAND_ABBRV = "ha";
-	private static final String PROJECTS_ANALYSIS_COMMAND = "project_analysis";
-	private static final String PROJECTS_ANALYSIS_COMMAND_ABBRV = "pa";
+	private static final String ACTIVITIES_ANALYSIS_COMMAND = "activities_analysis";
+	private static final String ACTIVITIES_ANALYSIS_COMMAND_ABBRV = "ac";
 	private static final String BACKEND_COMMAND = "backend";
 	private static final String BACKUP_COMMAND = "backup";
 	private static final String RESTORE_COMMAND = "restore";
@@ -126,7 +126,7 @@ public class PTMCLIConfigurator {
 				.addCommand(ADD_BREAK_COMMAND, new AddBreakToBooking(), ADD_BREAK_COMMAND_ABBRV)
 				.addCommand(LIST_BOOKING_COMMAND, new ListBookings(), LIST_BOOKING_COMMAND_ABBRV)
 				.addCommand(HOURS_ANALYSIS_COMMAND, new RunHourAnalysis(), HOURS_ANALYSIS_COMMAND_ABBRV)
-				.addCommand(PROJECTS_ANALYSIS_COMMAND, new RunProjectAnalysis(), PROJECTS_ANALYSIS_COMMAND_ABBRV)
+				.addCommand(ACTIVITIES_ANALYSIS_COMMAND, new RunActivitiesAnalysis(), ACTIVITIES_ANALYSIS_COMMAND_ABBRV)
 				.addCommand(BACKEND_COMMAND, new ControlBackend()).addCommand(BACKUP_COMMAND, new Backup())
 				.addCommand(RESTORE_COMMAND, new Restore()).addCommand(LICENSE_COMMAND, new License()).build();
 		return jc;
