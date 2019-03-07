@@ -17,20 +17,20 @@ import com.beust.jcommander.Parameters;
 /**
  * Run an analysis on the data
  */
-@Parameters(commandDescription = "Run an anaylsis activities to hours, separated for all single activities for a month or a day")
+@Parameters(commandDescription = "Run an analysis activities to hours, separated for all single activities for a month or a day")
 public class RunActivitiesAnalysis extends AbstractRunAnalysis {
 	private static final String ANALYSIS_ACTIVITIES_ID = "ACTIVITIES";
 
 	@Parameter(names = { "-m",
-			"--month" }, description = "Month for the hour analysis", converter = YearMonthConverter.class)
+			"--month" }, description = "Month for the activity analysis", converter = YearMonthConverter.class)
 	private YearMonth bookingMonth = YearMonth.now();
 
 	@Parameter(names = { "-w",
-			"--week" }, description = "Day in week for project analysis", converter = LocalDateConverter.class)
+			"--week" }, description = "Day in week for activity analysis", converter = LocalDateConverter.class)
 	private LocalDate bookingDayInWeek = null;
 
 	@Parameter(names = { "-d",
-			"--day" }, description = "Day for project analysis, either a iso date format or -<days>", converter = LocalDateConverter.class)
+			"--day" }, description = "Day for activity analysis, either a iso date format or -<days>", converter = LocalDateConverter.class)
 	private LocalDate bookingDay = null;
 
 	@Override

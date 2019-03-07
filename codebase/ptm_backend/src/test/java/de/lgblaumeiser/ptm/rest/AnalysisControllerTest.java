@@ -116,5 +116,12 @@ public class AnalysisControllerTest {
 				.andExpect(content().string(containsString("08:30"))).andExpect(content().string(containsString("100")))
 				.andExpect(content().string(containsString("8")));
 
+		mockMvc.perform(get("/analysis/projects/month/" + dateString.substring(0, 7))
+				.header(HttpHeaders.AUTHORIZATION,
+						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
+				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
+				.andExpect(content().string(containsString("0815")))
+				.andExpect(content().string(containsString("08:30"))).andExpect(content().string(containsString("100")))
+				.andExpect(content().string(containsString("8")));
 	}
 }

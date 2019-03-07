@@ -26,17 +26,17 @@
 		
 		<div class="card-deck ml-2 mr-2">
 			<div class="card">
-				<h4 class="card-header text-center" th:text="|Project Analysis for Day ${date}|" />
+				<h4 class="card-header text-center" th:text="|Activity Analysis for Day ${date}|" />
 				<div class="card-body">
 					<div class="table-responsive">
 						<table class="table">
 						    <thead>
    								<tr>
-						    		<th th:each="elem : ${projectAnalysisTodayHeadline}" th:text="|${elem}|" />
+						    		<th th:each="elem : ${activityAnalysisTodayHeadline}" th:text="|${elem}|" />
 								</tr>
    							</thead>
    							<tbody>
-   								<tr th:each="line : ${projectAnalysisToday}">
+   								<tr th:each="line : ${activityAnalysisToday}">
 									<td th:each="elem : ${line}" th:text="|${elem}|" />
 								</tr>
 							</tbody>
@@ -45,6 +45,24 @@
 				</div>				
 			</div>
 			<div class="card">
+				<h4 class="card-header text-center" th:text="|Activity Analysis for Month ${month}|" />
+				<div class="card-body">
+					<div class="table-responsive">
+						<table class="table">
+						    <thead>
+   								<tr>
+						    		<th th:each="elem : ${activityAnalysisMonthHeadline}" th:text="|${elem}|" />
+								</tr>
+   							</thead>
+   							<tbody>
+   								<tr th:each="line : ${activityAnalysisMonth}">
+									<td th:each="elem : ${line}" th:text="|${elem}|" />
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<br />
 				<h4 class="card-header text-center" th:text="|Project Analysis for Month ${month}|" />
 				<div class="card-body">
 					<div class="table-responsive">

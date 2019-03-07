@@ -35,6 +35,7 @@ public class OverviewController {
 	private static final String TEMPLATENAME = "overview";
 	private static final String HOURANALYSISID = "HOURS";
 	private static final String ACTIVITIESANALYSISID = "ACTIVITIES";
+	private static final String PROJECTSANALYSISID = "PROJECTS";
 	private static final String MONTHTIMEFRAME = "month";
 	private static final String DAYTIMEFRAME = "day";
 
@@ -44,8 +45,10 @@ public class OverviewController {
 	private static final String BOOKINGSFORDAYATTRIBUTE = "bookingsForDay";
 	private static final String HOURSANALYSISATTRIBUTE = "hourAnalysis";
 	private static final String HOURSANALYSISHEADLINEATTRIBUTE = "hourAnalysisHeadline";
-	private static final String PROJECTANALYSISTODAYATTRIBUTE = "projectAnalysisToday";
-	private static final String PROJECTANALYSISTODAYHEADLINEATTRIBUTE = "projectAnalysisTodayHeadline";
+	private static final String ACTIVITIESANALYSISTODAYATTRIBUTE = "activityAnalysisToday";
+	private static final String ACTIVITIESANALYSISTODAYHEADLINEATTRIBUTE = "activityAnalysisTodayHeadline";
+	private static final String ACTIVITYANALYSISMONTHATTRIBUTE = "activityAnalysisMonth";
+	private static final String ACTIVITYANALYSISMONTHHEADLINEATTRIBUTE = "activityAnalysisMonthHeadline";
 	private static final String PROJECTANALYSISMONTHATTRIBUTE = "projectAnalysisMonth";
 	private static final String PROJECTANALYSISMONTHHEADLINEATTRIBUTE = "projectAnalysisMonthHeadline";
 
@@ -98,12 +101,16 @@ public class OverviewController {
 		setAnalysisData(model, HOURSANALYSISHEADLINEATTRIBUTE, HOURSANALYSISATTRIBUTE, HOURANALYSISID, MONTHTIMEFRAME,
 				dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
 
-		setAnalysisData(model, PROJECTANALYSISTODAYHEADLINEATTRIBUTE, PROJECTANALYSISTODAYATTRIBUTE,
+		setAnalysisData(model, ACTIVITIESANALYSISTODAYHEADLINEATTRIBUTE, ACTIVITIESANALYSISTODAYATTRIBUTE,
 				ACTIVITIESANALYSISID, DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
 
-		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE,
+		setAnalysisData(model, ACTIVITYANALYSISMONTHHEADLINEATTRIBUTE, ACTIVITYANALYSISMONTHATTRIBUTE,
 				ACTIVITIESANALYSISID, MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")),
 				username);
+
+		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE, PROJECTSANALYSISID,
+				MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
+
 		return TEMPLATENAME;
 	}
 
