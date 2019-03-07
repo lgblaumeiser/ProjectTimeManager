@@ -11,6 +11,7 @@ import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
 import static de.lgblaumeiser.ptm.datamanager.model.Booking.newBooking;
 import static de.lgblaumeiser.ptm.util.Utils.parseDateString;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -25,6 +26,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 public abstract class AbstractComputerTest {
+	private static final String ID = "id";
 
 	protected static final LocalDate OTHERMONTH = LocalDate.of(2015, 12, 1);
 
@@ -134,6 +136,23 @@ public abstract class AbstractComputerTest {
 				// Not needed for test
 			}
 		};
+		try {
+			Field f = ACTIVITY1.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY1, 1L);
+			f.setAccessible(false);
+			f = ACTIVITY2.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY2, 2L);
+			f.setAccessible(false);
+			f = ACTIVITY3.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY3, 3L);
+			f.setAccessible(false);
+		} catch (IllegalAccessException | IllegalArgumentException | ClassCastException | NoSuchFieldException
+				| SecurityException e) {
+			throw new IllegalStateException(e);
+		}
 		createTestee(testdataB, testdataA);
 	}
 
