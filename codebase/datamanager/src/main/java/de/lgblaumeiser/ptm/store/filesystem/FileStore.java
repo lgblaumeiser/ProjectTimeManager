@@ -192,7 +192,6 @@ public abstract class FileStore<T> implements ObjectStore<T>, StoreBackupRestore
 				| SecurityException e) {
 			throw new IllegalStateException(e);
 		}
-
 	}
 
 	private Long getNextId() {

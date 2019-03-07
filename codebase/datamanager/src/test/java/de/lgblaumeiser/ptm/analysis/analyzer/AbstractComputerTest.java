@@ -9,7 +9,9 @@ package de.lgblaumeiser.ptm.analysis.analyzer;
 
 import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
 import static de.lgblaumeiser.ptm.datamanager.model.Booking.newBooking;
+import static de.lgblaumeiser.ptm.util.Utils.parseDateString;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
@@ -18,27 +20,30 @@ import java.util.Optional;
 
 import org.junit.Before;
 
+import de.lgblaumeiser.ptm.analysis.CalculationPeriod;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 public abstract class AbstractComputerTest {
+	private static final String ID = "id";
 
 	protected static final LocalDate OTHERMONTH = LocalDate.of(2015, 12, 1);
 
 	private static final String ACTIVITYNAME1 = "a";
 	private static final String ACTIVITYNAME2 = "b";
 	private static final String ACTIVITYNAME3 = "c";
-	private static final String BOOKINGNUMBER1 = "d";
-	private static final String BOOKINGNUMBER2 = "e";
-	protected static final String USERNAME = "f";
+	private static final String PROJECTID1 = "d";
+	private static final String PROJECTID2 = "e";
+	private static final String PROJECTSUBCAT = "f";
+	protected static final String USERNAME = "g";
 
-	private static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITYNAME1)
-			.setBookingNumber(BOOKINGNUMBER1).setUser(USERNAME).build();
-	private static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITYNAME2)
-			.setBookingNumber(BOOKINGNUMBER2).setUser(USERNAME).build();
-	private static final Activity ACTIVITY3 = newActivity().setActivityName(ACTIVITYNAME3)
-			.setBookingNumber(BOOKINGNUMBER1).setUser(USERNAME).build();
+	private static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITYNAME1).setProjectId(PROJECTID1)
+			.setProjectActivity(PROJECTSUBCAT).setUser(USERNAME).build();
+	private static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITYNAME2).setProjectId(PROJECTID2)
+			.setProjectActivity(PROJECTSUBCAT).setUser(USERNAME).build();
+	private static final Activity ACTIVITY3 = newActivity().setActivityName(ACTIVITYNAME3).setProjectId(PROJECTID1)
+			.setProjectActivity(PROJECTSUBCAT).setUser(USERNAME).build();
 
 	private static final LocalTime TIME1 = LocalTime.of(12, 34);
 	private static final LocalTime TIME2 = LocalTime.of(13, 57);
@@ -131,8 +136,29 @@ public abstract class AbstractComputerTest {
 				// Not needed for test
 			}
 		};
+		try {
+			Field f = ACTIVITY1.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY1, 1L);
+			f.setAccessible(false);
+			f = ACTIVITY2.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY2, 2L);
+			f.setAccessible(false);
+			f = ACTIVITY3.getClass().getDeclaredField(ID);
+			f.setAccessible(true);
+			f.set(ACTIVITY3, 3L);
+			f.setAccessible(false);
+		} catch (IllegalAccessException | IllegalArgumentException | ClassCastException | NoSuchFieldException
+				| SecurityException e) {
+			throw new IllegalStateException(e);
+		}
 		createTestee(testdataB, testdataA);
 	}
 
 	protected abstract void createTestee(ObjectStore<Booking> bStore, ObjectStore<Activity> aStore);
+
+	protected CalculationPeriod createPeriod(String firstDay, String firstDayAfter) {
+		return new CalculationPeriod(parseDateString(firstDay), parseDateString(firstDayAfter));
+	}
 }

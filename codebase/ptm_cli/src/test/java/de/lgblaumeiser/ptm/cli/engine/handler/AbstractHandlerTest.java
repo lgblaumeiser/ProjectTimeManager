@@ -43,14 +43,16 @@ public abstract class AbstractHandlerTest {
 	static final LocalTime TIME1 = LocalTime.of(12, 34);
 	static final LocalTime TIME2 = LocalTime.of(13, 57);
 	static final String ACTIVITY1NAME = "Act1";
-	static final String ACTIVITY1NUMBER = "0815";
+	static final String ACTIVITY1ID = "0815";
+	static final String ACTIVITY1SUB = "1";
 	static final String ACTIVITY2NAME = "NewAct2";
-	static final String ACTIVITY2NUMBER = "4711";
+	static final String ACTIVITY2ID = "4711";
+	static final String ACTIVITY2SUB = "2";
 	private final static String DUMMYUSER = "Dummy";
-	static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITY1NAME).setBookingNumber(ACTIVITY1NUMBER)
-			.setUser(DUMMYUSER).build();
-	static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITY2NAME).setBookingNumber(ACTIVITY2NUMBER)
-			.setUser(DUMMYUSER).setHidden(true).build();
+	static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITY1NAME).setProjectId(ACTIVITY1ID)
+			.setProjectActivity(ACTIVITY1SUB).setUser(DUMMYUSER).build();
+	static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITY2NAME).setProjectId(ACTIVITY2ID)
+			.setProjectActivity(ACTIVITY2SUB).setUser(DUMMYUSER).setHidden(true).build();
 	static final String COMMENT = "TestComment";
 	static final Booking BOOKING1 = Booking.newBooking().setActivity(1L).setBookingday(DATE1).setUser(DUMMYUSER)
 			.setStarttime(TIME1).setEndtime(TIME2).build();

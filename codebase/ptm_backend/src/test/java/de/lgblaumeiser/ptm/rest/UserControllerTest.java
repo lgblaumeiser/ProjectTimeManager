@@ -145,7 +145,8 @@ public class UserControllerTest {
 
 		ActivityRestController.ActivityBody data1 = new ActivityRestController.ActivityBody();
 		data1.activityName = "MyTestActivity";
-		data1.bookingNumber = "0815";
+		data1.projectId = "0815";
+		data1.projectActivity = "1";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
 						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
@@ -154,7 +155,8 @@ public class UserControllerTest {
 
 		ActivityRestController.ActivityBody data2 = new ActivityRestController.ActivityBody();
 		data2.activityName = "MyOtherTestActivity";
-		data2.bookingNumber = "4711";
+		data2.projectId = "4711";
+		data2.projectActivity = "2";
 		mockMvc.perform(post("/activities")
 				.header(HttpHeaders.AUTHORIZATION,
 						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))

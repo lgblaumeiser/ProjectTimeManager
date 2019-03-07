@@ -18,16 +18,17 @@ import java.util.Optional;
  * Rest Proxy Implementation for accessing analysis results over rest api.
  */
 public class RestAnalysisService extends RestBaseService {
-	public Collection<Collection<Object>> analyze(final String analyzerId, final Collection<String> parameter) {
-		Object[][] result = getRestUtils().get("/analysis/" + analyzerId + "/" + getIndexFromCollection(parameter, 0)
-				+ "/" + getIndexFromCollection(parameter, 1),
-				Optional.of(getServices().getCurrentUserStore().loadUserData()), Object[][].class);
+	public Collection<Collection<String>> analyze(final String analyzerId, final Collection<String> parameter) {
+		String[][] result = getRestUtils().get(
+				"/analysis/" + analyzerId + "/" + getIndexFromCollection(parameter, 0) + "/"
+						+ getIndexFromCollection(parameter, 1),
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), String[][].class);
 		return convertToCollection(result);
 	}
 
-	private Collection<Collection<Object>> convertToCollection(final Object[][] resultData) {
-		Collection<Collection<Object>> converted = new ArrayList<>();
-		for (Object[] currentLine : resultData) {
+	private Collection<Collection<String>> convertToCollection(final String[][] resultData) {
+		Collection<Collection<String>> converted = new ArrayList<>();
+		for (String[] currentLine : resultData) {
 			converted.add(asList(currentLine));
 		}
 		return converted;

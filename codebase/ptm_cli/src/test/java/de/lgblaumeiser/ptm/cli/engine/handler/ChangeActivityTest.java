@@ -18,29 +18,29 @@ public class ChangeActivityTest extends AbstractHandlerTest {
 
 	@Test
 	public void testChangeAndHideActivityClean() {
-		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "1", "-n", ACTIVITY1NAME, "-i", ACTIVITY1NUMBER,
-				"--hidden");
+		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "1", "-n", ACTIVITY1NAME, "-i", ACTIVITY1ID, "-s",
+				ACTIVITY1SUB, "--hidden");
 		assertEquals("/activities/1", restutils.apiNameGiven);
 		assertEquals(ACTIVITY1NAME, restutils.bodyDataGiven.get("activityName"));
-		assertEquals(ACTIVITY1NUMBER, restutils.bodyDataGiven.get("bookingNumber"));
+		assertEquals(ACTIVITY1ID, restutils.bodyDataGiven.get("projectId"));
+		assertEquals(ACTIVITY1SUB, restutils.bodyDataGiven.get("projectActivity"));
 		assertEquals("true", restutils.bodyDataGiven.get("hidden"));
-		assertEquals(3, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test
 	public void testChangeAndEnableActivityClean() {
-		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "2", "-n", ACTIVITY1NAME, "-i", ACTIVITY1NUMBER,
-				"--visible");
+		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "2", "-n", ACTIVITY1NAME, "-i", ACTIVITY1ID, "--visible");
 		assertEquals("/activities/2", restutils.apiNameGiven);
 		assertEquals(ACTIVITY1NAME, restutils.bodyDataGiven.get("activityName"));
-		assertEquals(ACTIVITY1NUMBER, restutils.bodyDataGiven.get("bookingNumber"));
+		assertEquals(ACTIVITY1ID, restutils.bodyDataGiven.get("projectId"));
 		assertEquals("false", restutils.bodyDataGiven.get("hidden"));
-		assertEquals(3, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)
 	public void testChangeActivityTwoParamFirstNull() {
-		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "1", "-n", "-i", ACTIVITY1NUMBER);
+		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "1", "-n", "-i", ACTIVITY1ID);
 	}
 
 	@Test(expected = ParameterException.class)
@@ -53,9 +53,10 @@ public class ChangeActivityTest extends AbstractHandlerTest {
 		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "1", "-n", ACTIVITY1NAME);
 		assertEquals("/activities/1", restutils.apiNameGiven);
 		assertEquals(ACTIVITY1NAME, restutils.bodyDataGiven.get("activityName"));
-		assertEquals(ACTIVITY1NUMBER, restutils.bodyDataGiven.get("bookingNumber"));
+		assertEquals(ACTIVITY1ID, restutils.bodyDataGiven.get("projectId"));
+		assertEquals(ACTIVITY1SUB, restutils.bodyDataGiven.get("projectActivity"));
 		assertEquals("false", restutils.bodyDataGiven.get("hidden"));
-		assertEquals(3, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test
@@ -63,9 +64,10 @@ public class ChangeActivityTest extends AbstractHandlerTest {
 		commandline.runCommand(CHANGE_ACTIVITY_COMMAND, "-a", "1", "--hidden");
 		assertEquals("/activities/1", restutils.apiNameGiven);
 		assertEquals(ACTIVITY1NAME, restutils.bodyDataGiven.get("activityName"));
-		assertEquals(ACTIVITY1NUMBER, restutils.bodyDataGiven.get("bookingNumber"));
+		assertEquals(ACTIVITY1ID, restutils.bodyDataGiven.get("projectId"));
+		assertEquals(ACTIVITY1SUB, restutils.bodyDataGiven.get("projectActivity"));
 		assertEquals("true", restutils.bodyDataGiven.get("hidden"));
-		assertEquals(3, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)

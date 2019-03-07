@@ -40,14 +40,15 @@ public class RestActivityStore extends RestBaseService implements ObjectStore<Ac
 		try {
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("activityName", activity.getActivityName());
-			bodyData.put("bookingNumber", activity.getBookingNumber());
+			bodyData.put("projectId", activity.getProjectId());
+			bodyData.put("projectActivity", activity.getProjectActivity());
 			bodyData.put("hidden", Boolean.toString(activity.isHidden()));
 			String apiName = "/activities";
 			if (activity.getId() > 0) {
 				apiName = apiName + "/" + activity.getId().toString();
 			}
-			Long id = getRestUtils().post(apiName,
-					Optional.of(getServices().getCurrentUserStore().loadUserData()), bodyData);
+			Long id = getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()),
+					bodyData);
 			Field idField = activity.getClass().getDeclaredField("id");
 			idField.setAccessible(true);
 			idField.set(activity, id);

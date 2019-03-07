@@ -22,11 +22,11 @@ public class RunHourAnalysis extends AbstractRunAnalysis {
 	private static final String ANALYSIS_HOURS_ID = "HOURS";
 
 	@Parameter(names = { "-m",
-			"--month" }, description = "Optional day for booking", converter = YearMonthConverter.class)
+			"--month" }, description = "Month for the hour analysis", converter = YearMonthConverter.class)
 	private YearMonth bookingMonth = YearMonth.now();
 
 	@Parameter(names = { "-w",
-			"--week" }, description = "Day in week for project analysis", converter = LocalDateConverter.class)
+			"--week" }, description = "Day in week for hour analysis", converter = LocalDateConverter.class)
 	private LocalDate bookingDayInWeek;
 
 	@Override

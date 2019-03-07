@@ -17,12 +17,12 @@ import com.beust.jcommander.Parameters;
 /**
  * Run an analysis on the data
  */
-@Parameters(commandDescription = "Run an projects anaylsis for a month or a day")
-public class RunProjectAnalysis extends AbstractRunAnalysis {
+@Parameters(commandDescription = "Run an analysis projects to hoursfor all projects aggregating activities with same project id")
+public class RunProjectsAnalysis extends AbstractRunAnalysis {
 	private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
 
 	@Parameter(names = { "-m",
-			"--month" }, description = "Month for the hour analysis", converter = YearMonthConverter.class)
+			"--month" }, description = "Month for the project analysis", converter = YearMonthConverter.class)
 	private YearMonth bookingMonth = YearMonth.now();
 
 	@Parameter(names = { "-w",

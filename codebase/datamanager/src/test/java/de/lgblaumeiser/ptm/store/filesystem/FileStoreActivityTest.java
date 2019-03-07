@@ -30,6 +30,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
 public class FileStoreActivityTest {
 	private static final String TESTNAME = "TestName";
 	private static final String TESTINDEX = "TestIndex";
+	private static final String TESTSUB = "TestSubIndex";
 	private static final String USERNAME = "UserX";
 
 	private FileStore<Activity> testee;
@@ -93,8 +94,8 @@ public class FileStoreActivityTest {
 		};
 	}
 
-	private static final Activity testData = Activity.newActivity().setActivityName(TESTNAME)
-			.setBookingNumber(TESTINDEX).setUser(USERNAME).build();
+	private static final Activity testData = Activity.newActivity().setActivityName(TESTNAME).setProjectId(TESTINDEX)
+			.setProjectActivity(TESTSUB).setUser(USERNAME).build();
 
 	@Test
 	public void testStore() {
@@ -102,8 +103,10 @@ public class FileStoreActivityTest {
 		assertEquals("activity", getExtension(storageFile.getName()));
 		assertTrue(storageContent.contains("activityName"));
 		assertTrue(storageContent.contains(TESTNAME));
-		assertTrue(storageContent.contains("bookingNumber"));
+		assertTrue(storageContent.contains("projectId"));
 		assertTrue(storageContent.contains(TESTINDEX));
+		assertTrue(storageContent.contains("projectActivity"));
+		assertTrue(storageContent.contains(TESTSUB));
 		assertTrue(storageContent.contains("id"));
 		Long id = testData.getId();
 		testee.store(testData.changeActivity().setHidden(false).build());
@@ -117,7 +120,8 @@ public class FileStoreActivityTest {
 		assertEquals(1, foundObjs.size());
 		Activity foundObj = getOnlyFromCollection(foundObjs);
 		assertEquals(TESTNAME, foundObj.getActivityName());
-		assertEquals(TESTINDEX, foundObj.getBookingNumber());
+		assertEquals(TESTINDEX, foundObj.getProjectId());
+		assertEquals(TESTSUB, foundObj.getProjectActivity());
 	}
 
 	@Test
@@ -126,7 +130,8 @@ public class FileStoreActivityTest {
 		Long id = returnedObject.getId();
 		Activity foundObj = testee.retrieveById(id).get();
 		assertEquals(TESTNAME, foundObj.getActivityName());
-		assertEquals(TESTINDEX, foundObj.getBookingNumber());
+		assertEquals(TESTINDEX, foundObj.getProjectId());
+		assertEquals(TESTSUB, foundObj.getProjectActivity());
 	}
 
 	@Test

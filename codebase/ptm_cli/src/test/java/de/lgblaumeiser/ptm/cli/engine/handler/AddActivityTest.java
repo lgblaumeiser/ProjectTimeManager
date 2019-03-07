@@ -18,31 +18,42 @@ public class AddActivityTest extends AbstractHandlerTest {
 
 	@Test
 	public void testAddActivityTwoParamClean() {
-		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-i", ACTIVITY1NUMBER);
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-i", ACTIVITY1ID, "-s", ACTIVITY1SUB);
 		assertEquals("/activities", restutils.apiNameGiven);
 		assertEquals(ACTIVITY1NAME, restutils.bodyDataGiven.get("activityName"));
-		assertEquals(ACTIVITY1NUMBER, restutils.bodyDataGiven.get("bookingNumber"));
+		assertEquals(ACTIVITY1ID, restutils.bodyDataGiven.get("projectId"));
+		assertEquals(ACTIVITY1SUB, restutils.bodyDataGiven.get("projectActivity"));
 		assertEquals("false", restutils.bodyDataGiven.get("hidden"));
-		assertEquals(3, restutils.bodyDataGiven.size());
+		assertEquals(4, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testAddActivityTwoParamFirstNull() {
-		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", "-i", ACTIVITY1NUMBER);
+	public void testAddActivityThreeParamFirstNull() {
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", "-i", ACTIVITY1ID, "-s", ACTIVITY1SUB);
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testAddActivityTwoParamSecondNull() {
-		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-i");
+	public void testAddActivityThreeParamSecondNull() {
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-i", "-s", ACTIVITY1SUB);
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testAddActivityOneParam() {
-		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME);
+	public void testAddActivityThreeParamThirsNull() {
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-i", ACTIVITY1ID, "-s");
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testAddActivityNoParam() {
-		commandline.runCommand(ADD_ACTIVITY_COMMAND);
+	public void testAddActivityTwoParamNameMissing() {
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-i", ACTIVITY1ID, "-s", ACTIVITY1SUB);
+	}
+
+	@Test(expected = ParameterException.class)
+	public void testAddActivityTwoParamIdMissing() {
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-s", ACTIVITY1SUB);
+	}
+
+	@Test(expected = ParameterException.class)
+	public void testAddActivityTwoParamSubMissing() {
+		commandline.runCommand(ADD_ACTIVITY_COMMAND, "-n", ACTIVITY1NAME, "-i", ACTIVITY1ID);
 	}
 }

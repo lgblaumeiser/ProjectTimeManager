@@ -12,7 +12,6 @@ import static java.util.stream.Collectors.toList;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -35,7 +34,8 @@ import de.lgblaumeiser.ptm.util.Utils;
 public class OverviewController {
 	private static final String TEMPLATENAME = "overview";
 	private static final String HOURANALYSISID = "HOURS";
-	private static final String PROJECTANALYSISID = "PROJECTS";
+	private static final String ACTIVITIESANALYSISID = "ACTIVITIES";
+	private static final String PROJECTSANALYSISID = "PROJECTS";
 	private static final String MONTHTIMEFRAME = "month";
 	private static final String DAYTIMEFRAME = "day";
 
@@ -45,8 +45,10 @@ public class OverviewController {
 	private static final String BOOKINGSFORDAYATTRIBUTE = "bookingsForDay";
 	private static final String HOURSANALYSISATTRIBUTE = "hourAnalysis";
 	private static final String HOURSANALYSISHEADLINEATTRIBUTE = "hourAnalysisHeadline";
-	private static final String PROJECTANALYSISTODAYATTRIBUTE = "projectAnalysisToday";
-	private static final String PROJECTANALYSISTODAYHEADLINEATTRIBUTE = "projectAnalysisTodayHeadline";
+	private static final String ACTIVITIESANALYSISTODAYATTRIBUTE = "activityAnalysisToday";
+	private static final String ACTIVITIESANALYSISTODAYHEADLINEATTRIBUTE = "activityAnalysisTodayHeadline";
+	private static final String ACTIVITYANALYSISMONTHATTRIBUTE = "activityAnalysisMonth";
+	private static final String ACTIVITYANALYSISMONTHHEADLINEATTRIBUTE = "activityAnalysisMonthHeadline";
 	private static final String PROJECTANALYSISMONTHATTRIBUTE = "projectAnalysisMonth";
 	private static final String PROJECTANALYSISMONTHHEADLINEATTRIBUTE = "projectAnalysisMonthHeadline";
 
@@ -86,7 +88,7 @@ public class OverviewController {
 		model.addAttribute(ALLACTIVITIESATTRIBUTE,
 				services.activityStore().retrieveAll().stream()
 						.filter(act -> !act.isHidden() && act.getUser().equals(username))
-						.sorted((a1, a2) -> a1.getBookingNumber().compareToIgnoreCase(a2.getBookingNumber()))
+						.sorted((a1, a2) -> a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity()))
 						.collect(toList()));
 		model.addAttribute(BOOKINGSFORDAYATTRIBUTE, services.bookingStore().retrieveAll().stream()
 				.filter(b -> b.getBookingday().equals(dateToShow) && b.getUser().equals(username))
@@ -99,26 +101,26 @@ public class OverviewController {
 		setAnalysisData(model, HOURSANALYSISHEADLINEATTRIBUTE, HOURSANALYSISATTRIBUTE, HOURANALYSISID, MONTHTIMEFRAME,
 				dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
 
-		setAnalysisData(model, PROJECTANALYSISTODAYHEADLINEATTRIBUTE, PROJECTANALYSISTODAYATTRIBUTE, PROJECTANALYSISID,
-				DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
+		setAnalysisData(model, ACTIVITIESANALYSISTODAYHEADLINEATTRIBUTE, ACTIVITIESANALYSISTODAYATTRIBUTE,
+				ACTIVITIESANALYSISID, DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
 
-		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE, PROJECTANALYSISID,
+		setAnalysisData(model, ACTIVITYANALYSISMONTHHEADLINEATTRIBUTE, ACTIVITYANALYSISMONTHATTRIBUTE,
+				ACTIVITIESANALYSISID, MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")),
+				username);
+
+		setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE, PROJECTSANALYSISID,
 				MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
+
 		return TEMPLATENAME;
 	}
 
 	private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
 			final String analysisId, final String timeFrameType, final String timeFrame, final String username) {
-		Collection<Collection<Object>> analysisResult = services.analysisService().analyze(analysisId,
-				Arrays.asList(timeFrameType, timeFrame, username));
-		Collection<String> headline = mapToString(Utils.getFirstFromCollection(analysisResult));
-		Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).map(col -> mapToString(col))
-				.collect(toList());
+		Collection<Collection<String>> analysisResult = services.analysisService().analyze(analysisId, username,
+				timeFrameType, timeFrame);
+		Collection<String> headline = Utils.getFirstFromCollection(analysisResult);
+		Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).collect(toList());
 		model.addAttribute(headlineAttr, headline);
 		model.addAttribute(analysisAttr, bodydata);
-	}
-
-	private Collection<String> mapToString(final Collection<Object> source) {
-		return source.stream().map(o -> o.toString()).collect(toList());
 	}
 }
