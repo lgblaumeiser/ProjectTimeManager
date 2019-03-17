@@ -11,7 +11,6 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
-import de.lgblaumeiser.ptm.datamanager.model.User;
 
 /**
  * Command to change the password for the current user
@@ -24,8 +23,7 @@ public class ChangePassword extends AbstractCommandHandler {
 	@Override
 	public void handleCommand() {
 		getLogger().log("Change Password for current user");
-		User oldUser = getServices().getCurrentUserStore().loadUserData();
-		getServices().getUserStore().storeChanged(oldUser.changeUser().setPassword(password).build());
+		getServices().getUserStore().storeChangedPassword(password);
 		getLogger().log("Password changed");
 	}
 }

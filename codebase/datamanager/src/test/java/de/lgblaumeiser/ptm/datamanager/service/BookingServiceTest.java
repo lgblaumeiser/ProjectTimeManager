@@ -40,12 +40,16 @@ public class BookingServiceTest {
 	private static final LocalTime TIME2 = LocalTime.of(12, 15);
 	private static final LocalTime TIME3 = LocalTime.of(13, 45);
 	private static final String USERNAME = "UserX";
+	private final static String EMAIL = "abc@xyz.com";
+	private final static String QUESTION = "What the Heck?";
+	private final static String ANSWER = "42";
 
 	private static final Activity ACTIVITY1 = newActivity().setActivityName("a").setProjectId("b")
 			.setProjectActivity("c").setUser(USERNAME).build();
 	private static final Activity ACTIVITY2 = newActivity().setActivityName("a1").setProjectId("b1")
 			.setProjectActivity("c1").setUser(USERNAME).build();
-	private static final User USER = newUser().setUsername(USERNAME).setPassword("DummyPwd").build();
+	private static final User USER = newUser().setUsername(USERNAME).setPassword("DummyPwd").setEmail(EMAIL)
+			.setQuestion(QUESTION).setAnswer(ANSWER).build();
 	private static final String COMMENT1 = "Test Comment";
 	private static final String COMMENT2 = "";
 	private static final Integer BREAKDURATION = 45;

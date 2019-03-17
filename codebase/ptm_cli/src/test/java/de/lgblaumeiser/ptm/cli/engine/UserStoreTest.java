@@ -7,7 +7,6 @@
  */
 package de.lgblaumeiser.ptm.cli.engine;
 
-import static de.lgblaumeiser.ptm.datamanager.model.User.newUser;
 import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -18,13 +17,13 @@ import java.nio.file.Path;
 
 import org.junit.Test;
 
-import de.lgblaumeiser.ptm.datamanager.model.User;
+import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
 
 public class UserStoreTest {
 	private static final String USERNAME = "MyTestUser";
 	private static final String PASSWORD = "DummyPwd";
-	private static final User TESTUSER = newUser().setUsername(USERNAME).setPassword(PASSWORD).build();
-	
+	private static final UserStore.UserInfo TESTUSER = new UserInfo(USERNAME, PASSWORD);
+
 	private UserStore testee;
 
 	@Test
@@ -33,8 +32,9 @@ public class UserStoreTest {
 		testee = new UserStore(tempFolder.toString());
 		try {
 			testee.storeUserData(TESTUSER);
-			User storedUser = testee.loadUserData();
-			assertEquals(TESTUSER, storedUser);
+			UserStore.UserInfo storedUser = testee.loadUserData();
+			assertEquals(USERNAME, storedUser.getUsername());
+			assertEquals(PASSWORD, storedUser.getPassword());
 		} finally {
 			forceDelete(tempFolder.toFile());
 		}

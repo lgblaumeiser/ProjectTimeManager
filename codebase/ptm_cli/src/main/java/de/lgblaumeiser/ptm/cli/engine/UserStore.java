@@ -22,15 +22,31 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.lgblaumeiser.ptm.datamanager.model.User;
-
 /**
  * Store and retrieve user information
  */
 public class UserStore {
 	private final Path storageFile;
 
-	public User loadUserData() {
+	public static class UserInfo {
+		private String username;
+		private String password;
+
+		public String getUsername() {
+			return username;
+		}
+
+		public String getPassword() {
+			return password;
+		}
+
+		public UserInfo(String username, String password) {
+			this.username = username;
+			this.password = password;
+		}
+	}
+
+	public UserInfo loadUserData() {
 		List<String> lines;
 		try {
 			lines = readAllLines(storageFile);
@@ -51,10 +67,10 @@ public class UserStore {
 				password = property[1];
 			}
 		}
-		return User.newUser().setUsername(username).setPassword(password).build();
+		return new UserInfo(username, password);
 	}
 
-	public void storeUserData(final User user) {
+	public void storeUserData(final UserInfo user) {
 		List<String> lines = new ArrayList<>();
 		lines.add(encodeBase64String(("user.name=" + user.getUsername()).getBytes()));
 		lines.add(encodeBase64String(("user.password=" + user.getPassword()).getBytes()));

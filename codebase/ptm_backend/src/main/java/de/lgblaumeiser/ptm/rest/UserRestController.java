@@ -42,6 +42,9 @@ public class UserRestController {
 	public static class UserBody {
 		public String username;
 		public String password;
+		public String email;
+		public String question;
+		public String answer;
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/register")
@@ -49,7 +52,9 @@ public class UserRestController {
 		logger.info("Request: Register new User");
 		checkUsername(userData.username);
 		User newUser = services.userStore()
-				.store(newUser().setUsername(userData.username).setPassword(encrypt(userData.password)).build());
+				.store(newUser().setUsername(userData.username).setPassword(encrypt(userData.password))
+						.setEmail(userData.email).setQuestion(userData.question).setAnswer(encrypt(userData.answer))
+						.build());
 		if (newUser.getId() == 1L) {
 			newUser = services.userStore().store(newUser.changeUser().setAdmin(true).build());
 		}
@@ -71,12 +76,11 @@ public class UserRestController {
 	@RequestMapping(method = RequestMethod.POST, value = "/name")
 	ResponseEntity<?> changePassword(final Principal principal, @RequestBody final UserBody userData) {
 		logger.info("Request: Change Password for User " + principal.getName());
-		checkState(principal.getName().equals(userData.username));
 		User oldUser = services.userStore().retrieveAll().stream()
 				.filter(u -> u.getUsername().equals(principal.getName())).findFirst()
 				.orElseThrow(IllegalStateException::new);
 		services.userStore().store(oldUser.changeUser().setPassword(encrypt(userData.password)).build());
-		logger.info("Result: Passoword changed for User");
+		logger.info("Result: Password changed for User");
 		return ResponseEntity.ok().build();
 	}
 
@@ -101,12 +105,13 @@ public class UserRestController {
 	}
 
 	private String encrypt(String password) {
+		checkState(stringHasContent(password));
 		return services.passwordEncodingService().encode(password);
 	}
 
 	private void checkUsername(String username) {
 		if (services.userStore().retrieveAll().stream().anyMatch(u -> u.getUsername().equals(username))) {
-			throw new IllegalStateException();
+			throw new IllegalStateException("Username already exists!");
 		}
 	}
 
@@ -114,6 +119,10 @@ public class UserRestController {
 		if (!state) {
 			throw new IllegalStateException();
 		}
+	}
+
+	private boolean stringHasContent(String toCheck) {
+		return (toCheck != null && toCheck.trim().length() > 0);
 	}
 
 	@ExceptionHandler(IllegalStateException.class)

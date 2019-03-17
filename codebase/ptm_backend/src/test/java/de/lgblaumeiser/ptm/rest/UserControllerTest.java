@@ -75,6 +75,9 @@ public class UserControllerTest {
 		UserRestController.UserBody data = new UserRestController.UserBody();
 		data.username = "TestUser";
 		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
 		MvcResult result = mockMvc
 				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(data)))
@@ -95,6 +98,9 @@ public class UserControllerTest {
 		UserRestController.UserBody data = new UserRestController.UserBody();
 		data.username = "TestUser";
 		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
 		MvcResult result = mockMvc
 				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(data)))
@@ -110,6 +116,9 @@ public class UserControllerTest {
 		UserRestController.UserBody data = new UserRestController.UserBody();
 		data.username = "TestUser";
 		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
 		MvcResult result = mockMvc
 				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(data)))
@@ -134,12 +143,18 @@ public class UserControllerTest {
 		UserRestController.UserBody user = new UserRestController.UserBody();
 		user.username = "MyTestUser";
 		user.password = "DummyPwd";
+		user.email = "abc@xyz.com";
+		user.question = "What the Heck?";
+		user.answer = "42";
 		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
 
 		user = new UserRestController.UserBody();
 		user.username = "MyTestUser2";
 		user.password = "DummyPwd2";
+		user.email = "abc@xyz.com";
+		user.question = "What the Heck?";
+		user.answer = "42";
 		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
 

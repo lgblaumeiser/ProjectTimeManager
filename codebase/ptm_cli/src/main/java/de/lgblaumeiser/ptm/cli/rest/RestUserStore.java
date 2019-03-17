@@ -37,6 +37,9 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("username", user.getUsername());
 			bodyData.put("password", user.getPassword());
+			bodyData.put("email", user.getEmail());
+			bodyData.put("question", user.getQuestion());
+			bodyData.put("answer", user.getAnswer());
 			String apiName = "/users/register";
 			Long id = getRestUtils().post(apiName, Optional.empty(), bodyData);
 			Field idField = user.getClass().getDeclaredField("id");
@@ -49,10 +52,9 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 		}
 	}
 
-	public void storeChanged(final User user) {
+	public void storeChangedPassword(final String password) {
 		Map<String, String> bodyData = new HashMap<>();
-		bodyData.put("username", user.getUsername());
-		bodyData.put("password", user.getPassword());
+		bodyData.put("password", password);
 		String apiName = "/users/name";
 		getRestUtils().post(apiName, Optional.empty(), bodyData);
 	}

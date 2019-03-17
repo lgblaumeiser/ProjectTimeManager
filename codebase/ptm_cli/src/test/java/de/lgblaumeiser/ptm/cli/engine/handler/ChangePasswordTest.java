@@ -23,7 +23,7 @@ public class ChangePasswordTest extends AbstractHandlerTest {
 		commandline.runCommand(CHANGE_PASSWORD_COMMAND, "-p", TESTPASSWORD);
 		assertEquals("/users/name", restutils.apiNameGiven);
 		assertEquals(TESTPASSWORD, restutils.bodyDataGiven.get("password"));
-		assertEquals(2, restutils.bodyDataGiven.size());
+		assertEquals(1, restutils.bodyDataGiven.size());
 	}
 
 	@Test(expected = ParameterException.class)

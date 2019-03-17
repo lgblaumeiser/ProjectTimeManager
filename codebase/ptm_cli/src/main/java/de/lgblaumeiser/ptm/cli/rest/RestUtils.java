@@ -7,8 +7,8 @@
  */
 package de.lgblaumeiser.ptm.cli.rest;
 
-import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 import static de.lgblaumeiser.ptm.cli.Utils.assertState;
+import static org.apache.commons.codec.binary.Base64.encodeBase64String;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,7 +32,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import de.lgblaumeiser.ptm.datamanager.model.User;
+import de.lgblaumeiser.ptm.cli.engine.UserStore;
 
 /**
  * Utils to do rest calls on the rest api
@@ -58,7 +58,8 @@ public class RestUtils {
 	 *                 into a flat json
 	 * @return The Id of the created or manipulated object
 	 */
-	public Long post(final String apiName, final Optional<User> user, final Map<String, String> bodyData) {
+	public Long post(final String apiName, final Optional<UserStore.UserInfo> user,
+			final Map<String, String> bodyData) {
 		try {
 			final HttpPost request = new HttpPost(baseUrl + apiName);
 			StringEntity bodyJson = new StringEntity(jsonMapper.writeValueAsString(bodyData), "UTF-8");
@@ -90,7 +91,7 @@ public class RestUtils {
 	 * @param user     User information if needed to fulfil the request
 	 * @param sendData The data to be send to the server
 	 */
-	public void put(final String apiName, final Optional<User> user, final byte[] sendData) {
+	public void put(final String apiName, final Optional<UserStore.UserInfo> user, final byte[] sendData) {
 		try {
 			final HttpPut request = new HttpPut(baseUrl + apiName);
 			ByteArrayEntity bodyData = new ByteArrayEntity(sendData);
@@ -114,7 +115,7 @@ public class RestUtils {
 	 * @param returnClass The class object of a result type
 	 * @return The found element or array of elements
 	 */
-	public <T> T get(final String apiName, final Optional<User> user, final Class<T> returnClass) {
+	public <T> T get(final String apiName, final Optional<UserStore.UserInfo> user, final Class<T> returnClass) {
 		try {
 			final HttpGet request = new HttpGet(baseUrl + apiName);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8");
@@ -136,7 +137,7 @@ public class RestUtils {
 	 * @param user    User information if needed to fulfil the request
 	 * @return The input stream delivered by the server
 	 */
-	public InputStream get(final String apiName, final Optional<User> user) {
+	public InputStream get(final String apiName, Optional<UserStore.UserInfo> user) {
 		try {
 			final HttpGet request = new HttpGet(baseUrl + apiName);
 			request.setHeader(HttpHeaders.CONTENT_TYPE, "application/zip");
@@ -156,7 +157,7 @@ public class RestUtils {
 	 * @param apiName The api name for the deletion
 	 * @param user    User information if needed to fulfil the request
 	 */
-	public void delete(final String apiName, final Optional<User> user) {
+	public void delete(final String apiName, final Optional<UserStore.UserInfo> user) {
 		try {
 			final String requestString = baseUrl + apiName;
 			final HttpDelete request = new HttpDelete(requestString);
