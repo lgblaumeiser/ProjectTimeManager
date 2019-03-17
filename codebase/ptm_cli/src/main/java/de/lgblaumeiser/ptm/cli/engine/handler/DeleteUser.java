@@ -15,7 +15,7 @@ import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 /**
  * Command to register a new user
  */
-@Parameters(commandDescription = "Register a new user")
+@Parameters(commandDescription = "Delete the currently set user")
 public class DeleteUser extends AbstractCommandHandler {
 	@Parameter(names = {
 			"--confirm" }, description = "Explicitely requested, since action deletes all user data", required = true)

@@ -37,6 +37,9 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("username", user.getUsername());
 			bodyData.put("password", user.getPassword());
+			bodyData.put("email", user.getEmail());
+			bodyData.put("question", user.getQuestion());
+			bodyData.put("answer", user.getAnswer());
 			String apiName = "/users/register";
 			Long id = getRestUtils().post(apiName, Optional.empty(), bodyData);
 			Field idField = user.getClass().getDeclaredField("id");
@@ -49,12 +52,19 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 		}
 	}
 
-	public void storeChanged(final User user) {
+	public void storeChangedPassword(final String password) {
 		Map<String, String> bodyData = new HashMap<>();
-		bodyData.put("username", user.getUsername());
-		bodyData.put("password", user.getPassword());
+		bodyData.put("password", password);
 		String apiName = "/users/name";
 		getRestUtils().post(apiName, Optional.empty(), bodyData);
+	}
+
+	public String resetPassword(final String username, final String answer) {
+		Map<String, String> bodyData = new HashMap<>();
+		bodyData.put("username", username);
+		bodyData.put("answer", answer);
+		String apiName = "/users/reset";
+		return getRestUtils().put(apiName, Optional.empty(), bodyData);
 	}
 
 	@Override
@@ -65,5 +75,11 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 	public void deleteCurrentUser() {
 		String apiName = "/users/name";
 		getRestUtils().delete(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()));
+	}
+
+	public Optional<User> getCurrentUser() {
+		String apiName = "/users/name";
+		return Optional.ofNullable(getRestUtils().get(apiName,
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), User.class));
 	}
 }

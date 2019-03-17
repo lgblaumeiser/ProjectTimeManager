@@ -17,13 +17,13 @@ public class DeleteUserTest extends AbstractHandlerTest {
 	private static final String DELETE_USER_COMMAND = "delete_user";
 
 	@Test
-	public void testRegisterUserClean() {
+	public void testDeleteUserClean() {
 		commandline.runCommand(DELETE_USER_COMMAND, "--confirm");
 		assertEquals("/users/name", restutils.apiNameGiven);
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testRegisterUserNoParam() {
+	public void testDeleteUserNoParam() {
 		commandline.runCommand(DELETE_USER_COMMAND);
 	}
 }

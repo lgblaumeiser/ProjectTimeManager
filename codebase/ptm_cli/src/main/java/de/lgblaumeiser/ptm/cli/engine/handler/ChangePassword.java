@@ -11,21 +11,22 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
-import de.lgblaumeiser.ptm.datamanager.model.User;
+import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
 
 /**
  * Command to change the password for the current user
  */
-@Parameters(commandDescription = "Register a new user")
+@Parameters(commandDescription = "Change the password of the currently set local user")
 public class ChangePassword extends AbstractCommandHandler {
-	@Parameter(names = { "-p", "--password" }, description = "Password of new user", required = true)
+	@Parameter(names = { "-p", "--password" }, description = "New Password of the user", required = true)
 	public String password;
 
 	@Override
 	public void handleCommand() {
 		getLogger().log("Change Password for current user");
-		User oldUser = getServices().getCurrentUserStore().loadUserData();
-		getServices().getUserStore().storeChanged(oldUser.changeUser().setPassword(password).build());
+		getServices().getUserStore().storeChangedPassword(password);
+		UserInfo localUser = getServices().getCurrentUserStore().loadUserData();
+		getServices().getCurrentUserStore().storeUserData(new UserInfo(localUser.getUsername(), password));
 		getLogger().log("Password changed");
 	}
 }

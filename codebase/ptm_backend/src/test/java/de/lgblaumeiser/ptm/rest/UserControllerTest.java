@@ -12,11 +12,13 @@ import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
 import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
 import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,6 +77,9 @@ public class UserControllerTest {
 		UserRestController.UserBody data = new UserRestController.UserBody();
 		data.username = "TestUser";
 		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
 		MvcResult result = mockMvc
 				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(data)))
@@ -95,6 +100,9 @@ public class UserControllerTest {
 		UserRestController.UserBody data = new UserRestController.UserBody();
 		data.username = "TestUser";
 		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
 		MvcResult result = mockMvc
 				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(data)))
@@ -110,6 +118,9 @@ public class UserControllerTest {
 		UserRestController.UserBody data = new UserRestController.UserBody();
 		data.username = "TestUser";
 		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
 		MvcResult result = mockMvc
 				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 						.content(objectMapper.writeValueAsString(data)))
@@ -122,11 +133,33 @@ public class UserControllerTest {
 						"Basic " + Base64Utils.encodeToString("TestUser:DummyPwd".getBytes()))
 				.content(objectMapper.writeValueAsString(data))).andDo(print()).andExpect(status().isOk());
 
-		data.password = "AnotherPasswdToTryThatChangeWorked";
-		mockMvc.perform(post("/users/name").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("TestUser:AnotherPasswd".getBytes()))
-				.content(objectMapper.writeValueAsString(data))).andDo(print()).andExpect(status().isOk());
+		mockMvc.perform(get("/users/name").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).header(
+				HttpHeaders.AUTHORIZATION, "Basic " + Base64Utils.encodeToString("TestUser:AnotherPasswd".getBytes())))
+				.andDo(print()).andExpect(status().isOk());
+	}
+
+	@Test
+	public void testResetUser() throws Exception {
+		UserRestController.UserBody data = new UserRestController.UserBody();
+		data.username = "TestUser";
+		data.password = "DummyPwd";
+		data.email = "abc@xyz.com";
+		data.question = "What the Heck?";
+		data.answer = "42";
+		MvcResult result = mockMvc
+				.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+						.content(objectMapper.writeValueAsString(data)))
+				.andDo(print()).andExpect(status().isCreated()).andReturn();
+		assertTrue(result.getResponse().getRedirectedUrl().contains("/users/1"));
+
+		UserRestController.UserBody data2 = new UserRestController.UserBody();
+		data2.username = "TestUser";
+		data2.answer = "42";
+		MvcResult result2 = mockMvc
+				.perform(put("/users/reset").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+						.content(objectMapper.writeValueAsString(data2)))
+				.andDo(print()).andExpect(status().isOk()).andReturn();
+		assertEquals(10, result2.getResponse().getContentAsString().length());
 	}
 
 	@Test
@@ -134,12 +167,18 @@ public class UserControllerTest {
 		UserRestController.UserBody user = new UserRestController.UserBody();
 		user.username = "MyTestUser";
 		user.password = "DummyPwd";
+		user.email = "abc@xyz.com";
+		user.question = "What the Heck?";
+		user.answer = "42";
 		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
 
 		user = new UserRestController.UserBody();
 		user.username = "MyTestUser2";
 		user.password = "DummyPwd2";
+		user.email = "abc@xyz.com";
+		user.question = "What the Heck?";
+		user.answer = "42";
 		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
 				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
 

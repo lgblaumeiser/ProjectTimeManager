@@ -7,12 +7,11 @@
  */
 package de.lgblaumeiser.ptm.cli.engine.handler;
 
-import static de.lgblaumeiser.ptm.datamanager.model.User.newUser;
-
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
+import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
 
 /**
  * Command to register a new user
@@ -28,7 +27,7 @@ public class SetUser extends AbstractCommandHandler {
 	@Override
 	public void handleCommand() {
 		getLogger().log("Set user " + username + " ...");
-		getServices().getCurrentUserStore().storeUserData(newUser().setUsername(username).setPassword(password).build());
+		getServices().getCurrentUserStore().storeUserData(new UserInfo(username, password));
 		getLogger().log("... User stored");
 	}
 }

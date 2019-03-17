@@ -27,9 +27,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/services/license", "/users/register").permitAll()
-				.antMatchers("/services/backup", "/services/restore").hasAuthority("ADMIN")
-				.anyRequest().authenticated();
+		http.authorizeRequests().antMatchers("/services/license", "/users/register", "/users/reset").permitAll()
+				.antMatchers("/services/backup", "/services/restore").hasAuthority("ADMIN").anyRequest()
+				.authenticated();
 		http.httpBasic();
 		http.csrf().disable();
 	}

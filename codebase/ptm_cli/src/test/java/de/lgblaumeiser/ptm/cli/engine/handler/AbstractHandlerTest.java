@@ -8,7 +8,6 @@
 package de.lgblaumeiser.ptm.cli.engine.handler;
 
 import static de.lgblaumeiser.ptm.datamanager.model.Activity.newActivity;
-import static de.lgblaumeiser.ptm.datamanager.model.User.newUser;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -30,11 +29,11 @@ import de.lgblaumeiser.ptm.cli.engine.CommandLogger;
 import de.lgblaumeiser.ptm.cli.engine.PrettyPrinter;
 import de.lgblaumeiser.ptm.cli.engine.ServiceManager;
 import de.lgblaumeiser.ptm.cli.engine.UserStore;
+import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
 import de.lgblaumeiser.ptm.cli.rest.RestBaseService;
 import de.lgblaumeiser.ptm.cli.rest.RestUtils;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
-import de.lgblaumeiser.ptm.datamanager.model.User;
 
 public abstract class AbstractHandlerTest {
 	private static final String ID = "id";
@@ -72,15 +71,15 @@ public abstract class AbstractHandlerTest {
 			super("donotcare");
 		}
 
-		protected User storedUser;
+		protected UserStore.UserInfo storedUser;
 
 		@Override
-		public User loadUserData() {
-			return newUser().setUsername("DummyName").setPassword("DummyPwd").build();
+		public UserStore.UserInfo loadUserData() {
+			return new UserStore.UserInfo("DummyName", "DummyPwd");
 		}
 
 		@Override
-		public void storeUserData(User user) {
+		public void storeUserData(UserStore.UserInfo user) {
 			storedUser = user;
 		}
 
@@ -92,30 +91,28 @@ public abstract class AbstractHandlerTest {
 		byte[] rawDataGiven;
 
 		@Override
-		public Long post(final String apiName, final Optional<User> user, final Map<String, String> bodyData) {
+		public Long post(final String apiName, final Optional<UserStore.UserInfo> user,
+				final Map<String, String> bodyData) {
 			apiNameGiven = apiName;
 			bodyDataGiven = bodyData;
 			return 2L;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see de.lgblaumeiser.ptm.cli.rest.RestUtils#put(java.lang.String, byte[])
-		 */
 		@Override
-		public void put(final String apiName, final Optional<User> user, final byte[] sendData) {
+		public String put(String apiName, Optional<UserInfo> user, Map<String, String> bodyData) {
+			apiNameGiven = apiName;
+			bodyDataGiven = bodyData;
+			return "12345";
+		}
+
+		@Override
+		public void put(final String apiName, final Optional<UserStore.UserInfo> user, final byte[] sendData) {
 			apiNameGiven = apiName;
 			rawDataGiven = sendData;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see de.lgblaumeiser.ptm.cli.rest.RestUtils#get(java.lang.String)
-		 */
 		@Override
-		public InputStream get(final String apiName, final Optional<User> user) {
+		public InputStream get(final String apiName, final Optional<UserStore.UserInfo> user) {
 			apiNameGiven = apiName;
 			if (apiName.contains("services/license")) {
 				try {
@@ -129,7 +126,7 @@ public abstract class AbstractHandlerTest {
 
 		@SuppressWarnings("unchecked")
 		@Override
-		public <T> T get(final String apiName, final Optional<User> user, final Class<T> returnClass) {
+		public <T> T get(final String apiName, final Optional<UserStore.UserInfo> user, final Class<T> returnClass) {
 			apiNameGiven = apiName;
 			if (apiName.contains("activities")) {
 				if (apiName.contains("1")) {
@@ -153,7 +150,7 @@ public abstract class AbstractHandlerTest {
 		}
 
 		@Override
-		public void delete(final String apiName, final Optional<User> user) {
+		public void delete(final String apiName, final Optional<UserStore.UserInfo> user) {
 			apiNameGiven = apiName;
 		}
 
