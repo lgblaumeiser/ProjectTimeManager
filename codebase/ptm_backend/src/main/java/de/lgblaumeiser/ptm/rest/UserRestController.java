@@ -12,7 +12,9 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.net.URI;
 import java.security.Principal;
+import java.security.SecureRandom;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -62,6 +64,20 @@ public class UserRestController {
 				+ newUser.getId());
 		logger.info("Result: User Created with Id " + newUser.getId());
 		return ResponseEntity.created(location).build();
+	}
+
+	@RequestMapping(method = RequestMethod.PUT, value = "/reset")
+	String resetPassword(@RequestBody final UserBody userdata) {
+		logger.info("Request: Reset Password");
+		checkState(stringHasContent(userdata.username));
+		checkState(stringHasContent(userdata.answer));
+		User foundUser = services.userStore().retrieveAll().stream()
+				.filter(u -> u.getUsername().equals(userdata.username)).findFirst()
+				.orElseThrow(IllegalStateException::new);
+		checkState(services.passwordEncodingService().matches(userdata.answer, foundUser.getAnswer()));
+		String newPassword = nextPassword();
+		services.userStore().store(foundUser.changeUser().setPassword(encrypt(newPassword)).build());
+		return newPassword;
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "/name")
@@ -123,6 +139,17 @@ public class UserRestController {
 
 	private boolean stringHasContent(String toCheck) {
 		return (toCheck != null && toCheck.trim().length() > 0);
+	}
+
+	private final Random random = new SecureRandom();
+	private static final char[] ALPHANUM = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+			.toCharArray();
+
+	private String nextPassword() {
+		char[] buf = new char[10];
+		for (int idx = 0; idx < buf.length; ++idx)
+			buf[idx] = ALPHANUM[random.nextInt(ALPHANUM.length)];
+		return new String(buf);
 	}
 
 	@ExceptionHandler(IllegalStateException.class)
