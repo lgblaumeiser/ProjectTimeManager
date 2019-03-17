@@ -18,7 +18,7 @@
 	</head>
 	<body>
     	<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-info border-bottom shadow-sm">
-  			<h3 class="my-0 mr-md-auto font-weight-normal"><img src="/icons/ptm.ico" /> Project Time Manager Overview App</h5>
+  			<h3 class="my-0 mr-md-auto font-weight-normal"><img src="/icons/ptm.ico" /> Project Time Manager Overview App</h3>
   			<h5 class="text-right">by Lars Geyer-Blaumeiser <a href="https://github.com/lgblaumeiser/ProjectTimeManager" class="text-light">Info</a></h5>
   		</div>
 		
@@ -44,46 +44,6 @@
 					</div>
 				</div>				
 			</div>
-			<div class="card">
-				<h4 class="card-header text-center" th:text="|Activity Analysis for Month ${month}|" />
-				<div class="card-body">
-					<div class="table-responsive">
-						<table class="table">
-						    <thead>
-   								<tr>
-						    		<th th:each="elem : ${activityAnalysisMonthHeadline}" th:text="|${elem}|" />
-								</tr>
-   							</thead>
-   							<tbody>
-   								<tr th:each="line : ${activityAnalysisMonth}">
-									<td th:each="elem : ${line}" th:text="|${elem}|" />
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-				<br />
-				<h4 class="card-header text-center" th:text="|Project Analysis for Month ${month}|" />
-				<div class="card-body">
-					<div class="table-responsive">
-						<table class="table">
-						    <thead>
-   								<tr>
-						    		<th th:each="elem : ${projectAnalysisMonthHeadline}" th:text="|${elem}|" />
-								</tr>
-   							</thead>
-   							<tbody>
-   								<tr th:each="line : ${projectAnalysisMonth}">
-									<td th:each="elem : ${line}" th:text="|${elem}|" />
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>				
-			</div>
-		</div>
-		
-		<div class="card-deck ml-2 mr-2 mt-2">
 			<div class="card">
   				<h4 class="card-header text-center" th:text="|Bookings for Day ${date}|" />
 				<div class="card-body">
@@ -111,8 +71,47 @@
    					</div>
 				</div>
 			</div>
+		</div>
+		
+		<div class="card-deck ml-2 mr-2 mt-2">
+			<div class="card">
+				<h4 class="card-header text-center" th:text="|Analysis for Month ${month}|" />
+				<div class="card-body">
+					<h5>Project Analysis</h5>
+					<div class="table-responsive">
+						<table class="table">
+						    <thead>
+   								<tr>
+						    		<th th:each="elem : ${projectAnalysisMonthHeadline}" th:text="|${elem}|" />
+								</tr>
+   							</thead>
+   							<tbody>
+   								<tr th:each="line : ${projectAnalysisMonth}">
+									<td th:each="elem : ${line}" th:text="|${elem}|" />
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<br />
+					<h5>Activity Analysis</h5>
+					<div class="table-responsive">
+						<table class="table">
+						    <thead>
+   								<tr>
+						    		<th th:each="elem : ${activityAnalysisMonthHeadline}" th:text="|${elem}|" />
+								</tr>
+   							</thead>
+   							<tbody>
+   								<tr th:each="line : ${activityAnalysisMonth}">
+									<td th:each="elem : ${line}" th:text="|${elem}|" />
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>				
+			</div>
    			<div class="card">
-   				<h4 class="card-header text-center">Activities</h2>
+   				<h4 class="card-header text-center">Activities</h4>
 				<div class="card-body">
 					<div class="table-responsive">
 						<table class=table>

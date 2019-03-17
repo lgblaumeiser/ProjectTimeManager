@@ -93,7 +93,7 @@ public class PTMCLIConfigurator {
 		ObjectStore<Activity> activityStore = new RestActivityStore();
 		RestAnalysisService analysisService = new RestAnalysisService();
 		RestUserStore restUserStore = new RestUserStore();
-		UserStore localUserStore = new UserStore(getProperty("user.home") + ".ptm");
+		UserStore localUserStore = new UserStore(getProperty("user.home") + "/.ptm");
 		RestInfrastructureServices infrastructureServices = new RestInfrastructureServices();
 		ServiceManager manager = createServiceManager(bookingStore, activityStore, restUserStore, analysisService,
 				infrastructureServices, localUserStore);
