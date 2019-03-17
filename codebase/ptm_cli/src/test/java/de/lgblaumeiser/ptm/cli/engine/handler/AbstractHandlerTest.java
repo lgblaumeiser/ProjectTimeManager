@@ -29,6 +29,7 @@ import de.lgblaumeiser.ptm.cli.engine.CommandLogger;
 import de.lgblaumeiser.ptm.cli.engine.PrettyPrinter;
 import de.lgblaumeiser.ptm.cli.engine.ServiceManager;
 import de.lgblaumeiser.ptm.cli.engine.UserStore;
+import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
 import de.lgblaumeiser.ptm.cli.rest.RestBaseService;
 import de.lgblaumeiser.ptm.cli.rest.RestUtils;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
@@ -97,22 +98,19 @@ public abstract class AbstractHandlerTest {
 			return 2L;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see de.lgblaumeiser.ptm.cli.rest.RestUtils#put(java.lang.String, byte[])
-		 */
+		@Override
+		public String put(String apiName, Optional<UserInfo> user, Map<String, String> bodyData) {
+			apiNameGiven = apiName;
+			bodyDataGiven = bodyData;
+			return "12345";
+		}
+
 		@Override
 		public void put(final String apiName, final Optional<UserStore.UserInfo> user, final byte[] sendData) {
 			apiNameGiven = apiName;
 			rawDataGiven = sendData;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see de.lgblaumeiser.ptm.cli.rest.RestUtils#get(java.lang.String)
-		 */
 		@Override
 		public InputStream get(final String apiName, final Optional<UserStore.UserInfo> user) {
 			apiNameGiven = apiName;

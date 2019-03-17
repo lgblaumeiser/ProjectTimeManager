@@ -18,7 +18,7 @@ import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
  */
 @Parameters(commandDescription = "Change the password of the currently set local user")
 public class ChangePassword extends AbstractCommandHandler {
-	@Parameter(names = { "-p", "--password" }, description = "Password of new user", required = true)
+	@Parameter(names = { "-p", "--password" }, description = "New Password of the user", required = true)
 	public String password;
 
 	@Override

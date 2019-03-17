@@ -27,12 +27,12 @@ public class ChangePasswordTest extends AbstractHandlerTest {
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testChangeParameterEmptyParameter() {
+	public void testChangePasswordEmptyParameter() {
 		commandline.runCommand(CHANGE_PASSWORD_COMMAND, "-p");
 	}
 
 	@Test(expected = ParameterException.class)
-	public void testCHangeParameterNoParam() {
+	public void testChangePasswordNoParam() {
 		commandline.runCommand(CHANGE_PASSWORD_COMMAND);
 	}
 }

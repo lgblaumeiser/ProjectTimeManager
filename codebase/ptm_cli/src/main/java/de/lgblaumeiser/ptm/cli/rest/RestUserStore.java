@@ -59,6 +59,14 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 		getRestUtils().post(apiName, Optional.empty(), bodyData);
 	}
 
+	public String resetPassword(final String username, final String answer) {
+		Map<String, String> bodyData = new HashMap<>();
+		bodyData.put("username", username);
+		bodyData.put("answer", answer);
+		String apiName = "/users/reset";
+		return getRestUtils().put(apiName, Optional.empty(), bodyData);
+	}
+
 	@Override
 	public void deleteById(final Long id) {
 		throw new UnsupportedOperationException();
