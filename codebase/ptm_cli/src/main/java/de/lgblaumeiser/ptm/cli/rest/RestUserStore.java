@@ -68,4 +68,10 @@ public class RestUserStore extends RestBaseService implements ObjectStore<User> 
 		String apiName = "/users/name";
 		getRestUtils().delete(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()));
 	}
+
+	public Optional<User> getCurrentUser() {
+		String apiName = "/users/name";
+		return Optional.ofNullable(getRestUtils().get(apiName,
+				Optional.of(getServices().getCurrentUserStore().loadUserData()), User.class));
+	}
 }

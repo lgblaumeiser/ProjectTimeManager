@@ -18,7 +18,7 @@ import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 /**
  * Command for showing license information
  */
-@Parameters(commandDescription = "show license information for cli and backend")
+@Parameters(commandDescription = "Show license information for cli and backend")
 public class License extends AbstractCommandHandler {
 	@Override
 	public void handleCommand() {

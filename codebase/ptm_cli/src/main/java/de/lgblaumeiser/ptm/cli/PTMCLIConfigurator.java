@@ -34,6 +34,7 @@ import de.lgblaumeiser.ptm.cli.engine.handler.RunActivitiesAnalysis;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunHourAnalysis;
 import de.lgblaumeiser.ptm.cli.engine.handler.RunProjectsAnalysis;
 import de.lgblaumeiser.ptm.cli.engine.handler.SetUser;
+import de.lgblaumeiser.ptm.cli.engine.handler.ShowUser;
 import de.lgblaumeiser.ptm.cli.rest.RestActivityStore;
 import de.lgblaumeiser.ptm.cli.rest.RestAnalysisService;
 import de.lgblaumeiser.ptm.cli.rest.RestBaseService;
@@ -59,8 +60,10 @@ public class PTMCLIConfigurator {
 	private static final String CHANGE_PASSWORD_COMMAND = "change_password";
 	private static final String CHANGE_PASSWORD_COMMAND_ABBRV = "cp";
 	private static final String DELETE_USER_COMMAND = "delete_user";
+	private static final String SHOW_USER_COMMAND = "show_user";
+	private static final String SHOW_USER_COMMAND_ABBRV = "su";
 	private static final String SET_USER_COMMAND = "set_user";
-	private static final String SET_USER_COMMAND_ABBRV = "su";
+	private static final String SET_USER_COMMAND_ABBRV = "se";
 	private static final String ADD_BOOKING_COMMAND = "add_booking";
 	private static final String ADD_BOOKING_COMMAND_ABBRV = "ab";
 	private static final String DELETE_BOOKING_COMMAND = "delete_booking";
@@ -123,6 +126,7 @@ public class PTMCLIConfigurator {
 				.addCommand(SET_USER_COMMAND, new SetUser(), SET_USER_COMMAND_ABBRV)
 				.addCommand(CHANGE_PASSWORD_COMMAND, new ChangePassword(), CHANGE_PASSWORD_COMMAND_ABBRV)
 				.addCommand(DELETE_USER_COMMAND, new DeleteUser())
+				.addCommand(SHOW_USER_COMMAND, new ShowUser(), SHOW_USER_COMMAND_ABBRV)
 				.addCommand(ADD_BOOKING_COMMAND, new AddBooking(), ADD_BOOKING_COMMAND_ABBRV)
 				.addCommand(DELETE_BOOKING_COMMAND, new DeleteBooking(), DELETE_BOOKING_COMMAND_ABBRV)
 				.addCommand(CHANGE_BOOKING_COMMAND, new ChangeBooking(), CHANGE_BOOKING_COMMAND_ABBRV)

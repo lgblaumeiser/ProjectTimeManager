@@ -17,7 +17,7 @@ import com.beust.jcommander.Parameters;
 /**
  * Run an analysis on the data
  */
-@Parameters(commandDescription = "Run an analysis projects to hoursfor all projects aggregating activities with same project id")
+@Parameters(commandDescription = "Run an analysis projects to hours for all projects aggregating activities with same project id")
 public class RunProjectsAnalysis extends AbstractRunAnalysis {
 	private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
 
