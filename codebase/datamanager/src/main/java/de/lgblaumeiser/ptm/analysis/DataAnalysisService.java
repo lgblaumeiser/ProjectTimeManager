@@ -34,7 +34,7 @@ public class DataAnalysisService {
      * @return The result as an implemented analysis result interface
      */
     public Collection<Collection<String>> analyze(final String analyzerId, final String user, final String periodId,
-            String... periodIndicator) {
+            final String... periodIndicator) {
         assertState(stringHasContent(analyzerId));
         assertState(stringHasContent(periodId));
         assertState(periodIndicator.length > 0);

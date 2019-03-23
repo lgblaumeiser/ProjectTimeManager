@@ -25,7 +25,7 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  */
 public class ActivityComputer extends BaseProjectComputer {
     @Override
-    protected String indexGetter(Activity activity) {
+    protected String indexGetter(final Activity activity) {
         return activity.getId().toString();
     }
 
@@ -40,7 +40,7 @@ public class ActivityComputer extends BaseProjectComputer {
     }
 
     @Override
-    protected Collection<String> getKeyItems(Activity activity) {
+    protected Collection<String> getKeyItems(final Activity activity) {
         return asList(activity.getActivityName(), activity.getProjectId(), activity.getProjectActivity());
     }
 

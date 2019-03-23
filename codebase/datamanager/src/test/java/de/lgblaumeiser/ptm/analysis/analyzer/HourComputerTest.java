@@ -45,7 +45,7 @@ public class HourComputerTest extends AbstractComputerTest {
         assertEquals("-05:04", getAccumulatedHoursOfResult(analysisResults));
     }
 
-    private String getAccumulatedHoursOfResult(Collection<Collection<String>> analysisResults) {
+    private String getAccumulatedHoursOfResult(final Collection<Collection<String>> analysisResults) {
         return getIndexFromCollection(getLastRow(analysisResults), ACCUMULATED_HOURS_COLUMN);
     }
 

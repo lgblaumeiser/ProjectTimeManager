@@ -24,7 +24,7 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  */
 public class ProjectComputer extends BaseProjectComputer {
     @Override
-    protected String indexGetter(Activity activity) {
+    protected String indexGetter(final Activity activity) {
         return activity.getProjectId();
     }
 
@@ -39,16 +39,16 @@ public class ProjectComputer extends BaseProjectComputer {
     }
 
     @Override
-    protected Collection<String> getKeyItems(Activity activity) {
+    protected Collection<String> getKeyItems(final Activity activity) {
         return asList(activity.getProjectId());
     }
 
     @Override
-    protected String getSortCriteriaForResultLine(Collection<String> line) {
+    protected String getSortCriteriaForResultLine(final Collection<String> line) {
         return getIndexFromCollection(line, 0);
     }
 
-    public ProjectComputer(ObjectStore<Booking> bStore, ObjectStore<Activity> aStore) {
+    public ProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
         super(bStore, aStore);
     }
 }

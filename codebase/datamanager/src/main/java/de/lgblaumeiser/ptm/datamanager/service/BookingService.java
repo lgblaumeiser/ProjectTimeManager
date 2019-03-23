@@ -69,10 +69,10 @@ public class BookingService {
                 .findFirst();
     }
 
-    private void endOpenBookingWithStarttime(final LocalTime starttime, Booking b) {
-        if (b.getStarttime().isBefore(starttime)) {
+    private void endOpenBookingWithStarttime(final LocalTime starttime, final Booking booking) {
+        if (booking.getStarttime().isBefore(starttime)) {
             createAndStoreBooking(
-                    b.changeBooking(),
+                    booking.changeBooking(),
                     empty(),
                     empty(),
                     empty(),

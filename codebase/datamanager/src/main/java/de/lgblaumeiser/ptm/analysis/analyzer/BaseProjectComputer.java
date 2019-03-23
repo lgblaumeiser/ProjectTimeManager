@@ -169,7 +169,7 @@ public abstract class BaseProjectComputer implements Analysis {
     }
 
     private Collection<String> calculateResultForActivity(final Activity activity, final Duration activityMinutes,
-	    final Duration totalMinutes, final String activityComments, boolean withComments) {
+            final Duration totalMinutes, final String activityComments, final boolean withComments) {
 	return createLine(
 		getKeyItems(activity),
 		formatDuration(activityMinutes),

@@ -95,8 +95,8 @@ public class HourComputer implements Analysis {
     }
 
     private Collection<String> createLine(final LocalDate day, final AccumulatedTimes accutimes,
-            final LocalTime starttime,
-            final LocalTime endtime, final Duration presence, final Duration worktime, final Duration breaktime) {
+            final LocalTime starttime, final LocalTime endtime, final Duration presence, final Duration worktime,
+            final Duration breaktime) {
         return Arrays.asList(
                 formatDay(day),
                 formatTime(starttime),

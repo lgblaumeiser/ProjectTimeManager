@@ -40,7 +40,7 @@ public class FileStore<T> implements ObjectStore<T>, StoreBackupRestore<T> {
 
     private final Supplier<Class<T>> typeFunction;
 
-    public FileStore(final FilesystemAbstraction filesystemAccess, Supplier<Class<T>> typeFunction) {
+    public FileStore(final FilesystemAbstraction filesystemAccess, final Supplier<Class<T>> typeFunction) {
         jsonUtil.registerModule(new JavaTimeModule());
         this.typeFunction = typeFunction;
         this.filesystemAccess = filesystemAccess;

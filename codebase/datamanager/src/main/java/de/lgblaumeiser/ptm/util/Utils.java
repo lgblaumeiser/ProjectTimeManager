@@ -33,7 +33,7 @@ public class Utils {
         }
     }
 
-    public static LocalDate parseDateString(String dateString) {
+    public static LocalDate parseDateString(final String dateString) {
         return LocalDate.parse(dateString, DateTimeFormatter.ISO_LOCAL_DATE);
     }
 

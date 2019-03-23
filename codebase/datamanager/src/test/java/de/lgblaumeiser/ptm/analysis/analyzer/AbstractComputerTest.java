@@ -173,7 +173,7 @@ public abstract class AbstractComputerTest {
         };
         ObjectStore<Activity> testdataA = new ObjectStore<Activity>() {
             @Override
-            public Activity store(Activity object) {
+            public Activity store(final Activity object) {
                 // Not needed for test
                 return object;
             }
@@ -185,7 +185,7 @@ public abstract class AbstractComputerTest {
             }
 
             @Override
-            public Optional<Activity> retrieveById(Long id) {
+            public Optional<Activity> retrieveById(final Long id) {
                 switch (id.intValue()) {
                 case 1:
                     return Optional.of(ACTIVITY1);
@@ -199,7 +199,7 @@ public abstract class AbstractComputerTest {
             }
 
             @Override
-            public void deleteById(Long id) {
+            public void deleteById(final Long id) {
                 // Not needed for test
             }
         };
@@ -223,13 +223,13 @@ public abstract class AbstractComputerTest {
         createTestee(testdataB, testdataA);
     }
 
-    protected abstract void createTestee(ObjectStore<Booking> bStore, ObjectStore<Activity> aStore);
+    protected abstract void createTestee(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore);
 
-    protected CalculationPeriod createPeriod(String firstDay, String firstDayAfter) {
+    protected CalculationPeriod createPeriod(final String firstDay, final String firstDayAfter) {
         return new CalculationPeriod(parseDateString(firstDay), parseDateString(firstDayAfter));
     }
 
-    protected double sumPercentages(Collection<Collection<String>> analysisResults) {
+    protected double sumPercentages(final Collection<Collection<String>> analysisResults) {
         double sum = 0.0;
         for (int rowIndex = 1; rowIndex < analysisResults.size(); rowIndex++) {
             sum += parseDoubleFromPercentageString(analysisResults, rowIndex);
@@ -237,18 +237,19 @@ public abstract class AbstractComputerTest {
         return sum;
     }
 
-    private double parseDoubleFromPercentageString(Collection<Collection<String>> analysisResults, int rowNumber) {
+    private double parseDoubleFromPercentageString(final Collection<Collection<String>> analysisResults,
+            final int rowNumber) {
         return parseDouble(getPercentageFromRow(analysisResults, rowNumber).replaceAll(",", ".")
                 .replaceAll("%", ""));
     }
 
     protected int percentageColumn = 0;
 
-    private String getPercentageFromRow(Collection<Collection<String>> analysisResults, int rowNumber) {
+    private String getPercentageFromRow(final Collection<Collection<String>> analysisResults, final int rowNumber) {
         return getIndexFromCollection(getRow(analysisResults, rowNumber), percentageColumn);
     }
 
-    private Collection<String> getRow(Collection<Collection<String>> analysisResults, int rowNumber) {
+    private Collection<String> getRow(final Collection<Collection<String>> analysisResults, final int rowNumber) {
         return getIndexFromCollection(analysisResults, rowNumber);
     }
 }
