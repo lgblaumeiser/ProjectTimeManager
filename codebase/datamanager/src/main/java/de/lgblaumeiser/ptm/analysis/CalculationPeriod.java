@@ -14,25 +14,25 @@ import java.util.Collections;
 import java.util.List;
 
 public class CalculationPeriod {
-	List<LocalDate> daysInPeriod = new ArrayList<>();
+    List<LocalDate> daysInPeriod = new ArrayList<>();
 
-	public CalculationPeriod(final LocalDate firstDay, final LocalDate firstDayAfter) {
-		LocalDate currentDate = firstDay;
-		while (currentDate.isBefore(firstDayAfter)) {
-			daysInPeriod.add(currentDate);
-			currentDate = currentDate.plusDays(1L);
-		}
-	}
+    public CalculationPeriod(final LocalDate firstDay, final LocalDate firstDayAfter) {
+        LocalDate currentDate = firstDay;
+        while (currentDate.isBefore(firstDayAfter)) {
+            daysInPeriod.add(currentDate);
+            currentDate = currentDate.plusDays(1L);
+        }
+    }
 
-	public boolean isInPeriod(final LocalDate current) {
-		return daysInPeriod.contains(current);
-	}
+    public boolean isInPeriod(final LocalDate current) {
+        return daysInPeriod.contains(current);
+    }
 
-	public Collection<LocalDate> days() {
-		return Collections.unmodifiableList(daysInPeriod);
-	}
+    public Collection<LocalDate> days() {
+        return Collections.unmodifiableList(daysInPeriod);
+    }
 
-	public boolean isDayPeriod() {
-		return daysInPeriod.size() == 1;
-	}
+    public boolean isDayPeriod() {
+        return daysInPeriod.size() == 1;
+    }
 }

@@ -7,8 +7,11 @@
  */
 package de.lgblaumeiser.ptm.analysis.analyzer;
 
+import static de.lgblaumeiser.ptm.analysis.analyzer.DateFormatterUtil.formatDuration;
+import static de.lgblaumeiser.ptm.analysis.analyzer.DateFormatterUtil.formatPercentageString;
 import static de.lgblaumeiser.ptm.util.Utils.emptyString;
 import static de.lgblaumeiser.ptm.util.Utils.stringHasContent;
+import static java.util.stream.Collectors.toList;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -36,132 +39,170 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * projects
  */
 public abstract class BaseProjectComputer implements Analysis {
-	private final ObjectStore<Booking> bookingStore;
-	private final ObjectStore<Activity> activityStore;
+    private final ObjectStore<Booking> bookingStore;
+    private final ObjectStore<Activity> activityStore;
 
-	@Override
-	public Collection<Collection<String>> analyze(final CalculationPeriod period, final String user) {
-		Map<String, Activity> keyToActivityMap = new HashMap<>();
-		Map<String, Duration> keyToMinutesMap = new HashMap<>();
-		Map<String, String> keyToCommentMap = new HashMap<>();
-		Duration totalMinutes = calculateTimeMapping(getBookingsForPeriod(period, user), keyToActivityMap,
-				keyToMinutesMap, keyToCommentMap);
-		return createResultCollection(keyToActivityMap, keyToMinutesMap, keyToCommentMap, totalMinutes,
-				period.isDayPeriod());
+    private static class AnalysisData {
+	private Map<String, Activity> keyToActivityMap = new HashMap<>();
+	private Map<String, Duration> keyToMinutesMap = new HashMap<>();
+	private Map<String, String> keyToCommentMap = new HashMap<>();
+
+	void setActivityData(final String key, final Activity activity, final Duration currentLength,
+		final String comment) {
+	    keyToActivityMap.put(key, activity);
+	    calculateTimeForActivity(key, currentLength);
+	    calculateAccumulatedComment(key, comment);
 	}
 
-	private Collection<Booking> getBookingsForPeriod(final CalculationPeriod period, final String user) {
-		return bookingStore.retrieveAll().stream()
-				.filter(b -> b.getUser().equals(user) && period.isInPeriod(b.getBookingday()))
-				.collect(Collectors.toList());
-	}
-
-	private Duration calculateTimeMapping(final Collection<Booking> bookings,
-			final Map<String, Activity> keyToActivityMap, final Map<String, Duration> keyToMinutesMap,
-			final Map<String, String> keyToCommentMap) {
-		Duration totalMinutes = Duration.ZERO;
-		for (Booking booking : bookings) {
-			if (booking.hasEndtime()) {
-				totalMinutes = totalMinutes
-						.plus(calculateBooking(booking, keyToActivityMap, keyToMinutesMap, keyToCommentMap));
-			}
+	private void calculateAccumulatedComment(final String key, final String newComment) {
+	    String currentComment = getCurrentComment(key);
+	    if (stringHasContent(newComment)) {
+		if (stringHasContent(currentComment) && !currentComment.contains(newComment)) {
+		    currentComment = currentComment + ", " + newComment;
+		} else {
+		    currentComment = newComment;
 		}
-		return totalMinutes;
+	    }
+	    keyToCommentMap.put(key, currentComment);
 	}
 
-	private Duration calculateBooking(final Booking booking, final Map<String, Activity> keyToActivityMap,
-			final Map<String, Duration> keyToMinutesMap, final Map<String, String> keyToCommentMap) {
-		Activity activity = activityStore.retrieveById(booking.getActivity()).orElseThrow(IllegalStateException::new);
-		String key = indexGetter(activity);
-		keyToActivityMap.put(key, activity);
-		Duration accumulatedMinutes = getMinutesForKey(Optional.ofNullable(keyToMinutesMap.get(key)));
-		Duration activityLength = TimeSpan.newTimeSpan(booking).getLengthInMinutes();
-		accumulatedMinutes = accumulatedMinutes.plus(activityLength);
-		keyToMinutesMap.put(key, accumulatedMinutes);
-		keyToCommentMap.put(key, getCommentForKey(Optional.ofNullable(keyToCommentMap.get(key)), booking.getComment()));
-		return activityLength;
+	private String getCurrentComment(final String key) {
+	    return Optional.ofNullable(keyToCommentMap.get(key)).orElse(emptyString());
 	}
 
-	protected abstract String indexGetter(final Activity activity);
-
-	private Duration getMinutesForKey(final Optional<Duration> currentDuration) {
-		return currentDuration.orElse(Duration.ZERO);
+	private void calculateTimeForActivity(final String key, final Duration currentLength) {
+	    keyToMinutesMap.put(key, getMinutesForKey(key).plus(currentLength));
 	}
 
-	private String getCommentForKey(final Optional<String> currentComment, final String newComment) {
-		String comments = currentComment.orElse(emptyString());
-		if (stringHasContent(newComment)) {
-			if (stringHasContent(comments)) {
-				comments = comments + ", " + newComment;
-			} else {
-				comments = newComment;
-			}
-		}
-		return comments;
+	private Duration getMinutesForKey(final String key) {
+	    return Optional.ofNullable(keyToMinutesMap.get(key)).orElse(Duration.ZERO);
 	}
 
-	private Collection<Collection<String>> createResultCollection(final Map<String, Activity> keyToActivityMap,
-			final Map<String, Duration> keyToMinutesMap, final Map<String, String> keyToCommentMap,
-			final Duration totalMinutes, final boolean withComments) {
-		Collection<Collection<String>> result = new ArrayList<>();
-		result.add(createLine(getHeadline(), "Hours", "%", "Comments", withComments));
-		result.addAll(
-				computeResultLines(keyToActivityMap, keyToMinutesMap, keyToCommentMap, totalMinutes, withComments));
-		result.add(createLine(getFootLine(), formatDuration(totalMinutes), "100.0%", emptyString(), withComments));
-		return result;
+	Collection<String> getKeys() {
+	    return keyToActivityMap.keySet();
 	}
 
-	protected abstract Collection<String> getHeadline(); // Arrays.asList("Project Id", )
-
-	protected abstract Collection<String> getFootLine(); // Arrays.asList("Total", )
-
-	private Collection<Collection<String>> computeResultLines(final Map<String, Activity> keyToActivityMap,
-			final Map<String, Duration> keyToMinutesMap, final Map<String, String> keyToCommentsMap,
-			final Duration totalMinutes, final boolean withComments) {
-		Collection<Collection<String>> valueList = new ArrayList<>();
-		for (String key : keyToActivityMap.keySet()) {
-			valueList.add(calculateResultForActivity(keyToActivityMap.get(key), keyToMinutesMap.get(key), totalMinutes,
-					keyToCommentsMap.get(key), withComments));
-		}
-		return valueList.stream().sorted((line1, line2) -> getSortCriteriaForResultLine(line1)
-				.compareToIgnoreCase(getSortCriteriaForResultLine(line2))).collect(Collectors.toList());
+	Activity getActivityForKey(final String key) {
+	    return keyToActivityMap.get(key);
 	}
 
-	protected abstract String getSortCriteriaForResultLine(final Collection<String> line);
-
-	private Collection<String> calculateResultForActivity(final Activity activity, final Duration activityMinutes,
-			final Duration totalMinutes, final String activityComments, boolean withComments) {
-		return createLine(getKeyItems(activity), formatDuration(activityMinutes),
-				formatPercentageString(totalMinutes, activityMinutes), activityComments, withComments);
+	Duration getBookedMinutesForKey(final String key) {
+	    return keyToMinutesMap.get(key);
 	}
 
-	private Collection<String> createLine(Collection<String> activityinfo, String activityMinutes, String totalMinutes,
-			String activityComments, boolean withComments) {
-		List<String> back = new ArrayList<>(activityinfo);
-		back.add(activityMinutes);
-		back.add(totalMinutes);
-		if (withComments) {
-			back.add(activityComments);
-		}
-		return back;
+	String getAccumulatedCommentForKey(final String key) {
+	    return keyToCommentMap.get(key);
 	}
+    }
 
-	protected abstract Collection<String> getKeyItems(Activity activity);
+    @Override
+    public Collection<Collection<String>> analyze(final CalculationPeriod period, final String user) {
+	AnalysisData currentAnalysis = new AnalysisData();
 
-	private String formatPercentageString(final Duration totalMinutes, final Duration totalMinutesId) {
-		double percentage = (double) totalMinutesId.toMinutes() / (double) totalMinutes.toMinutes();
-		return String.format("%2.1f", percentage * 100.0) + "%";
+	return createResultCollection(
+		currentAnalysis,
+		calculateTimeMapping(getBookingsForPeriod(period, user), currentAnalysis),
+		period.isDayPeriod());
+    }
+
+    private Collection<Booking> getBookingsForPeriod(final CalculationPeriod period, final String user) {
+	return bookingStore
+		.retrieveAll()
+		.stream()
+		.filter(b -> b.getUser().equals(user) && period.isInPeriod(b.getBookingday()))
+		.collect(toList());
+    }
+
+    private Duration calculateTimeMapping(final Collection<Booking> bookings, final AnalysisData currentAnalysis) {
+	Duration totalMinutes = Duration.ZERO;
+	for (Booking booking : bookings) {
+	    if (booking.hasEndtime()) {
+                totalMinutes = totalMinutes.plus(calculateBooking(booking, currentAnalysis));
+	    }
 	}
+	return totalMinutes;
+    }
 
-	private String formatDuration(final Duration duration) {
-		long minutes = duration.toMinutes();
-		char pre = minutes < 0 ? '-' : ' ';
-		minutes = Math.abs(minutes);
-		return String.format("%c%02d:%02d", pre, minutes / 60, minutes % 60);
-	}
+    private Duration calculateBooking(final Booking booking, final AnalysisData currentAnalysis) {
+	Activity activity = retrieveActivityForBooking(booking);
+	Duration activityLength = calculateActivityLengthForBooking(booking);
+	currentAnalysis.setActivityData(indexGetter(activity), activity, activityLength, booking.getComment());
+	return activityLength;
+    }
 
-	public BaseProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
-		bookingStore = bStore;
-		activityStore = aStore;
+    private Activity retrieveActivityForBooking(final Booking booking) {
+	return activityStore.retrieveById(booking.getActivity()).orElseThrow(IllegalStateException::new);
+    }
+
+    private Duration calculateActivityLengthForBooking(final Booking booking) {
+	return TimeSpan.newTimeSpan(booking).getLengthInMinutes();
+    }
+
+    protected abstract String indexGetter(final Activity activity);
+
+    private Collection<Collection<String>> createResultCollection(final AnalysisData currentAnalysis,
+	    final Duration totalMinutes, final boolean withComments) {
+	Collection<Collection<String>> result = new ArrayList<>();
+	result.add(createLine(getHeadlineActivityElements(), "Hours", "%", "Comments", withComments));
+	result.addAll(computeResultLines(currentAnalysis, totalMinutes, withComments));
+	result.add(createLine(getFootlineActivityElements(), formatDuration(totalMinutes), "100.0%", emptyString(), withComments));
+	return result;
+    }
+
+    protected abstract Collection<String> getHeadlineActivityElements();
+
+    protected abstract Collection<String> getFootlineActivityElements();
+
+    private Collection<Collection<String>> computeResultLines(final AnalysisData currentAnalysis,
+	    final Duration totalMinutes, final boolean withComments) {
+	Collection<Collection<String>> valueList = new ArrayList<>();
+	for (String key : currentAnalysis.getKeys()) {
+	    valueList.add(
+		    calculateResultForActivity(
+			    currentAnalysis.getActivityForKey(key),
+			    currentAnalysis.getBookedMinutesForKey(key),
+			    totalMinutes,
+			    currentAnalysis.getAccumulatedCommentForKey(key),
+			    withComments));
 	}
+	return sortResultList(valueList);
+    }
+
+    private Collection<String> calculateResultForActivity(final Activity activity, final Duration activityMinutes,
+	    final Duration totalMinutes, final String activityComments, boolean withComments) {
+	return createLine(
+		getKeyItems(activity),
+		formatDuration(activityMinutes),
+		formatPercentageString(totalMinutes, activityMinutes),
+		activityComments,
+		withComments);
+    }
+
+    private Collection<String> createLine(final Collection<String> activityinfo, final String activityMinutes,
+	    final String totalMinutes, final String activityComments, final boolean withComments) {
+	List<String> back = new ArrayList<>(activityinfo);
+	back.add(activityMinutes);
+	back.add(totalMinutes);
+	if (withComments) {
+	    back.add(activityComments);
+	}
+	return back;
+    }
+
+    protected abstract Collection<String> getKeyItems(final Activity activity);
+
+    private List<Collection<String>> sortResultList(final Collection<Collection<String>> valueList) {
+	return valueList
+		.stream()
+		.sorted((line1, line2) -> getSortCriteriaForResultLine(line1)
+		.compareToIgnoreCase(getSortCriteriaForResultLine(line2)))
+		.collect(Collectors.toList());
+    }
+
+    protected abstract String getSortCriteriaForResultLine(final Collection<String> line);
+
+    public BaseProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
+	bookingStore = bStore;
+	activityStore = aStore;
+    }
 }

@@ -13,5 +13,5 @@ import java.util.Collection;
  * Interface to be implemented for an anaylsis of the data
  */
 public interface Analysis {
-	Collection<Collection<String>> analyze(CalculationPeriod period, String user);
+    Collection<Collection<String>> analyze(CalculationPeriod period, String user);
 }
