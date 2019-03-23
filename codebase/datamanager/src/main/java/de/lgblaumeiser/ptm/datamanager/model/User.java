@@ -61,7 +61,7 @@ public class User {
         /**
          * @param email the email to set
          */
-        public UserBuilder setEmail(String email) {
+        public UserBuilder setEmail(final String email) {
             this.email = email;
             return this;
         }
@@ -69,7 +69,7 @@ public class User {
         /**
          * @param question the question to set
          */
-        public UserBuilder setQuestion(String question) {
+        public UserBuilder setQuestion(final String question) {
             this.question = question;
             return this;
         }
@@ -77,7 +77,7 @@ public class User {
         /**
          * @param answer the answer to set
          */
-        public UserBuilder setAnswer(String answer) {
+        public UserBuilder setAnswer(final String answer) {
             this.answer = answer;
             return this;
         }
