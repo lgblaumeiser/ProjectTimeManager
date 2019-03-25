@@ -18,17 +18,17 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * Provider for the data analysis and the standard implementations
  */
 public class AnalysisProvider {
-	private static final String ANALYSIS_HOURS_ID = "HOURS";
-	private static final String ANALYSIS_ACTIVITIES_ID = "ACTIVITIES";
-	private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
+    private static final String ANALYSIS_HOURS_ID = "HOURS";
+    private static final String ANALYSIS_ACTIVITIES_ID = "ACTIVITIES";
+    private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
 
-	public DataAnalysisService getAnalysisService(final ObjectStore<Activity> aStore,
-			final ObjectStore<Booking> bStore) {
-		HourComputer hourComputer = new HourComputer(bStore);
-		ActivityComputer activityComputer = new ActivityComputer(bStore, aStore);
-		ProjectComputer projectComputer = new ProjectComputer(bStore, aStore);
-		return new DataAnalysisService().addAnalysis(ANALYSIS_HOURS_ID, hourComputer)
-				.addAnalysis(ANALYSIS_ACTIVITIES_ID, activityComputer)
-				.addAnalysis(ANALYSIS_PROJECTS_ID, projectComputer);
-	}
+    public DataAnalysisService getAnalysisService(final ObjectStore<Activity> aStore,
+            final ObjectStore<Booking> bStore) {
+        HourComputer hourComputer = new HourComputer(bStore);
+        ActivityComputer activityComputer = new ActivityComputer(bStore, aStore);
+        ProjectComputer projectComputer = new ProjectComputer(bStore, aStore);
+        return new DataAnalysisService().addAnalysis(ANALYSIS_HOURS_ID, hourComputer)
+                .addAnalysis(ANALYSIS_ACTIVITIES_ID, activityComputer)
+                .addAnalysis(ANALYSIS_PROJECTS_ID, projectComputer);
+    }
 }

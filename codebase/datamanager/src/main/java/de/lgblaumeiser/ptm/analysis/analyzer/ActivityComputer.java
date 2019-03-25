@@ -24,40 +24,40 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * the requirements of the author concerning his time keeping.
  */
 public class ActivityComputer extends BaseProjectComputer {
-	@Override
-	protected String indexGetter(Activity activity) {
-		return activity.getId().toString();
-	}
+    @Override
+    protected String indexGetter(final Activity activity) {
+        return activity.getId().toString();
+    }
 
-	@Override
-	protected Collection<String> getHeadline() {
-		return asList("Activity", "Project Id", "Project Activity");
-	}
+    @Override
+    protected Collection<String> getHeadlineActivityElements() {
+        return asList("Activity", "Project Id", "Project Activity");
+    }
 
-	@Override
-	protected Collection<String> getFootLine() {
-		return asList("Total", emptyString(), emptyString());
-	}
+    @Override
+    protected Collection<String> getFootlineActivityElements() {
+        return asList("Total", emptyString(), emptyString());
+    }
 
-	@Override
-	protected Collection<String> getKeyItems(Activity activity) {
-		return asList(activity.getActivityName(), activity.getProjectId(), activity.getProjectActivity());
-	}
+    @Override
+    protected Collection<String> getKeyItems(final Activity activity) {
+        return asList(activity.getActivityName(), activity.getProjectId(), activity.getProjectActivity());
+    }
 
-	@Override
-	protected String getSortCriteriaForResultLine(final Collection<String> line) {
-		return getProjectIdFromResultLine(line) + "_" + getProjectSubidFromResultLine(line);
-	}
+    @Override
+    protected String getSortCriteriaForResultLine(final Collection<String> line) {
+        return getProjectIdFromResultLine(line) + "_" + getProjectSubidFromResultLine(line);
+    }
 
-	private String getProjectIdFromResultLine(final Collection<String> line) {
-		return getIndexFromCollection(line, 1);
-	}
+    private String getProjectIdFromResultLine(final Collection<String> line) {
+        return getIndexFromCollection(line, 1);
+    }
 
-	private String getProjectSubidFromResultLine(final Collection<String> line) {
-		return getIndexFromCollection(line, 2);
-	}
+    private String getProjectSubidFromResultLine(final Collection<String> line) {
+        return getIndexFromCollection(line, 2);
+    }
 
-	public ActivityComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
-		super(bStore, aStore);
-	}
+    public ActivityComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
+        super(bStore, aStore);
+    }
 }

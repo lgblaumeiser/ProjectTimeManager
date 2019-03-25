@@ -23,32 +23,32 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * the requirements of the author concerning his time keeping.
  */
 public class ProjectComputer extends BaseProjectComputer {
-	@Override
-	protected String indexGetter(Activity activity) {
-		return activity.getProjectId();
-	}
+    @Override
+    protected String indexGetter(final Activity activity) {
+        return activity.getProjectId();
+    }
 
-	@Override
-	protected Collection<String> getHeadline() {
-		return asList("Project Id");
-	}
+    @Override
+    protected Collection<String> getHeadlineActivityElements() {
+        return asList("Project Id");
+    }
 
-	@Override
-	protected Collection<String> getFootLine() {
-		return asList("Total");
-	}
+    @Override
+    protected Collection<String> getFootlineActivityElements() {
+        return asList("Total");
+    }
 
-	@Override
-	protected Collection<String> getKeyItems(Activity activity) {
-		return asList(activity.getProjectId());
-	}
+    @Override
+    protected Collection<String> getKeyItems(final Activity activity) {
+        return asList(activity.getProjectId());
+    }
 
-	@Override
-	protected String getSortCriteriaForResultLine(Collection<String> line) {
-		return getIndexFromCollection(line, 0);
-	}
+    @Override
+    protected String getSortCriteriaForResultLine(final Collection<String> line) {
+        return getIndexFromCollection(line, 0);
+    }
 
-	public ProjectComputer(ObjectStore<Booking> bStore, ObjectStore<Activity> aStore) {
-		super(bStore, aStore);
-	}
+    public ProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
+        super(bStore, aStore);
+    }
 }
