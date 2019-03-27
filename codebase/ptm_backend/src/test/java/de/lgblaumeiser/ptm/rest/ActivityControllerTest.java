@@ -7,34 +7,18 @@
  */
 package de.lgblaumeiser.ptm.rest;
 
-import static java.lang.System.setProperty;
-import static org.apache.commons.io.FileUtils.forceDelete;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.Base64Utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lgblaumeiser.ptm.rest.ActivityRestController.ActivityBody;
 
 /**
  * Test the activity rest controller
@@ -42,199 +26,103 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ActivityControllerTest {
-	@Autowired
-	private MockMvc mockMvc;
+public class ActivityControllerTest extends ControllerTestSetupAndSupport {
+    private static final String ACTIVITY_HIDDEN_JSON = "\"hidden\":true";
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    private static final String TESTACT_HIDDEN_NAME = "MyHiddenActivity";
+    private static final String TESTACT_HIDDEN_PROJ = "1234";
+    private static final String TESTACT_HIDDEN_SUB = "4";
 
-	private File tempFolder;
+    @Test
+    public void testWithInitialSetupNoActivities() throws Exception {
+        createDefaultUser();
 
-	@Before
-	public void before() throws IOException {
-		tempFolder = Files.createTempDirectory("ptm").toFile();
-		String tempStorage = new File(tempFolder, ".ptm").getAbsolutePath();
-		setProperty("ptm.filestore", tempStorage);
-	}
+        performGet(ACTIVITY_RESOURCE_API)
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(EMPTY_JSON_ARRAY)));
+    }
 
-	@After
-	public void after() throws IOException {
-		forceDelete(tempFolder);
-	}
+    @Test
+    public void testRoundtripCreateAndRetrieveActivity() throws Exception {
+        createDefaultUser();
 
-	@Test
-	public void testWithInitialSetupNoActivities() throws Exception {
-		UserRestController.UserBody user = new UserRestController.UserBody();
-		user.username = "MyTestUser";
-		user.password = "DummyPwd";
-		user.email = "abc@xyz.com";
-		user.question = "What the Heck?";
-		user.answer = "42";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+        createDefaultActivity(false);
 
-		mockMvc.perform(get("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("[]")));
-	}
+        performGet(ACTIVITY_RESOURCE_API)
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT1_NAME)))
+                .andExpect(content().string(containsString(TESTACT1_PRJ)))
+                .andExpect(content().string(containsString(TESTACT1_SUB)));
 
-	@Test
-	public void testRoundtripCreateAndRetrieveActivity() throws Exception {
-		UserRestController.UserBody user = new UserRestController.UserBody();
-		user.username = "MyTestUser";
-		user.password = "DummyPwd";
-		user.email = "abc@xyz.com";
-		user.question = "What the Heck?";
-		user.answer = "42";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+        performGet(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_1)
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT1_NAME)))
+                .andExpect(content().string(containsString(TESTACT1_PRJ)))
+                .andExpect(content().string(containsString(TESTACT1_SUB)));
 
-		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
-		data.activityName = "MyTestActivity";
-		data.projectId = "0815";
-		data.projectActivity = "1";
-		data.hidden = false;
-		mockMvc.perform(post("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().isCreated());
+        ActivityBody data = new ActivityBody();
+        data.activityName = TESTACT_HIDDEN_NAME;
+        data.projectId = TESTACT_HIDDEN_PROJ;
+        data.projectActivity = TESTACT_HIDDEN_SUB;
+        data.hidden = true;
+        createActivity(data, getUser1());
 
-		mockMvc.perform(get("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyTestActivity")))
-				.andExpect(content().string(containsString("0815")));
+        performGet(ACTIVITY_RESOURCE_API)
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(ACTIVITY_HIDDEN_JSON)))
+                .andExpect(content().string(containsString(TESTACT_HIDDEN_NAME)))
+                .andExpect(content().string(containsString(TESTACT1_PRJ)))
+                .andExpect(content().string(containsString(TESTACT1_SUB)));
+    }
 
-		mockMvc.perform(get("/activities/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyTestActivity")))
-				.andExpect(content().string(containsString("0815")));
+    @Test
+    public void testActivitiesWithDifferentUser() throws Exception {
+        createDefaultUser();
 
-		data.hidden = true;
-		data.activityName = "MyOtherTestActivity";
-		data.projectId = "4711";
-		data.projectActivity = "2";
-		mockMvc.perform(post("/activities/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().isOk());
+        createDefaultActivity(false);
 
-		mockMvc.perform(get("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("true")))
-				.andExpect(content().string(containsString("MyOtherTestActivity")))
-				.andExpect(content().string(containsString("4711")))
-				.andExpect(content().string(containsString("\"id\":1")));
-	}
+        performGet(ACTIVITY_RESOURCE_API, getUser1())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT1_NAME)))
+                .andExpect(content().string(containsString(TESTACT1_PRJ)))
+                .andExpect(content().string(containsString(TESTACT1_SUB)))
+                .andExpect(content().string(not(containsString(TESTACT2_PRJ))));
 
-	@Test
-	public void testActivitiesWithDifferentUser() throws Exception {
-		UserRestController.UserBody user = new UserRestController.UserBody();
-		user.username = "MyTestUser";
-		user.password = "DummyPwd";
-		user.email = "abc@xyz.com";
-		user.question = "What the Heck?";
-		user.answer = "42";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+        performGet(ACTIVITY_RESOURCE_API, getUser2())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT2_NAME)))
+                .andExpect(content().string(containsString(TESTACT2_PRJ)))
+                .andExpect(content().string(containsString(TESTACT2_SUB)))
+                .andExpect(content().string(not(containsString(TESTACT1_PRJ))));
 
-		user = new UserRestController.UserBody();
-		user.username = "MyTestUser2";
-		user.password = "DummyPwd2";
-		user.email = "abc@xyz.com";
-		user.question = "What the Heck?";
-		user.answer = "42";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+        performGet(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_1, getUser1())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT1_NAME)))
+                .andExpect(content().string(containsString(TESTACT1_PRJ)))
+                .andExpect(content().string(containsString(TESTACT1_SUB)));
 
-		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
-		data.activityName = "MyTestActivity";
-		data.projectId = "0815";
-		data.projectActivity = "1";
-		data.hidden = false;
-		mockMvc.perform(post("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().isCreated());
+        performGet(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_2, getUser2())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT2_NAME)))
+                .andExpect(content().string(containsString(TESTACT2_PRJ)))
+                .andExpect(content().string(containsString(TESTACT2_SUB)));
 
-		data = new ActivityRestController.ActivityBody();
-		data.activityName = "MyOtherTestActivity";
-		data.projectId = "4711";
-		data.projectActivity = "2";
-		data.hidden = false;
-		mockMvc.perform(post("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().isCreated());
+        performGet(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_1, getUser2())
+                .andExpect(status().is4xxClientError());
 
-		mockMvc.perform(get("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyTestActivity")))
-				.andExpect(content().string(containsString("0815")))
-				.andExpect(content().string(not(containsString("4711"))));
+        performGet(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_2, getUser1())
+                .andExpect(status().is4xxClientError());
 
-		mockMvc.perform(get("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyOtherTestActivity")))
-				.andExpect(content().string(containsString("4711")))
-				.andExpect(content().string(not(containsString("0815"))));
+        ActivityBody data = new ActivityBody();
+        data.activityName = TESTACT_HIDDEN_NAME;
+        data.projectId = TESTACT_HIDDEN_PROJ;
+        data.projectActivity = TESTACT_HIDDEN_SUB;
+        data.hidden = true;
 
-		mockMvc.perform(get("/activities/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyTestActivity")))
-				.andExpect(content().string(containsString("0815")));
+        performPost(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_2, data, getUser1())
+                .andExpect(status().is4xxClientError());
 
-		mockMvc.perform(get("/activities/2")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyOtherTestActivity")))
-				.andExpect(content().string(containsString("4711")));
-
-		mockMvc.perform(get("/activities/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser2:DummyPwd2".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
-				.andExpect(status().is4xxClientError());
-
-		mockMvc.perform(get("/activities/2")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print())
-				.andExpect(status().is4xxClientError());
-
-		data.hidden = true;
-		data.activityName = "MyOtherOtherTestActivity";
-		data.projectId = "08154711";
-		data.projectActivity = "3";
-		mockMvc.perform(post("/activities/2")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().is4xxClientError());
-
-		mockMvc.perform(post("/activities/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().isOk());
-	}
+        performPost(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_1, data, getUser1())
+                .andExpect(status().isOk());
+    }
 }

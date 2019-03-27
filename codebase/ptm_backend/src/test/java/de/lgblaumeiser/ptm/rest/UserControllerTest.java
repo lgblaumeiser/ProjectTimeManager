@@ -29,7 +29,7 @@ import de.lgblaumeiser.ptm.rest.UserRestController.UserBody;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class UserControllerTest extends AbstractControllerTest {
+public class UserControllerTest extends ControllerTestSetupAndSupport {
     private static final String USER_RESET_API = "/users/reset";
     private static final String USER_RESOURCE_API = "/users/name";
 
@@ -41,7 +41,7 @@ public class UserControllerTest extends AbstractControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(TESTUSER_USERNAME)));
 
-        performGet(USER_RESOURCE_API, TESTUSER_USERNAME, TESTUSER_PASSWORD2)
+        performGet(USER_RESOURCE_API, getUserWrongPassword())
                 .andExpect(status().is4xxClientError());
     }
 
@@ -50,7 +50,7 @@ public class UserControllerTest extends AbstractControllerTest {
         createDefaultUser();
 
         UserBody data = getFirstFromCollection(createDefaultUserdata());
-        data.password = TESTUSER_PASSWORD2;
+        data.password = TESTUSER2_PASSWORD;
         performPost(USER_REGISTRATION_API, data, empty())
                 .andExpect(status().is4xxClientError());
     }
@@ -60,11 +60,11 @@ public class UserControllerTest extends AbstractControllerTest {
         createDefaultUser();
 
         UserBody data = new UserBody();
-        data.password = TESTUSER_PASSWORD2;
-        performPost(USER_RESOURCE_API, data, TESTUSER_USERNAME, TESTUSER_PASSWORD)
+        data.password = TESTUSER2_PASSWORD;
+        performPost(USER_RESOURCE_API, data, getUser1())
                 .andExpect(status().isOk());
 
-        performGet(USER_RESOURCE_API, TESTUSER_USERNAME, TESTUSER_PASSWORD2)
+        performGet(USER_RESOURCE_API, getUserWrongPassword())
                 .andExpect(status().isOk());
     }
 
@@ -85,27 +85,27 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testDeleteAllUserData() throws Exception {
         createDefaultUser();
 
-        createDefaultActivity();
+        createDefaultActivity(false);
 
-        createDefaultBooking();
+        createDefaultBooking(false);
 
-        performDelete(USER_RESOURCE_API, TESTUSER_USERNAME2, TESTUSER_PASSWORD2)
+        performDelete(USER_RESOURCE_API, getUser2())
                 .andExpect(status().isOk());
 
-        performGet(BOOKING_DAY_API + DATE_STRING, TESTUSER_USERNAME, TESTUSER_PASSWORD)
+        performGet(BOOKING_DAY_API + DATE_STRING, getUser1())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("activity\":" + ACTIVITY_ID_1)))
                 .andExpect(content().string(containsString("user\":\"" + TESTUSER_USERNAME)));
 
-        performGet(ACTIVITY_RESOURCE_API, TESTUSER_USERNAME, TESTUSER_PASSWORD)
+        performGet(ACTIVITY_RESOURCE_API, getUser1())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString(TESTACT1_NAME)))
                 .andExpect(content().string(containsString(TESTACT1_PRJ)));
 
-        performGet(BOOKING_DAY_API + DATE_STRING, TESTUSER_USERNAME2, TESTUSER_PASSWORD2)
+        performGet(BOOKING_DAY_API + DATE_STRING, getUser2())
                 .andExpect(status().is4xxClientError());
 
-        performGet(ACTIVITY_RESOURCE_API, TESTUSER_USERNAME2, TESTUSER_PASSWORD2)
+        performGet(ACTIVITY_RESOURCE_API, getUser2())
                 .andExpect(status().is4xxClientError());
     }
 }
