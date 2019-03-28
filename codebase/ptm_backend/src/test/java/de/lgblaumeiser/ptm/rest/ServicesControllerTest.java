@@ -7,39 +7,21 @@
  */
 package de.lgblaumeiser.ptm.rest;
 
-import static java.lang.System.setProperty;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_DATE;
-import static java.time.format.DateTimeFormatter.ISO_LOCAL_TIME;
-import static org.apache.commons.io.FileUtils.forceDelete;
+import static de.lgblaumeiser.ptm.util.Utils.emptyString;
 import static org.hamcrest.Matchers.containsString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.Optional;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.Base64Utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import de.lgblaumeiser.ptm.rest.BookingRestController.BookingBody;
 
 /**
  * Test class for the services rest controller
@@ -47,117 +29,66 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ServicesControllerTest {
+public class ServicesControllerTest extends ControllerTestSetupAndSupport {
+    private static final String API_BACKUP = "/services/backup";
+    private static final String API_RESTORE = "/services/restore";
+    private static final String API_LICENSE = "/services/license";
 
-	@Autowired
-	private MockMvc mockMvc;
+    private static final String EXPECTED_USER_JSON_STRING = "user\":\"" + TESTUSER_USERNAME;
+    private static final String EXPECTED_ACTIVITY_1_JSON_STRING = "activity\":" + ACTIVITY_ID_1;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+    @Test
+    public void testBackupRestore() throws Exception {
+        createDefaultUser();
 
-	private File tempFolder;
+        createDefaultActivity(false);
 
-	@Before
-	public void before() throws IOException {
-		tempFolder = Files.createTempDirectory("ptm").toFile();
-		String tempStorage = new File(tempFolder, ".ptm").getAbsolutePath();
-		setProperty("ptm.filestore", tempStorage);
-	}
+        BookingBody booking = new BookingBody();
+        booking.activityId = ACTIVITY_ID_1;
+        booking.starttime = createHourString(8, 15);
+        booking.endtime = createHourString(17, 0);
+        booking.breakstart = createHourString(10, 30);
+        booking.comment = emptyString();
 
-	@After
-	public void after() throws IOException {
-		forceDelete(tempFolder);
-	}
+        createBooking(DATE_STRING, booking, getUser1());
 
-	@Test
-	public void testBackupRestore() throws Exception {
-		UserRestController.UserBody user = new UserRestController.UserBody();
-		user.username = "MyTestUser";
-		user.password = "DummyPwd";
-		user.email = "abc@xyz.com";
-		user.question = "What the Heck?";
-		user.answer = "42";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+        MvcResult result = performGet(API_BACKUP, getUser1())
+                .andExpect(status().isOk())
+                .andReturn();
+        byte[] zipdata = result.getResponse().getContentAsByteArray();
 
-		user.username = "MyOtherTestUser";
-		user.password = "DummyPwd2";
-		user.email = "abc@xyz.com";
-		user.question = "What the Heck?";
-		user.answer = "42";
-		mockMvc.perform(post("/users/register").contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-				.content(objectMapper.writeValueAsString(user))).andDo(print()).andExpect(status().isCreated());
+        performGet(API_BACKUP, getUser2())
+                .andExpect(status().is4xxClientError());
 
-		ActivityRestController.ActivityBody data = new ActivityRestController.ActivityBody();
-		data.activityName = "MyTestActivity";
-		data.projectId = "0815";
-		data.projectActivity = "1";
-		mockMvc.perform(post("/activities")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(data)))
-				.andDo(print()).andExpect(status().isCreated());
+        performPut(API_RESTORE, zipdata, getUser2())
+                .andExpect(status().is4xxClientError());
 
-		LocalDate date = LocalDate.now();
-		String dateString = date.format(ISO_LOCAL_DATE);
-		BookingRestController.BookingBody booking = new BookingRestController.BookingBody();
-		booking.activityId = "1";
-		booking.starttime = LocalTime.of(8, 15).format(ISO_LOCAL_TIME);
-		booking.endtime = LocalTime.of(16, 45).format(ISO_LOCAL_TIME);
-		booking.comment = "";
-		mockMvc.perform(post("/bookings/day/" + dateString)
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE).content(objectMapper.writeValueAsString(booking)))
-				.andDo(print()).andExpect(status().isCreated());
+        performPut(API_RESTORE, zipdata, getUser1())
+                .andExpect(status().isOk());
 
-		MvcResult result = mockMvc.perform(get("/services/backup")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType("application/zip")).andDo(print()).andExpect(status().isOk()).andReturn();
-		byte[] zipdata = result.getResponse().getContentAsByteArray();
+        performGet(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_1)
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(TESTACT1_NAME)))
+                .andExpect(content().string(containsString(TESTACT1_PRJ)))
+                .andExpect(content().string(containsString(TESTACT1_SUB)));
 
-		mockMvc.perform(get("/services/backup")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyOtherTestUser:DummyPwd2".getBytes()))
-				.contentType("application/zip")).andDo(print()).andExpect(status().is4xxClientError());
+        performGet(BOOKING_RESOURCE_API + "1")
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString(EXPECTED_ACTIVITY_1_JSON_STRING)))
+                .andExpect(content().string(containsString(EXPECTED_USER_JSON_STRING)))
+                .andExpect(content().string(containsString(booking.starttime)))
+                .andExpect(content().string(containsString(booking.breakstart)));
+    }
 
-		mockMvc.perform(put("/services/restore")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyOtherTestUser:DummyPwd2".getBytes()))
-				.contentType("application/zip").content(zipdata)).andDo(print()).andExpect(status().is4xxClientError());
-
-		mockMvc.perform(put("/services/restore")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType("application/zip").content(zipdata)).andDo(print()).andExpect(status().isOk());
-
-		mockMvc.perform(get("/activities/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("MyTestActivity")))
-				.andExpect(content().string(containsString("0815")));
-
-		mockMvc.perform(get("/bookings/id/1")
-				.header(HttpHeaders.AUTHORIZATION,
-						"Basic " + Base64Utils.encodeToString("MyTestUser:DummyPwd".getBytes()))
-				.contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("activity")))
-				.andExpect(content().string(containsString("user\":\"MyTestUser")))
-				.andExpect(content().string(containsString("starttime")))
-				.andExpect(content().string(containsString("endtime")));
-
-	}
-
-	@Test
-	public void testLicense() throws Exception {
-		mockMvc.perform(get("/services/license")).andDo(print()).andExpect(status().isOk())
-				.andExpect(content().string(containsString("Apache-2.0")))
-				.andExpect(content().string(containsString("EPL-1.0")))
-				.andExpect(content().string(containsString("MIT")))
-				.andExpect(content().string(containsString("CDDL-1.1")))
-				.andExpect(content().string(containsString("BSD-2-Clause")))
-				.andExpect(content().string(containsString("BSD-3-Clause")));
-	}
+    @Test
+    public void testLicense() throws Exception {
+        performGet(API_LICENSE, Optional.empty())
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Apache-2.0")))
+                .andExpect(content().string(containsString("EPL-1.0")))
+                .andExpect(content().string(containsString("MIT")))
+                .andExpect(content().string(containsString("CDDL-1.1")))
+                .andExpect(content().string(containsString("BSD-2-Clause")))
+                .andExpect(content().string(containsString("BSD-3-Clause")));
+    }
 }
