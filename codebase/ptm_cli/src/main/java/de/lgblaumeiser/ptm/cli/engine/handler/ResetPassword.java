@@ -18,7 +18,7 @@ import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
  */
 @Parameters(commandDescription = "Reset the password for a user and set it locally")
 public class ResetPassword extends AbstractCommandHandler {
-	@Parameter(names = { "-u", "--username" }, description = "Username of new user", required = true)
+    @Parameter(names = { "-u", "--username" }, description = "Username of the user", required = true)
 	public String username;
 
 	@Parameter(names = { "-a", "--answer" }, description = "Answer for question on password reset", required = true)

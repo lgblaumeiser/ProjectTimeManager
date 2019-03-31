@@ -21,7 +21,7 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
  */
 @Parameters(commandDescription = "List all activities available")
 public class ListActivity extends AbstractCommandHandler {
-	@Parameter(names = { "--hidden" }, description = "Hide the activity")
+    @Parameter(names = { "--hidden" }, description = "Show hidden activities")
 	private boolean hidden = false;
 
 	@Override
