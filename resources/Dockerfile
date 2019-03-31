@@ -4,7 +4,7 @@
 #
 # SPDX-License-Identifier: MIT
 
-FROM openjdk:11-jre
+FROM openjdk:8-jre
 VOLUME /var/ptm
 COPY ptm_backend-1.5.jar app.jar
 ENTRYPOINT ["java","-Dptm.filestore=/var/ptm", "-jar","/app.jar"]
