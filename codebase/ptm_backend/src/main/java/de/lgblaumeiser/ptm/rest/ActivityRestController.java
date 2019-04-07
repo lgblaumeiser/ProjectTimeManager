@@ -37,72 +37,93 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
 @RestController
 @RequestMapping("/activities")
 public class ActivityRestController {
-	private Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	private ServiceMapper services;
+    @Autowired
+    private ServiceMapper services;
 
-	@RequestMapping(method = RequestMethod.GET)
-	Collection<Activity> getActivities(final Principal principal) {
-		logger.info("Request: Get all Activities of user " + principal.getName());
-		return services.activityStore().retrieveAll().stream().filter(act -> act.getUser().equals(principal.getName()))
-				.sorted((a1, a2) -> a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity()))
-				.collect(Collectors.toList());
-	}
+    @RequestMapping(method = RequestMethod.GET)
+    Collection<Activity> getActivities(final Principal principal) {
+        logger.info("Request: Get all Activities of user " + principal.getName());
+        return services
+                .activityStore()
+                .retrieveAll()
+                .stream()
+                .filter(act -> act.getUser().equals(principal.getName()))
+                .sorted((a1, a2) -> a1.getProjectId().compareToIgnoreCase(a2.getProjectId()))
+                .collect(Collectors.toList());
+    }
 
-	public static class ActivityBody {
-		public String activityName;
-		public String projectId;
-		public String projectActivity;
-		public boolean hidden;
-	}
+    public static class ActivityBody {
+        public String activityName;
+        public String projectId;
+        public String projectActivity;
+        public boolean hidden;
+    }
 
-	@RequestMapping(method = RequestMethod.POST)
-	ResponseEntity<?> addActivity(final Principal principal, @RequestBody final ActivityBody activityData) {
-		logger.info("Request: Post new Activity for user " + principal.getName());
-		Activity newActivity = services.activityStore()
-				.store(newActivity().setUser(principal.getName()).setActivityName(activityData.activityName)
-						.setProjectId(activityData.projectId).setProjectActivity(activityData.projectActivity)
-						.setHidden(activityData.hidden).build());
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(newActivity.getId()).toUri();
-		logger.info("Result: Activity Created with Id " + newActivity.getId());
-		return ResponseEntity.created(location).build();
-	}
+    @RequestMapping(method = RequestMethod.POST)
+    ResponseEntity<?> addActivity(final Principal principal, @RequestBody final ActivityBody activityData) {
+        logger.info("Request: Post new Activity for user " + principal.getName());
+        Activity newActivity = services
+                .activityStore()
+                .store(newActivity()
+                        .setUser(principal.getName())
+                        .setActivityName(activityData.activityName)
+                        .setProjectId(activityData.projectId)
+                        .setProjectActivity(activityData.projectActivity)
+                        .setHidden(activityData.hidden)
+                        .build());
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(newActivity.getId())
+                .toUri();
+        logger.info("Result: Activity Created with Id " + newActivity.getId());
+        return ResponseEntity.created(location).build();
+    }
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{activityId}")
-	Activity getActivity(final Principal principal, @PathVariable final String activityId) {
-		logger.info("Request: Get Activity with Id " + activityId + " for user " + principal.getName());
-		Activity foundAct = services.activityStore().retrieveById(valueOf(activityId))
-				.orElseThrow(IllegalStateException::new);
-		if (!foundAct.getUser().equals(principal.getName())) {
-			throw new IllegalStateException();
-		}
-		return foundAct;
-	}
+    @RequestMapping(method = RequestMethod.GET, value = "/{activityId}")
+    Activity getActivity(final Principal principal, @PathVariable final String activityId) {
+        logger.info("Request: Get Activity with Id " + activityId + " for user " + principal.getName());
+        Activity foundAct = services
+                .activityStore()
+                .retrieveById(valueOf(activityId))
+                .orElseThrow(IllegalStateException::new);
+        if (!foundAct.getUser().equals(principal.getName())) {
+            throw new IllegalStateException();
+        }
+        return foundAct;
+    }
 
-	@RequestMapping(method = RequestMethod.POST, value = "/{activityId}")
-	ResponseEntity<?> changeActivity(final Principal principal, @PathVariable final String activityId,
-			@RequestBody final ActivityBody activityData) {
-		logger.info(
-				"Request: Post changed Activity, id Id for change: " + activityId + " for user " + principal.getName());
-		services.activityStore().retrieveById(valueOf(activityId)).ifPresent(a -> {
-			if (a.getUser().equals(principal.getName())) {
-				services.activityStore()
-						.store(a.changeActivity().setActivityName(activityData.activityName)
-								.setProjectId(activityData.projectId).setProjectActivity(activityData.projectActivity)
-								.setHidden(activityData.hidden).build());
-			} else {
-				throw new IllegalStateException();
-			}
-		});
-		logger.info("Result: Activity changed");
-		return ResponseEntity.ok().build();
-	}
+    @RequestMapping(method = RequestMethod.POST, value = "/{activityId}")
+    ResponseEntity<?> changeActivity(final Principal principal, @PathVariable final String activityId,
+            @RequestBody final ActivityBody activityData) {
+        logger.info(
+                "Request: Post changed Activity, id Id for change: " + activityId + " for user " + principal.getName());
+        services
+                .activityStore()
+                .retrieveById(valueOf(activityId))
+                .ifPresent(a -> {
+                    if (a.getUser().equals(principal.getName())) {
+                        services
+                                .activityStore()
+                                .store(a.changeActivity()
+                                        .setActivityName(activityData.activityName)
+                                        .setProjectId(activityData.projectId)
+                                        .setProjectActivity(activityData.projectActivity)
+                                        .setHidden(activityData.hidden)
+                                        .build());
+                    } else {
+                        throw new IllegalStateException();
+                    }
+                });
+        logger.info("Result: Activity changed");
+        return ResponseEntity.ok().build();
+    }
 
-	@ExceptionHandler(IllegalStateException.class)
-	public ResponseEntity<?> handleException(final IllegalStateException e) {
-		logger.error("Exception in Request", e);
-		return ResponseEntity.status(BAD_REQUEST).body(e.toString());
-	}
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<?> handleException(final IllegalStateException e) {
+        logger.error("Exception in Request", e);
+        return ResponseEntity.status(BAD_REQUEST).body(e.toString());
+    }
 }
