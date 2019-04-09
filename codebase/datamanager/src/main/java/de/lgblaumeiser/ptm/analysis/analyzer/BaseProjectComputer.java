@@ -56,12 +56,11 @@ public abstract class BaseProjectComputer implements Analysis {
 
 	private void calculateAccumulatedComment(final String key, final String newComment) {
 	    String currentComment = getCurrentComment(key);
-	    if (stringHasContent(newComment)) {
-		if (stringHasContent(currentComment) && !currentComment.contains(newComment)) {
-		    currentComment = currentComment + ", " + newComment;
-		} else {
-		    currentComment = newComment;
-		}
+            if (stringHasContent(newComment) && !currentComment.contains(newComment)) {
+                currentComment = (stringHasContent(currentComment)
+                        ? currentComment + ", "
+                        : emptyString())
+                        + newComment;
 	    }
 	    keyToCommentMap.put(key, currentComment);
 	}
