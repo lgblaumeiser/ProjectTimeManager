@@ -50,8 +50,16 @@ public class ActivityRestController {
                 .retrieveAll()
                 .stream()
                 .filter(act -> act.getUser().equals(principal.getName()))
-                .sorted((a1, a2) -> a1.getProjectId().compareToIgnoreCase(a2.getProjectId()))
+                .sorted((a1, a2) -> compareActivities(a1, a2))
                 .collect(Collectors.toList());
+    }
+
+    private int compareActivities(Activity a1, Activity a2) {
+        int actcompare = a1.getProjectId().compareToIgnoreCase(a2.getProjectId());
+        if (actcompare == 0) {
+            actcompare = a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity());
+        }
+        return actcompare;
     }
 
     public static class ActivityBody {

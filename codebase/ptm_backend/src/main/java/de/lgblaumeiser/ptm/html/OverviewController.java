@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import de.lgblaumeiser.ptm.ServiceMapper;
+import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.util.Utils;
 
@@ -91,7 +92,7 @@ public class OverviewController {
                         .retrieveAll()
                         .stream()
                         .filter(act -> !act.isHidden() && act.getUser().equals(username))
-                        .sorted((a1, a2) -> a1.getProjectId().compareToIgnoreCase(a2.getProjectId()))
+                        .sorted((a1, a2) -> compareActivities(a1, a2))
                         .collect(toList()));
         model.addAttribute(BOOKINGSFORDAYATTRIBUTE,
                 services
@@ -122,6 +123,14 @@ public class OverviewController {
                 MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
 
         return TEMPLATENAME;
+    }
+
+    private int compareActivities(Activity a1, Activity a2) {
+        int actcompare = a1.getProjectId().compareToIgnoreCase(a2.getProjectId());
+        if (actcompare == 0) {
+            actcompare = a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity());
+        }
+        return actcompare;
     }
 
     private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
