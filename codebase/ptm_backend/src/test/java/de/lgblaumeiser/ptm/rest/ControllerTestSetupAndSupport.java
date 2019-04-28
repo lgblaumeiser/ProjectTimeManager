@@ -163,14 +163,14 @@ public class ControllerTestSetupAndSupport {
         ActivityBody data1 = new ActivityBody();
         data1.activityName = TESTACT1_NAME;
         data1.projectId = TESTACT1_PRJ;
-        data1.projectActivity = TESTACT1_SUB;
+        data1.activityId = TESTACT1_SUB;
         data1.hidden = false;
         result.add(new DefaultDataEntry<ActivityBody>(data1, user1));
 
         ActivityBody data2 = new ActivityBody();
         data2.activityName = TESTACT2_NAME;
         data2.projectId = TESTACT2_PRJ;
-        data2.projectActivity = TESTACT2_SUB;
+        data2.activityId = TESTACT2_SUB;
         data2.hidden = false;
         result.add(new DefaultDataEntry<ActivityBody>(data2, user2));
 

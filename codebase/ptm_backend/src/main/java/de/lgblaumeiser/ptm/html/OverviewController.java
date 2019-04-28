@@ -128,7 +128,7 @@ public class OverviewController {
     private int compareActivities(Activity a1, Activity a2) {
         int actcompare = a1.getProjectId().compareToIgnoreCase(a2.getProjectId());
         if (actcompare == 0) {
-            actcompare = a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity());
+            actcompare = a1.getActivityId().compareToIgnoreCase(a2.getActivityId());
         }
         return actcompare;
     }

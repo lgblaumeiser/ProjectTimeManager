@@ -45,19 +45,19 @@ public abstract class AbstractComputerTest {
     private static final Activity ACTIVITY1 = newActivity()
             .setActivityName(ACTIVITYNAME1)
             .setProjectId(PROJECTID1)
-            .setProjectActivity(PROJECTSUBCAT)
+            .setActivityId(PROJECTSUBCAT)
             .setUser(USERNAME)
             .build();
     private static final Activity ACTIVITY2 = newActivity()
             .setActivityName(ACTIVITYNAME2)
             .setProjectId(PROJECTID2)
-            .setProjectActivity(PROJECTSUBCAT)
+            .setActivityId(PROJECTSUBCAT)
             .setUser(USERNAME)
             .build();
     private static final Activity ACTIVITY3 = newActivity()
             .setActivityName(ACTIVITYNAME3)
             .setProjectId(PROJECTID1)
-            .setProjectActivity(PROJECTSUBCAT)
+            .setActivityId(PROJECTSUBCAT)
             .setUser(USERNAME)
             .build();
 

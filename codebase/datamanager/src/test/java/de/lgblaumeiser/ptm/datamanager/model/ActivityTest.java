@@ -23,10 +23,10 @@ public class ActivityTest {
     private final static String ACTIVITY_1_1 = "ActivityId11";
     private final static String ACTIVITY_1_2 = "ActivityId12";
     private final static String PRJID_1 = "ID1";
-    private final static String PRJACT_1 = "Cat1";
+    private final static String ACTID_1 = "Cat1";
     private final static String ACTIVITY_2 = "ActivityId11";
     private final static String PRJID_2 = "ID2";
-    private final static String PRJACT_2 = "Cat2";
+    private final static String ACTID_2 = "Cat2";
     private final static String USERNAME = "UserX";
     private final static String USERNAME2 = "UserY";
 
@@ -38,12 +38,12 @@ public class ActivityTest {
         Activity newActivity = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         assertEquals(ACTIVITY_1_1, newActivity.getActivityName());
         assertEquals(PRJID_1, newActivity.getProjectId());
-        assertEquals(PRJACT_1, newActivity.getProjectActivity());
+        assertEquals(ACTID_1, newActivity.getActivityId());
         assertEquals(USERNAME, newActivity.getUser());
     }
 
@@ -52,7 +52,7 @@ public class ActivityTest {
         Activity newActivity = newActivity()
                 .setActivityName(emptyString())
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
     }
@@ -62,7 +62,7 @@ public class ActivityTest {
         Activity newActivity = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(emptyString())
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
     }
@@ -72,7 +72,7 @@ public class ActivityTest {
         Activity newActivity = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(emptyString())
+                .setActivityId(emptyString())
                 .setUser(USERNAME)
                 .build();
     }
@@ -82,7 +82,7 @@ public class ActivityTest {
         Activity newActivity = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .build();
     }
 
@@ -91,7 +91,7 @@ public class ActivityTest {
         Activity newActivity = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(emptyString())
                 .build();
     }
@@ -104,37 +104,37 @@ public class ActivityTest {
         Activity newActivity1 = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity2 = newActivity()
                 .setActivityName(ACTIVITY_1_2)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity3 = newActivity()
                 .setActivityName(ACTIVITY_2)
                 .setProjectId(PRJID_2)
-                .setProjectActivity(PRJACT_2)
+                .setActivityId(ACTID_2)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity4 = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity5 = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_1)
+                .setActivityId(ACTID_1)
                 .setUser(USERNAME2)
                 .build();
         Activity newActivity6 = newActivity()
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
-                .setProjectActivity(PRJACT_2)
+                .setActivityId(ACTID_2)
                 .setUser(USERNAME)
                 .build();
 

@@ -49,13 +49,13 @@ public class BookingServiceTest {
     private static final Activity ACTIVITY1 = newActivity()
             .setActivityName("a")
             .setProjectId("b")
-            .setProjectActivity("c")
+            .setActivityId("c")
             .setUser(USERNAME)
             .build();
     private static final Activity ACTIVITY2 = newActivity()
             .setActivityName("a1")
             .setProjectId("b1")
-            .setProjectActivity("c1")
+            .setActivityId("c1")
             .setUser(USERNAME)
             .build();
     private static final User USER = newUser()

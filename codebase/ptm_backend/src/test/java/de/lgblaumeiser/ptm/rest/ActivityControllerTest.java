@@ -63,7 +63,7 @@ public class ActivityControllerTest extends ControllerTestSetupAndSupport {
         ActivityBody data = new ActivityBody();
         data.activityName = TESTACT_HIDDEN_NAME;
         data.projectId = TESTACT_HIDDEN_PROJ;
-        data.projectActivity = TESTACT_HIDDEN_SUB;
+        data.activityId = TESTACT_HIDDEN_SUB;
         data.hidden = true;
         createActivity(data, getUser1());
 
@@ -116,7 +116,7 @@ public class ActivityControllerTest extends ControllerTestSetupAndSupport {
         ActivityBody data = new ActivityBody();
         data.activityName = TESTACT_HIDDEN_NAME;
         data.projectId = TESTACT_HIDDEN_PROJ;
-        data.projectActivity = TESTACT_HIDDEN_SUB;
+        data.activityId = TESTACT_HIDDEN_SUB;
         data.hidden = true;
 
         performPost(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_2, data, getUser1())

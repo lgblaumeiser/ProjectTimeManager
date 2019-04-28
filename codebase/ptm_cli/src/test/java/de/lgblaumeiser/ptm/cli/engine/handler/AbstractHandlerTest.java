@@ -49,9 +49,9 @@ public abstract class AbstractHandlerTest {
 	static final String ACTIVITY2SUB = "2";
 	private final static String DUMMYUSER = "Dummy";
 	static final Activity ACTIVITY1 = newActivity().setActivityName(ACTIVITY1NAME).setProjectId(ACTIVITY1ID)
-			.setProjectActivity(ACTIVITY1SUB).setUser(DUMMYUSER).build();
+			.setActivityId(ACTIVITY1SUB).setUser(DUMMYUSER).build();
 	static final Activity ACTIVITY2 = newActivity().setActivityName(ACTIVITY2NAME).setProjectId(ACTIVITY2ID)
-			.setProjectActivity(ACTIVITY2SUB).setUser(DUMMYUSER).setHidden(true).build();
+			.setActivityId(ACTIVITY2SUB).setUser(DUMMYUSER).setHidden(true).build();
 	static final String COMMENT = "TestComment";
 	static final Booking BOOKING1 = Booking.newBooking().setActivity(1L).setBookingday(DATE1).setUser(DUMMYUSER)
 			.setStarttime(TIME1).setEndtime(TIME2).build();

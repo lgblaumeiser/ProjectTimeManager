@@ -35,7 +35,7 @@ public class AddActivity extends AbstractCommandHandler {
 	public void handleCommand() {
 		getLogger().log("Add activity " + name + " with project id " + pid + " and sub id " + pactivity);
 		Activity newAct = getServices().getActivityStore().store(newActivity().setActivityName(name).setProjectId(pid)
-				.setProjectActivity(pactivity).setUser(DUMMYUSER).build());
+				.setActivityId(pactivity).setUser(DUMMYUSER).build());
 		getLogger().log("Activity added: " + newAct.toString() + "\n");
 	}
 }

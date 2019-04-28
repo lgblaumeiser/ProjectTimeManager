@@ -57,7 +57,7 @@ public class ActivityRestController {
     private int compareActivities(Activity a1, Activity a2) {
         int actcompare = a1.getProjectId().compareToIgnoreCase(a2.getProjectId());
         if (actcompare == 0) {
-            actcompare = a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity());
+            actcompare = a1.getActivityId().compareToIgnoreCase(a2.getActivityId());
         }
         return actcompare;
     }
@@ -65,7 +65,7 @@ public class ActivityRestController {
     public static class ActivityBody {
         public String activityName;
         public String projectId;
-        public String projectActivity;
+        public String activityId;
         public boolean hidden;
     }
 
@@ -78,7 +78,7 @@ public class ActivityRestController {
                         .setUser(principal.getName())
                         .setActivityName(activityData.activityName)
                         .setProjectId(activityData.projectId)
-                        .setProjectActivity(activityData.projectActivity)
+                        .setActivityId(activityData.activityId)
                         .setHidden(activityData.hidden)
                         .build());
         URI location = ServletUriComponentsBuilder
@@ -118,7 +118,7 @@ public class ActivityRestController {
                                 .store(a.changeActivity()
                                         .setActivityName(activityData.activityName)
                                         .setProjectId(activityData.projectId)
-                                        .setProjectActivity(activityData.projectActivity)
+                                        .setActivityId(activityData.activityId)
                                         .setHidden(activityData.hidden)
                                         .build());
                     } else {

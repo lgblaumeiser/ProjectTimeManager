@@ -41,7 +41,7 @@ public class RestActivityStore extends RestBaseService implements ObjectStore<Ac
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("activityName", activity.getActivityName());
 			bodyData.put("projectId", activity.getProjectId());
-			bodyData.put("projectActivity", activity.getProjectActivity());
+			bodyData.put("activityId", activity.getActivityId());
 			bodyData.put("hidden", Boolean.toString(activity.isHidden()));
 			String apiName = "/activities";
 			if (activity.getId() > 0) {

@@ -48,7 +48,7 @@ public class ChangeActivity extends AbstractCommandHandler {
 		Activity.ActivityBuilder chgAct = oldAct.changeActivity();
 		name.ifPresent(chgAct::setActivityName);
 		pid.ifPresent(chgAct::setProjectId);
-		pactivity.ifPresent(chgAct::setProjectActivity);
+		pactivity.ifPresent(chgAct::setActivityId);
 		if (oldAct.isHidden() && visible)
 			chgAct.setHidden(false);
 		if (!oldAct.isHidden() && hidden)

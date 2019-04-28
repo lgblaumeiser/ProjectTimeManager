@@ -43,7 +43,7 @@ public class FileStoreActivityTest {
             .newActivity()
             .setActivityName(TESTNAME)
             .setProjectId(TESTINDEX)
-            .setProjectActivity(TESTSUB)
+            .setActivityId(TESTSUB)
             .setUser(USERNAME)
             .build();
 
@@ -55,7 +55,7 @@ public class FileStoreActivityTest {
         assertTrue(stubAccess.getStorageContent().contains(TESTNAME));
         assertTrue(stubAccess.getStorageContent().contains("projectId"));
         assertTrue(stubAccess.getStorageContent().contains(TESTINDEX));
-        assertTrue(stubAccess.getStorageContent().contains("projectActivity"));
+        assertTrue(stubAccess.getStorageContent().contains("activityId"));
         assertTrue(stubAccess.getStorageContent().contains(TESTSUB));
         assertTrue(stubAccess.getStorageContent().contains("id"));
         Long id = testData.getId();
@@ -71,7 +71,7 @@ public class FileStoreActivityTest {
         Activity foundObj = getOnlyFromCollection(foundObjs);
         assertEquals(TESTNAME, foundObj.getActivityName());
         assertEquals(TESTINDEX, foundObj.getProjectId());
-        assertEquals(TESTSUB, foundObj.getProjectActivity());
+        assertEquals(TESTSUB, foundObj.getActivityId());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class FileStoreActivityTest {
         Activity foundObj = testee.retrieveById(id).get();
         assertEquals(TESTNAME, foundObj.getActivityName());
         assertEquals(TESTINDEX, foundObj.getProjectId());
-        assertEquals(TESTSUB, foundObj.getProjectActivity());
+        assertEquals(TESTSUB, foundObj.getActivityId());
     }
 
     @Test

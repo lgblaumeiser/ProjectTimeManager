@@ -31,7 +31,7 @@ public class ActivityComputer extends BaseProjectComputer {
 
     @Override
     protected Collection<String> getHeadlineActivityElements() {
-        return asList("Activity", "Project Id", "Project Activity");
+        return asList("Activity", "Project Id", "Activity Id");
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ActivityComputer extends BaseProjectComputer {
 
     @Override
     protected Collection<String> getKeyItems(final Activity activity) {
-        return asList(activity.getActivityName(), activity.getProjectId(), activity.getProjectActivity());
+        return asList(activity.getActivityName(), activity.getProjectId(), activity.getActivityId());
     }
 
     @Override
