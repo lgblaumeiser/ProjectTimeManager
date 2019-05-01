@@ -24,11 +24,11 @@ public class ChangeActivity extends AbstractCommandHandler {
     private Long id;
 
     @Parameter(names = { "-pn",
-            "--project-name" }, description = "New name of the overall project", converter = OptionalStringConverter.class)
+            "--project-name" }, description = "Change the name of the project", converter = OptionalStringConverter.class)
     private Optional<String> projectName = Optional.empty();
 
     @Parameter(names = { "-an",
-            "--activity-name" }, description = "New name of the activity", converter = OptionalStringConverter.class)
+            "--activity-name" }, description = "Change the name of the activity", converter = OptionalStringConverter.class)
     private Optional<String> activityName = Optional.empty();
 
     @Parameter(names = { "-pi",

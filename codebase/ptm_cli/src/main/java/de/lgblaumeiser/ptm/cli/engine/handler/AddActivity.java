@@ -23,7 +23,7 @@ public class AddActivity extends AbstractCommandHandler {
     private final static String DUMMYUSER = "Dummy";
 
     @Parameter(names = { "-pn",
-            "--project-name" }, description = "Name of the activities overall project", required = true)
+            "--project-name" }, description = "Name of the overall project", required = true)
     public String projectName;
 
     @Parameter(names = { "-an", "--activity-name" }, description = "Name of the activity", required = true)
@@ -32,7 +32,7 @@ public class AddActivity extends AbstractCommandHandler {
     @Parameter(names = { "-pi", "--project-id" }, description = "Project identifier", required = true)
     public String projectId;
 
-    @Parameter(names = { "-ai", "--activity-id" }, description = "Project sub activity", required = true)
+    @Parameter(names = { "-ai", "--activity-id" }, description = "Activity identifier", required = true)
     public String activityId;
 
     @Override
