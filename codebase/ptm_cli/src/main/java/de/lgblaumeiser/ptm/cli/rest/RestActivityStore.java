@@ -23,44 +23,45 @@ import de.lgblaumeiser.ptm.store.ObjectStore;
  * implementation of Object Store
  */
 public class RestActivityStore extends RestBaseService implements ObjectStore<Activity> {
-	@Override
-	public Collection<Activity> retrieveAll() {
-		return asList(getRestUtils().<Activity[]>get("/activities",
-				Optional.of(getServices().getCurrentUserStore().loadUserData()), Activity[].class));
-	}
+    @Override
+    public Collection<Activity> retrieveAll() {
+        return asList(getRestUtils().<Activity[]>get("/activities",
+                Optional.of(getServices().getCurrentUserStore().loadUserData()), Activity[].class));
+    }
 
-	@Override
-	public Optional<Activity> retrieveById(final Long id) {
-		return Optional.ofNullable(getRestUtils().<Activity>get("/activities/" + id.toString(),
-				Optional.of(getServices().getCurrentUserStore().loadUserData()), Activity.class));
-	}
+    @Override
+    public Optional<Activity> retrieveById(final Long id) {
+        return Optional.ofNullable(getRestUtils().<Activity>get("/activities/" + id.toString(),
+                Optional.of(getServices().getCurrentUserStore().loadUserData()), Activity.class));
+    }
 
-	@Override
-	public Activity store(final Activity activity) {
-		try {
-			Map<String, String> bodyData = new HashMap<>();
-			bodyData.put("activityName", activity.getActivityName());
-			bodyData.put("projectId", activity.getProjectId());
-			bodyData.put("projectActivity", activity.getProjectActivity());
-			bodyData.put("hidden", Boolean.toString(activity.isHidden()));
-			String apiName = "/activities";
-			if (activity.getId() > 0) {
-				apiName = apiName + "/" + activity.getId().toString();
-			}
-			Long id = getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()),
-					bodyData);
-			Field idField = activity.getClass().getDeclaredField("id");
-			idField.setAccessible(true);
-			idField.set(activity, id);
-			idField.setAccessible(false);
-			return activity;
-		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
-			throw new IllegalStateException(e);
-		}
-	}
+    @Override
+    public Activity store(final Activity activity) {
+        try {
+            Map<String, String> bodyData = new HashMap<>();
+            bodyData.put("projectName", activity.getProjectName());
+            bodyData.put("activityName", activity.getActivityName());
+            bodyData.put("projectId", activity.getProjectId());
+            bodyData.put("activityId", activity.getActivityId());
+            bodyData.put("hidden", Boolean.toString(activity.isHidden()));
+            String apiName = "/activities";
+            if (activity.getId() > 0) {
+                apiName = apiName + "/" + activity.getId().toString();
+            }
+            Long id = getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()),
+                    bodyData);
+            Field idField = activity.getClass().getDeclaredField("id");
+            idField.setAccessible(true);
+            idField.set(activity, id);
+            idField.setAccessible(false);
+            return activity;
+        } catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
-	@Override
-	public void deleteById(final Long id) {
-		throw new UnsupportedOperationException();
-	}
+    @Override
+    public void deleteById(final Long id) {
+        throw new UnsupportedOperationException();
+    }
 }

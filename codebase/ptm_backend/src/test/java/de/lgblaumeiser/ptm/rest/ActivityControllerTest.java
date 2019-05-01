@@ -29,6 +29,7 @@ import de.lgblaumeiser.ptm.rest.ActivityRestController.ActivityBody;
 public class ActivityControllerTest extends ControllerTestSetupAndSupport {
     private static final String ACTIVITY_HIDDEN_JSON = "\"hidden\":true";
 
+    private static final String TESTACT_HIDDEN_PNAME = "MyHiddenProject";
     private static final String TESTACT_HIDDEN_NAME = "MyHiddenActivity";
     private static final String TESTACT_HIDDEN_PROJ = "1234";
     private static final String TESTACT_HIDDEN_SUB = "4";
@@ -61,9 +62,10 @@ public class ActivityControllerTest extends ControllerTestSetupAndSupport {
                 .andExpect(content().string(containsString(TESTACT1_SUB)));
 
         ActivityBody data = new ActivityBody();
+        data.projectName = TESTACT_HIDDEN_PNAME;
         data.activityName = TESTACT_HIDDEN_NAME;
         data.projectId = TESTACT_HIDDEN_PROJ;
-        data.projectActivity = TESTACT_HIDDEN_SUB;
+        data.activityId = TESTACT_HIDDEN_SUB;
         data.hidden = true;
         createActivity(data, getUser1());
 
@@ -114,9 +116,10 @@ public class ActivityControllerTest extends ControllerTestSetupAndSupport {
                 .andExpect(status().is4xxClientError());
 
         ActivityBody data = new ActivityBody();
+        data.projectName = TESTACT_HIDDEN_PNAME;
         data.activityName = TESTACT_HIDDEN_NAME;
         data.projectId = TESTACT_HIDDEN_PROJ;
-        data.projectActivity = TESTACT_HIDDEN_SUB;
+        data.activityId = TESTACT_HIDDEN_SUB;
         data.hidden = true;
 
         performPost(ACTIVITY_RESOURCE_API + "/" + ACTIVITY_ID_2, data, getUser1())

@@ -63,9 +63,11 @@ public class ControllerTestSetupAndSupport {
     protected static final String TESTUSER_ANSWER = "42";
     protected static final String TESTUSER_RESOURCE_URL_SUFFIX = "/users/1";
 
+    protected static final String TESTACT1_PNAME = "MyTestProject";
     protected static final String TESTACT1_NAME = "MyTestActivity";
     protected static final String TESTACT1_PRJ = "0815";
     protected static final String TESTACT1_SUB = "1";
+    protected static final String TESTACT2_PNAME = "MyOtherTestProject";
     protected static final String TESTACT2_NAME = "MyOtherTestActivity";
     protected static final String TESTACT2_PRJ = "4711";
     protected static final String TESTACT2_SUB = "2";
@@ -161,16 +163,18 @@ public class ControllerTestSetupAndSupport {
         Optional<String> user2 = sameUser ? user1 : getUser2();
 
         ActivityBody data1 = new ActivityBody();
+        data1.projectName = TESTACT1_PNAME;
         data1.activityName = TESTACT1_NAME;
         data1.projectId = TESTACT1_PRJ;
-        data1.projectActivity = TESTACT1_SUB;
+        data1.activityId = TESTACT1_SUB;
         data1.hidden = false;
         result.add(new DefaultDataEntry<ActivityBody>(data1, user1));
 
         ActivityBody data2 = new ActivityBody();
+        data2.projectName = TESTACT2_NAME;
         data2.activityName = TESTACT2_NAME;
         data2.projectId = TESTACT2_PRJ;
-        data2.projectActivity = TESTACT2_SUB;
+        data2.activityId = TESTACT2_SUB;
         data2.hidden = false;
         result.add(new DefaultDataEntry<ActivityBody>(data2, user2));
 

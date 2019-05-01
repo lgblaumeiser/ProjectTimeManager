@@ -20,44 +20,49 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
  */
 @Parameters(commandDescription = "Change an existing activity for bookings")
 public class ChangeActivity extends AbstractCommandHandler {
-	@Parameter(names = { "-a", "--activity" }, description = "Id of activity to change", required = true)
-	private Long id;
+    @Parameter(names = { "-a", "--activity" }, description = "Id of activity to change", required = true)
+    private Long id;
 
-	@Parameter(names = { "-n",
-			"--name" }, description = "New name of the activity", converter = OptionalStringConverter.class)
-	private Optional<String> name = Optional.empty();
+    @Parameter(names = { "-pn",
+            "--project-name" }, description = "New name of the overall project", converter = OptionalStringConverter.class)
+    private Optional<String> projectName = Optional.empty();
 
-	@Parameter(names = { "-i",
-			"--project-id" }, description = "Change the project id", converter = OptionalStringConverter.class)
-	private Optional<String> pid = Optional.empty();
+    @Parameter(names = { "-an",
+            "--activity-name" }, description = "New name of the activity", converter = OptionalStringConverter.class)
+    private Optional<String> activityName = Optional.empty();
 
-	@Parameter(names = { "-s",
-			"--project-sub-id" }, description = "Change the project sub id", converter = OptionalStringConverter.class)
-	private Optional<String> pactivity = Optional.empty();
+    @Parameter(names = { "-pi",
+            "--project-id" }, description = "Change the project id", converter = OptionalStringConverter.class)
+    private Optional<String> projectId = Optional.empty();
 
-	@Parameter(names = { "--hidden" }, description = "Hide the activity")
-	private boolean hidden = false;
+    @Parameter(names = { "-ai",
+            "--activity-id" }, description = "Change the activity id", converter = OptionalStringConverter.class)
+    private Optional<String> activityId = Optional.empty();
 
-	@Parameter(names = { "--visible" }, description = "Make activity visible, if hidden")
-	private boolean visible = false;
+    @Parameter(names = { "--hidden" }, description = "Hide the activity")
+    private boolean hidden = false;
 
-	@Override
-	public void handleCommand() {
-		getLogger().log("Change activity with id " + id);
-		Activity oldAct = getActivityById(id);
-		Activity.ActivityBuilder chgAct = oldAct.changeActivity();
-		name.ifPresent(chgAct::setActivityName);
-		pid.ifPresent(chgAct::setProjectId);
-		pactivity.ifPresent(chgAct::setProjectActivity);
-		if (oldAct.isHidden() && visible)
-			chgAct.setHidden(false);
-		if (!oldAct.isHidden() && hidden)
-			chgAct.setHidden(true);
-		Activity newAct = getServices().getActivityStore().store(chgAct.build());
-		getLogger().log("Activity changed " + newAct.toString() + "\n");
-	}
+    @Parameter(names = { "--visible" }, description = "Make activity visible, if hidden")
+    private boolean visible = false;
 
-	private Activity getActivityById(final Long id) {
-		return getServices().getActivityStore().retrieveById(id).orElseThrow(IllegalStateException::new);
-	}
+    @Override
+    public void handleCommand() {
+        getLogger().log("Change activity with id " + id);
+        Activity oldAct = getActivityById(id);
+        Activity.ActivityBuilder chgAct = oldAct.changeActivity();
+        projectName.ifPresent(chgAct::setProjectName);
+        activityName.ifPresent(chgAct::setActivityName);
+        projectId.ifPresent(chgAct::setProjectId);
+        activityId.ifPresent(chgAct::setActivityId);
+        if (oldAct.isHidden() && visible)
+            chgAct.setHidden(false);
+        if (!oldAct.isHidden() && hidden)
+            chgAct.setHidden(true);
+        Activity newAct = getServices().getActivityStore().store(chgAct.build());
+        getLogger().log("Activity changed " + newAct.toString() + "\n");
+    }
+
+    private Activity getActivityById(final Long id) {
+        return getServices().getActivityStore().retrieveById(id).orElseThrow(IllegalStateException::new);
+    }
 }

@@ -20,22 +20,39 @@ import de.lgblaumeiser.ptm.datamanager.model.Activity;
  */
 @Parameters(commandDescription = "Define a new activity for bookings")
 public class AddActivity extends AbstractCommandHandler {
-	private final static String DUMMYUSER = "Dummy";
+    private final static String DUMMYUSER = "Dummy";
 
-	@Parameter(names = { "-n", "--name" }, description = "Name of the activity", required = true)
-	public String name;
+    @Parameter(names = { "-pn",
+            "--project-name" }, description = "Name of the activities overall project", required = true)
+    public String projectName;
 
-	@Parameter(names = { "-i", "--project-id" }, description = "Project identifier", required = true)
-	public String pid;
+    @Parameter(names = { "-an", "--activity-name" }, description = "Name of the activity", required = true)
+    public String activityName;
 
-	@Parameter(names = { "-s", "--project-sub-id" }, description = "Project sub activity", required = true)
-	public String pactivity;
+    @Parameter(names = { "-pi", "--project-id" }, description = "Project identifier", required = true)
+    public String projectId;
 
-	@Override
-	public void handleCommand() {
-		getLogger().log("Add activity " + name + " with project id " + pid + " and sub id " + pactivity);
-		Activity newAct = getServices().getActivityStore().store(newActivity().setActivityName(name).setProjectId(pid)
-				.setProjectActivity(pactivity).setUser(DUMMYUSER).build());
-		getLogger().log("Activity added: " + newAct.toString() + "\n");
-	}
+    @Parameter(names = { "-ai", "--activity-id" }, description = "Project sub activity", required = true)
+    public String activityId;
+
+    @Override
+    public void handleCommand() {
+        getLogger().log("Add activity "
+                + projectName
+                + ":"
+                + activityName
+                + " with id "
+                + projectId
+                + ":"
+                + activityId);
+        Activity newAct = getServices().getActivityStore().store(
+                newActivity()
+                        .setProjectName(projectName)
+                        .setActivityName(activityName)
+                        .setProjectId(projectId)
+                        .setActivityId(activityId)
+                        .setUser(DUMMYUSER)
+                        .build());
+        getLogger().log("Activity added: " + newAct.toString() + "\n");
+    }
 }

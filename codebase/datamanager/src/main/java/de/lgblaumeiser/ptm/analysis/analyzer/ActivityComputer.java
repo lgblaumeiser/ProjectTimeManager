@@ -7,11 +7,7 @@
  */
 package de.lgblaumeiser.ptm.analysis.analyzer;
 
-import static de.lgblaumeiser.ptm.util.Utils.emptyString;
-import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
-import static java.util.Arrays.asList;
-
-import java.util.Collection;
+import static java.lang.String.format;
 
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
@@ -30,31 +26,27 @@ public class ActivityComputer extends BaseProjectComputer {
     }
 
     @Override
-    protected Collection<String> getHeadlineActivityElements() {
-        return asList("Activity", "Project Id", "Project Activity");
+    protected String getHeadlineNameElement() {
+        return "Activity";
     }
 
     @Override
-    protected Collection<String> getFootlineActivityElements() {
-        return asList("Total", emptyString(), emptyString());
+    protected String getHeadlineIdElement() {
+        return "Activity Id";
     }
 
     @Override
-    protected Collection<String> getKeyItems(final Activity activity) {
-        return asList(activity.getActivityName(), activity.getProjectId(), activity.getProjectActivity());
+    protected String getElementName(final Activity activity) {
+        return formatActivityString(activity.getProjectName(), activity.getActivityName());
     }
 
     @Override
-    protected String getSortCriteriaForResultLine(final Collection<String> line) {
-        return getProjectIdFromResultLine(line) + "_" + getProjectSubidFromResultLine(line);
+    protected String getElementId(final Activity activity) {
+        return formatActivityString(activity.getProjectId(), activity.getActivityId());
     }
 
-    private String getProjectIdFromResultLine(final Collection<String> line) {
-        return getIndexFromCollection(line, 1);
-    }
-
-    private String getProjectSubidFromResultLine(final Collection<String> line) {
-        return getIndexFromCollection(line, 2);
+    private String formatActivityString(final String part1, final String part2) {
+        return format("%s:%s", part1, part2);
     }
 
     public ActivityComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {

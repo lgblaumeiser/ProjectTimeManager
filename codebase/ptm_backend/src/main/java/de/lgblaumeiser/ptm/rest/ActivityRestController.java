@@ -57,15 +57,16 @@ public class ActivityRestController {
     private int compareActivities(Activity a1, Activity a2) {
         int actcompare = a1.getProjectId().compareToIgnoreCase(a2.getProjectId());
         if (actcompare == 0) {
-            actcompare = a1.getProjectActivity().compareToIgnoreCase(a2.getProjectActivity());
+            actcompare = a1.getActivityId().compareToIgnoreCase(a2.getActivityId());
         }
         return actcompare;
     }
 
     public static class ActivityBody {
+        public String projectName;
         public String activityName;
         public String projectId;
-        public String projectActivity;
+        public String activityId;
         public boolean hidden;
     }
 
@@ -76,9 +77,10 @@ public class ActivityRestController {
                 .activityStore()
                 .store(newActivity()
                         .setUser(principal.getName())
+                        .setProjectName(activityData.projectName)
                         .setActivityName(activityData.activityName)
                         .setProjectId(activityData.projectId)
-                        .setProjectActivity(activityData.projectActivity)
+                        .setActivityId(activityData.activityId)
                         .setHidden(activityData.hidden)
                         .build());
         URI location = ServletUriComponentsBuilder
@@ -116,9 +118,10 @@ public class ActivityRestController {
                         services
                                 .activityStore()
                                 .store(a.changeActivity()
+                                        .setProjectName(activityData.projectName)
                                         .setActivityName(activityData.activityName)
                                         .setProjectId(activityData.projectId)
-                                        .setProjectActivity(activityData.projectActivity)
+                                        .setActivityId(activityData.activityId)
                                         .setHidden(activityData.hidden)
                                         .build());
                     } else {

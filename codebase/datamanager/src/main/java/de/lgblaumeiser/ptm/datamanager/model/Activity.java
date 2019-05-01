@@ -22,17 +22,19 @@ public class Activity {
     public static class ActivityBuilder {
         private Long id = valueOf(-1);
         private String user;
+        private String projectName;
         private String activityName;
         private String projectId;
-        private String projectActivity;
+        private String activityId;
         private boolean hidden = false;
 
         private ActivityBuilder(final Activity activity) {
             id = activity.getId();
             user = activity.getUser();
+            projectName = activity.getProjectName();
             activityName = activity.getActivityName();
             projectId = activity.getProjectId();
-            projectActivity = activity.getProjectActivity();
+            activityId = activity.getActivityId();
             hidden = activity.isHidden();
         }
 
@@ -42,6 +44,11 @@ public class Activity {
 
         public ActivityBuilder setUser(final String user) {
             this.user = user;
+            return this;
+        }
+
+        public ActivityBuilder setProjectName(final String projectName) {
+            this.projectName = projectName;
             return this;
         }
 
@@ -55,8 +62,8 @@ public class Activity {
             return this;
         }
 
-        public ActivityBuilder setProjectActivity(final String projectActivity) {
-            this.projectActivity = projectActivity;
+        public ActivityBuilder setActivityId(final String activityId) {
+            this.activityId = activityId;
             return this;
         }
 
@@ -71,14 +78,15 @@ public class Activity {
          */
         public Activity build() {
             checkData();
-            return new Activity(id, user, activityName, projectId, projectActivity, hidden);
+            return new Activity(id, user, projectName, activityName, projectId, activityId, hidden);
         }
 
         private void checkData() {
             assertState(stringHasContent(user));
+            assertState(stringHasContent(projectName));
             assertState(stringHasContent(activityName));
             assertState(stringHasContent(projectId));
-            assertState(stringHasContent(projectActivity));
+            assertState(stringHasContent(activityId));
         }
     }
 
@@ -101,9 +109,10 @@ public class Activity {
         return new ActivityBuilder(this);
     }
 
+    private String projectName;
     private String activityName;
-    private String projectActivity;
     private String projectId;
+    private String activityId;
     private boolean hidden = false;
     private String user;
     private Long id = valueOf(-1);
@@ -114,6 +123,13 @@ public class Activity {
      */
     public Long getId() {
         return id;
+    }
+
+    /**
+     * @return Name of the project. Non null
+     */
+    public String getProjectName() {
+        return projectName;
     }
 
     /**
@@ -133,8 +149,8 @@ public class Activity {
     /**
      * @return Project sub category of the activities type. Non null
      */
-    public String getProjectActivity() {
-        return projectActivity;
+    public String getActivityId() {
+        return activityId;
     }
 
     /**
@@ -153,8 +169,8 @@ public class Activity {
 
     @Override
     public String toString() {
-        return format("Activity: Project Id: %s, Project Category: %s, Name: %s, Hidden: %b, User: %s, Id: %d",
-                projectId, projectActivity, activityName, hidden, user, id);
+        return format("Activity: Project Id: %s, Activity Id: %s, Activity Name: %s, Hidden: %b, User: %s, Id: %d",
+                projectId, activityId, activityName, hidden, user, id);
     }
 
     @Override
@@ -162,7 +178,7 @@ public class Activity {
         if (obj instanceof Activity) {
             Activity act = (Activity) obj;
             return id == act.id && hidden == act.isHidden() && activityName.equals(act.activityName)
-                    && projectId.equals(act.projectId) && projectActivity.equals(act.projectActivity)
+                    && projectId.equals(act.projectId) && activityId.equals(act.activityId)
                     && user.equals(act.user);
         }
         return false;
@@ -170,15 +186,16 @@ public class Activity {
 
     @Override
     public int hashCode() {
-        return hash(id, activityName, projectId, projectActivity, user);
+        return hash(id, activityName, projectId, activityId, user);
     }
 
-    private Activity(final Long id, final String user, final String activityName, final String projectId,
-            final String projectActivity, final boolean hidden) {
+    private Activity(final Long id, final String user, final String projectName, final String activityName,
+            final String projectId, final String activityId, final boolean hidden) {
         this.id = id;
+        this.projectName = projectName;
         this.activityName = activityName;
         this.projectId = projectId;
-        this.projectActivity = projectActivity;
+        this.activityId = activityId;
         this.hidden = hidden;
         this.user = user;
     }
