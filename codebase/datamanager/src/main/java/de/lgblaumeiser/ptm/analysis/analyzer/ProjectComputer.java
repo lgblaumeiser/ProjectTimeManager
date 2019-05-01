@@ -7,11 +7,6 @@
  */
 package de.lgblaumeiser.ptm.analysis.analyzer;
 
-import static de.lgblaumeiser.ptm.util.Utils.getIndexFromCollection;
-import static java.util.Arrays.asList;
-
-import java.util.Collection;
-
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.store.ObjectStore;
@@ -29,23 +24,23 @@ public class ProjectComputer extends BaseProjectComputer {
     }
 
     @Override
-    protected Collection<String> getHeadlineActivityElements() {
-        return asList("Project Id");
+    protected String getHeadlineNameElement() {
+        return "Project Name";
     }
 
     @Override
-    protected Collection<String> getFootlineActivityElements() {
-        return asList("Total");
+    protected String getHeadlineIdElement() {
+        return "Project Id";
     }
 
     @Override
-    protected Collection<String> getKeyItems(final Activity activity) {
-        return asList(activity.getProjectId());
+    protected String getElementName(Activity activity) {
+        return activity.getProjectName();
     }
 
     @Override
-    protected String getSortCriteriaForResultLine(final Collection<String> line) {
-        return getIndexFromCollection(line, 0);
+    protected String getElementId(final Activity activity) {
+        return activity.getProjectId();
     }
 
     public ProjectComputer(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {

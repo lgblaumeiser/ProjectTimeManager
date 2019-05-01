@@ -63,6 +63,7 @@ public class ActivityRestController {
     }
 
     public static class ActivityBody {
+        public String projectName;
         public String activityName;
         public String projectId;
         public String activityId;
@@ -76,6 +77,7 @@ public class ActivityRestController {
                 .activityStore()
                 .store(newActivity()
                         .setUser(principal.getName())
+                        .setProjectName(activityData.projectName)
                         .setActivityName(activityData.activityName)
                         .setProjectId(activityData.projectId)
                         .setActivityId(activityData.activityId)
@@ -116,6 +118,7 @@ public class ActivityRestController {
                         services
                                 .activityStore()
                                 .store(a.changeActivity()
+                                        .setProjectName(activityData.projectName)
                                         .setActivityName(activityData.activityName)
                                         .setProjectId(activityData.projectId)
                                         .setActivityId(activityData.activityId)

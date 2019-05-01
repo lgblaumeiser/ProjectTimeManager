@@ -20,11 +20,13 @@ import org.junit.Test;
  */
 @SuppressWarnings("unused")
 public class ActivityTest {
+    private final static String PRJ_1 = "Prj 1";
     private final static String ACTIVITY_1_1 = "ActivityId11";
     private final static String ACTIVITY_1_2 = "ActivityId12";
     private final static String PRJID_1 = "ID1";
     private final static String ACTID_1 = "Cat1";
-    private final static String ACTIVITY_2 = "ActivityId11";
+    private final static String PRJ_2 = "Prj 2";
+    private final static String ACTIVITY_2 = "ActivityId2";
     private final static String PRJID_2 = "ID2";
     private final static String ACTID_2 = "Cat2";
     private final static String USERNAME = "UserX";
@@ -36,11 +38,13 @@ public class ActivityTest {
     @Test
     public final void testNewActivityPositive() {
         Activity newActivity = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
+        assertEquals(PRJ_1, newActivity.getProjectName());
         assertEquals(ACTIVITY_1_1, newActivity.getActivityName());
         assertEquals(PRJID_1, newActivity.getProjectId());
         assertEquals(ACTID_1, newActivity.getActivityId());
@@ -48,8 +52,20 @@ public class ActivityTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public final void testWithBlankName() {
+    public final void testWithBlankProjectName() {
         Activity newActivity = newActivity()
+                .setProjectName(emptyString())
+                .setActivityName(ACTIVITY_1_1)
+                .setProjectId(PRJID_1)
+                .setActivityId(ACTID_1)
+                .setUser(USERNAME)
+                .build();
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public final void testWithBlankActivityName() {
+        Activity newActivity = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(emptyString())
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
@@ -58,8 +74,9 @@ public class ActivityTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public final void testWithBlankProject() {
+    public final void testWithBlankProjectId() {
         Activity newActivity = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(emptyString())
                 .setActivityId(ACTID_1)
@@ -68,8 +85,9 @@ public class ActivityTest {
     }
 
     @Test(expected = IllegalStateException.class)
-    public final void testWithBlankProjectAct() {
+    public final void testWithBlankActivityId() {
         Activity newActivity = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(emptyString())
@@ -80,6 +98,7 @@ public class ActivityTest {
     @Test(expected = IllegalStateException.class)
     public final void testWithoutUser() {
         Activity newActivity = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
@@ -89,6 +108,7 @@ public class ActivityTest {
     @Test(expected = IllegalStateException.class)
     public final void testWithWrongUser() {
         Activity newActivity = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
@@ -102,36 +122,42 @@ public class ActivityTest {
     @Test
     public final void testEquals() {
         Activity newActivity1 = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity2 = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_2)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity3 = newActivity()
+                .setProjectName(PRJ_2)
                 .setActivityName(ACTIVITY_2)
                 .setProjectId(PRJID_2)
                 .setActivityId(ACTID_2)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity4 = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
                 .setUser(USERNAME)
                 .build();
         Activity newActivity5 = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_1)
                 .setUser(USERNAME2)
                 .build();
         Activity newActivity6 = newActivity()
+                .setProjectName(PRJ_1)
                 .setActivityName(ACTIVITY_1_1)
                 .setProjectId(PRJID_1)
                 .setActivityId(ACTID_2)

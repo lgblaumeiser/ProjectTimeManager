@@ -47,15 +47,17 @@ public class BookingServiceTest {
     private final static String ANSWER = "42";
 
     private static final Activity ACTIVITY1 = newActivity()
-            .setActivityName("a")
-            .setProjectId("b")
-            .setActivityId("c")
+            .setProjectName("a")
+            .setActivityName("b")
+            .setProjectId("c")
+            .setActivityId("d")
             .setUser(USERNAME)
             .build();
     private static final Activity ACTIVITY2 = newActivity()
-            .setActivityName("a1")
-            .setProjectId("b1")
-            .setActivityId("c1")
+            .setProjectName("a1")
+            .setActivityName("b1")
+            .setProjectId("c1")
+            .setActivityId("d1")
             .setUser(USERNAME)
             .build();
     private static final User USER = newUser()

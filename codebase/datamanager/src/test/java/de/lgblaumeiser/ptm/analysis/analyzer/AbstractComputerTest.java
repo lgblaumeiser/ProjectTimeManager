@@ -32,29 +32,36 @@ public abstract class AbstractComputerTest {
 
     protected static final double DOUBLE_COMPARISON_DELTA = 0.15;
 
+    private static final int PERCENTAGE_COLUMN = 3;
+
     protected static final LocalDate OTHERMONTH = LocalDate.of(2015, 12, 1);
 
-    private static final String ACTIVITYNAME1 = "a";
-    private static final String ACTIVITYNAME2 = "b";
-    private static final String ACTIVITYNAME3 = "c";
-    private static final String PROJECTID1 = "d";
-    private static final String PROJECTID2 = "e";
-    private static final String PROJECTSUBCAT = "f";
-    protected static final String USERNAME = "g";
+    private static final String PROJECTNAME1 = "a";
+    private static final String PROJECTNAME2 = "b";
+    private static final String ACTIVITYNAME1 = "c";
+    private static final String ACTIVITYNAME2 = "d";
+    private static final String ACTIVITYNAME3 = "e";
+    private static final String PROJECTID1 = "f";
+    private static final String PROJECTID2 = "g";
+    private static final String PROJECTSUBCAT = "h";
+    protected static final String USERNAME = "i";
 
     private static final Activity ACTIVITY1 = newActivity()
+            .setProjectName(PROJECTNAME1)
             .setActivityName(ACTIVITYNAME1)
             .setProjectId(PROJECTID1)
             .setActivityId(PROJECTSUBCAT)
             .setUser(USERNAME)
             .build();
     private static final Activity ACTIVITY2 = newActivity()
+            .setProjectName(PROJECTNAME2)
             .setActivityName(ACTIVITYNAME2)
             .setProjectId(PROJECTID2)
             .setActivityId(PROJECTSUBCAT)
             .setUser(USERNAME)
             .build();
     private static final Activity ACTIVITY3 = newActivity()
+            .setProjectName(PROJECTNAME1)
             .setActivityName(ACTIVITYNAME3)
             .setProjectId(PROJECTID1)
             .setActivityId(PROJECTSUBCAT)
@@ -243,10 +250,8 @@ public abstract class AbstractComputerTest {
                 .replaceAll("%", ""));
     }
 
-    protected int percentageColumn = 0;
-
     private String getPercentageFromRow(final Collection<Collection<String>> analysisResults, final int rowNumber) {
-        return getIndexFromCollection(getRow(analysisResults, rowNumber), percentageColumn);
+        return getIndexFromCollection(getRow(analysisResults, rowNumber), PERCENTAGE_COLUMN);
     }
 
     private Collection<String> getRow(final Collection<Collection<String>> analysisResults, final int rowNumber) {

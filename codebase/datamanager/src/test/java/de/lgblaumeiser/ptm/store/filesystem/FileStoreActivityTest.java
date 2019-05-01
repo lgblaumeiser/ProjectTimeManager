@@ -25,6 +25,7 @@ import org.junit.Test;
 import de.lgblaumeiser.ptm.datamanager.model.Activity;
 
 public class FileStoreActivityTest {
+    private static final String TESTPNAME = "TestProjectName";
     private static final String TESTNAME = "TestName";
     private static final String TESTINDEX = "TestIndex";
     private static final String TESTSUB = "TestSubIndex";
@@ -41,6 +42,7 @@ public class FileStoreActivityTest {
 
     private static final Activity testData = Activity
             .newActivity()
+            .setProjectName(TESTPNAME)
             .setActivityName(TESTNAME)
             .setProjectId(TESTINDEX)
             .setActivityId(TESTSUB)
@@ -51,6 +53,8 @@ public class FileStoreActivityTest {
     public void testStore() {
         testee.store(testData);
         assertEquals("activity", getExtension(stubAccess.getStorageFile().getName()));
+        assertTrue(stubAccess.getStorageContent().contains("projectName"));
+        assertTrue(stubAccess.getStorageContent().contains(TESTPNAME));
         assertTrue(stubAccess.getStorageContent().contains("activityName"));
         assertTrue(stubAccess.getStorageContent().contains(TESTNAME));
         assertTrue(stubAccess.getStorageContent().contains("projectId"));
@@ -69,6 +73,7 @@ public class FileStoreActivityTest {
         Collection<Activity> foundObjs = testee.retrieveAll();
         assertEquals(1, foundObjs.size());
         Activity foundObj = getOnlyFromCollection(foundObjs);
+        assertEquals(TESTPNAME, foundObj.getProjectName());
         assertEquals(TESTNAME, foundObj.getActivityName());
         assertEquals(TESTINDEX, foundObj.getProjectId());
         assertEquals(TESTSUB, foundObj.getActivityId());
@@ -79,6 +84,7 @@ public class FileStoreActivityTest {
         Activity returnedObject = testee.store(testData);
         Long id = returnedObject.getId();
         Activity foundObj = testee.retrieveById(id).get();
+        assertEquals(TESTPNAME, foundObj.getProjectName());
         assertEquals(TESTNAME, foundObj.getActivityName());
         assertEquals(TESTINDEX, foundObj.getProjectId());
         assertEquals(TESTSUB, foundObj.getActivityId());

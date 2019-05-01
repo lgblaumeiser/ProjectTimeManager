@@ -66,12 +66,12 @@ public class AddBookingTest extends AbstractHandlerTest {
 
 	@Test(expected = DateTimeParseException.class)
 	public void testAddBookingTwoParamWrongTime() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-s", ACTIVITY1ID);
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "1", "-s", ACTIVITY1PID);
 	}
 
 	@Test(expected = DateTimeParseException.class)
 	public void testAddBookingThreeParamWrongTime() {
-		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "3", "-s", TIME1.toString(), "-e", ACTIVITY1ID);
+		commandline.runCommand(ADD_BOOKING_COMMAND, "-a", "3", "-s", TIME1.toString(), "-e", ACTIVITY1PID);
 	}
 
 	@Test(expected = IllegalStateException.class)

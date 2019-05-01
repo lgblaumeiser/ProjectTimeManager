@@ -18,24 +18,24 @@ public class ListActivityTest extends AbstractHandlerTest {
     @Test
     public void testListActivity() {
         commandline.runCommand(LIST_ACTIVITY_COMMAND);
-        assertTrue(logger.logMessages.toString().contains("| Activity | Project Id | Activity Id | Id |"));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY1NAME));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY1ID));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY1SUB));
-        assertFalse(logger.logMessages.toString().contains(ACTIVITY2NAME));
-        assertFalse(logger.logMessages.toString().contains(ACTIVITY2ID));
-        assertFalse(logger.logMessages.toString().contains(ACTIVITY2SUB));
+        assertTrue(logger.logMessages.toString().contains("| Id | Project | Project Id | Activity | Activity Id |"));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY1ANAME));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY1PID));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY1AID));
+        assertFalse(logger.logMessages.toString().contains(ACTIVITY2ANAME));
+        assertFalse(logger.logMessages.toString().contains(ACTIVITY2PID));
+        assertFalse(logger.logMessages.toString().contains(ACTIVITY2AID));
     }
 
     @Test
     public void testListActivityWithHidden() {
         commandline.runCommand(LIST_ACTIVITY_COMMAND, "--hidden");
-        assertTrue(logger.logMessages.toString().contains("| Activity | Project Id | Activity Id | Id |"));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY1NAME));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY1ID));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY1SUB));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY2NAME));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY2ID));
-        assertTrue(logger.logMessages.toString().contains(ACTIVITY2SUB));
+        assertTrue(logger.logMessages.toString().contains("| Id | Project | Project Id | Activity | Activity Id |"));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY1ANAME));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY1PID));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY1AID));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY2ANAME));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY2PID));
+        assertTrue(logger.logMessages.toString().contains(ACTIVITY2AID));
     }
 }

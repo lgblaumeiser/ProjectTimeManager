@@ -18,13 +18,11 @@ import de.lgblaumeiser.ptm.datamanager.model.Booking;
 import de.lgblaumeiser.ptm.store.ObjectStore;
 
 public class ProjectComputerTest extends AbstractComputerTest {
-    private static final int PERCENTAGE_COLUMN = 2;
     private BaseProjectComputer testee;
 
     @Override
     protected void createTestee(final ObjectStore<Booking> bStore, final ObjectStore<Activity> aStore) {
         testee = new ProjectComputer(bStore, aStore);
-        percentageColumn = PERCENTAGE_COLUMN;
     }
 
     @Test

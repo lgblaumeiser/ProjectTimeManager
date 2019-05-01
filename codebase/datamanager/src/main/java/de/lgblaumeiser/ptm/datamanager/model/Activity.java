@@ -22,6 +22,7 @@ public class Activity {
     public static class ActivityBuilder {
         private Long id = valueOf(-1);
         private String user;
+        private String projectName;
         private String activityName;
         private String projectId;
         private String activityId;
@@ -30,6 +31,7 @@ public class Activity {
         private ActivityBuilder(final Activity activity) {
             id = activity.getId();
             user = activity.getUser();
+            projectName = activity.getProjectName();
             activityName = activity.getActivityName();
             projectId = activity.getProjectId();
             activityId = activity.getActivityId();
@@ -42,6 +44,11 @@ public class Activity {
 
         public ActivityBuilder setUser(final String user) {
             this.user = user;
+            return this;
+        }
+
+        public ActivityBuilder setProjectName(final String projectName) {
+            this.projectName = projectName;
             return this;
         }
 
@@ -71,11 +78,12 @@ public class Activity {
          */
         public Activity build() {
             checkData();
-            return new Activity(id, user, activityName, projectId, activityId, hidden);
+            return new Activity(id, user, projectName, activityName, projectId, activityId, hidden);
         }
 
         private void checkData() {
             assertState(stringHasContent(user));
+            assertState(stringHasContent(projectName));
             assertState(stringHasContent(activityName));
             assertState(stringHasContent(projectId));
             assertState(stringHasContent(activityId));
@@ -101,6 +109,7 @@ public class Activity {
         return new ActivityBuilder(this);
     }
 
+    private String projectName;
     private String activityName;
     private String projectId;
     private String activityId;
@@ -114,6 +123,13 @@ public class Activity {
      */
     public Long getId() {
         return id;
+    }
+
+    /**
+     * @return Name of the project. Non null
+     */
+    public String getProjectName() {
+        return projectName;
     }
 
     /**
@@ -173,9 +189,10 @@ public class Activity {
         return hash(id, activityName, projectId, activityId, user);
     }
 
-    private Activity(final Long id, final String user, final String activityName, final String projectId,
-            final String activityId, final boolean hidden) {
+    private Activity(final Long id, final String user, final String projectName, final String activityName,
+            final String projectId, final String activityId, final boolean hidden) {
         this.id = id;
+        this.projectName = projectName;
         this.activityName = activityName;
         this.projectId = projectId;
         this.activityId = activityId;
