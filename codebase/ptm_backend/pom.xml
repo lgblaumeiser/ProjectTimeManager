@@ -21,7 +21,6 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.1.3.RELEASE</version>
-		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
@@ -79,9 +78,9 @@
         		<groupId>org.apache.maven.plugins</groupId>
         		<artifactId>maven-surefire-plugin</artifactId>
         		<configuration>
-          			<redirectTestOutputToFile>true</redirectTestOutputToFile>
+<!--           			<redirectTestOutputToFile>true</redirectTestOutputToFile>
           			<reportsDirectory>../../shippable/testresults</reportsDirectory>
-          			<argLine>${argLine} -Xmx1024m</argLine>
+          			<argLine>${argLine} -Xmx1024m</argLine> -->
         		</configuration>
         		<dependencies>
           			<dependency>
