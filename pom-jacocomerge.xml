@@ -85,7 +85,7 @@
                   </includes>
                 </fileSet>
               </fileSets>
-              <destFile>${project.basedir}/shippable/codecoverage/jacoco.exec</destFile>
+              <destFile>${project.basedir}/target/codecoverage/jacoco.exec</destFile>
             </configuration>
           </execution>
           <execution>
@@ -95,8 +95,8 @@
               <goal>report</goal>
             </goals>
             <configuration>
-              <dataFile>${project.basedir}/shippable/codecoverage/jacoco.exec</dataFile>
-              <outputDirectory>${project.basedir}/shippable/codecoverage</outputDirectory>
+              <dataFile>${project.basedir}/target/codecoverage/jacoco.exec</dataFile>
+              <outputDirectory>${project.basedir}/target/codecoverage</outputDirectory>
             </configuration>
           </execution>
         </executions>
