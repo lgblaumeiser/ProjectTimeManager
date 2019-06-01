@@ -36,6 +36,6 @@ steps:
     
 - script: |
     docker build -t lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber) .
-    docker login -u lgblaumeiser -p $(ptm.docker_pwd) https://hub.docker.com/
+    docker login -u lgblaumeiser -p $(ptm.docker_pwd)
     docker push lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber)
     
