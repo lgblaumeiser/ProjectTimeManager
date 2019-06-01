@@ -34,4 +34,8 @@ steps:
     summaryFileLocation: 'target/codecoverage/jacoco.xml'
     reportDirectory: 'target/codecoverage'
     
-- script: docker build -t lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber) .
+- script: |
+    docker build -t lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber) .
+    docker login -u lgblaumeiser -p $(Docker.Passwd) https://hub.docker.com/
+    docker push lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber)
+    
