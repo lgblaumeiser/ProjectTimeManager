@@ -29,4 +29,6 @@ steps:
   inputs:
     codeCoverageTool: 'jaCoCo' 
     summaryFileLocation: 'target/codecoverage/jacoco.xml'
-    reportDirectory: 'target/codecoverage' 
+    reportDirectory: 'target/codecoverage'
+    
+- script: docker build -t lgblaumeiser/ptm_backend .

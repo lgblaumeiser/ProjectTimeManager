@@ -13,7 +13,7 @@
 	<artifactId>ptm_backend</artifactId>
     <version>1.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
+ 
 	<name>PTM Backend</name>
 	<description>Backend server for Project Time Manager with web and rest interface</description>
 
@@ -69,6 +69,7 @@
   	</dependencies>
 
 	<build>
+		<finalName>ptm</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
