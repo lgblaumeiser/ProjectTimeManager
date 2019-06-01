@@ -5,6 +5,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  PTM.Version: 1.6
+  
 steps:
 - task: Maven@3
   inputs:
@@ -31,4 +34,4 @@ steps:
     summaryFileLocation: 'target/codecoverage/jacoco.xml'
     reportDirectory: 'target/codecoverage'
     
-- script: docker build -t lgblaumeiser/ptm_backend .
+- script: docker build -t lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber) .
