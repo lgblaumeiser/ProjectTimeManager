@@ -230,14 +230,14 @@ public class Booking {
 
     @Override
     public String toString() {
-        return format("Booking: Bookingday: %s, User Id: %s, Starttime: %s, %sActivity Id: %d, Comment: %s, Id: %d",
+        return format("Booking: Bookingday: %s, User Id: %s, Starttime: %s, %sActivity Id: %d, %sId: %d",
                 bookingday.format(ISO_LOCAL_DATE),
                 user,
                 starttime.format(DateTimeFormatter.ofPattern("HH:mm")),
                 endtime != null ? "Endtime: " + endtime.format(DateTimeFormatter.ofPattern("HH:mm")) + ", "
                         : emptyString(),
                 activity,
-                comment,
+                comment != null ? "Comment: " + comment + ", " : emptyString(),
                 id);
     }
 
