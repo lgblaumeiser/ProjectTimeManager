@@ -6,6 +6,13 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: SonarSource.sonarcloud.14d9cde6-c1da-4d55-aa01-2965cd301255.SonarCloudPrepare@1
+  displayName: 'Prepare analysis on SonarCloud' 
+  inputs: 
+    SonarCloud: 'https://sonarcloud.io/' 
+    organization: ProjectTimeManager 
+    projectKey: 84ac5cdf91f59bcbf1b7210c87074aec52c86ec5
+    
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -16,6 +23,7 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+    sonarQubeRunAnalysis: true
 
 - task: Maven@3
   inputs:
