@@ -47,7 +47,7 @@ public class AnalysisRestController {
 
 	private String[] calculateAnalysisTime(String timeframe, String param) {
 		if (timeframe.equals("period")) {
-			return param.split(";");
+			return param.split("_");
 		}
 		return new String[] { param };
 	}

@@ -24,7 +24,7 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	private static final String ANALYSIS_PROJECTS_ID = "PROJECTS";
 
 	private static final String DATE_FOR_ANALYSIS = "2018-04-05";
-	private static final String PERIOD_EXPECTED_FOR_WEEK = "2018-04-02;2018-04-09";
+	private static final String PERIOD_EXPECTED_FOR_WEEK = "2018-04-02_2018-04-09";
 	private static final String MONTH_FOR_ANALYSIS = "2018-04";
 
 	@Test
