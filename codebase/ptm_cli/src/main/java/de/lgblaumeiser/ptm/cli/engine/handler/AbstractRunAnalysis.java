@@ -42,7 +42,7 @@ abstract class AbstractRunAnalysis extends AbstractCommandHandler {
 		while (current.getDayOfWeek() != DayOfWeek.MONDAY) {
 			current = current.minusDays(1L);
 		}
-		return current.format(DateTimeFormatter.ISO_LOCAL_DATE) + ";"
+		return current.format(DateTimeFormatter.ISO_LOCAL_DATE) + "_"
 				+ current.plusDays(7L).format(DateTimeFormatter.ISO_LOCAL_DATE);
 	}
 
