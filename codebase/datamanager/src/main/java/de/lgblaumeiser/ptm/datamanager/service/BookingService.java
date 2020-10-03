@@ -130,7 +130,6 @@ public class BookingService {
             final Optional<Integer> duration) {
         assertState(booking != null);
         assertState(breakstart != null);
-        assertState(duration != null);
 
         long internalDuration = duration.orElse(DEFAULTBREAKTIME);
         checkParameters(booking, breakstart, internalDuration);
