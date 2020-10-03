@@ -38,11 +38,18 @@ public class AnalysisRestController {
 	@RequestMapping(method = RequestMethod.GET, value = "/{analyzerId}/{timeframe}/{param}")
 	Collection<Collection<String>> runAnalysis(Principal principal, @PathVariable final String analyzerId,
 			@PathVariable final String timeframe, @PathVariable final String param) {
-		logger.info("Request: Get Analysis Data for " + analyzerId + " for time frame " + timeframe + " " + param
-				+ " and user " + principal.getName());
+		logger.info("Request: Get Analysis Data for {} for time frame {} {} and user {}",
+				removeTroubleCausingChars(analyzerId),
+				removeTroubleCausingChars(timeframe),
+				removeTroubleCausingChars(param),
+				principal.getName());
 		String[] analysisTime = calculateAnalysisTime(timeframe, param);
 		return services.analysisService().analyze(analyzerId.toUpperCase(), principal.getName(), timeframe,
 				analysisTime);
+	}
+
+	private String removeTroubleCausingChars(String troubledString) {
+		return troubledString.replaceAll("[\n|\r|\t]", "_");
 	}
 
 	private String[] calculateAnalysisTime(String timeframe, String param) {
