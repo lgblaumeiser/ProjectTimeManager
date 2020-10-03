@@ -135,6 +135,6 @@ public class ActivityRestController {
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<?> handleException(final IllegalStateException e) {
         logger.error("Exception in Request", e);
-        return ResponseEntity.status(BAD_REQUEST).body(e.toString());
+        return ResponseEntity.status(BAD_REQUEST).body(e.getMessage());
     }
 }
