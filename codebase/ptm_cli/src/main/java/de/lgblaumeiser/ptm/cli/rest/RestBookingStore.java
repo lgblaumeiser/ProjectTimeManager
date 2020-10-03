@@ -71,7 +71,7 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 		}
 	}
 
-	public Long breakAt(final Booking booking, final LocalTime startOfBreak, final Optional<Integer> duration) {
+	public void breakAt(final Booking booking, final LocalTime startOfBreak, final Optional<Integer> duration) {
 		try {
 			Map<String, String> bodyData = new HashMap<>();
 			bodyData.put("activityId", booking.getActivity().toString());
@@ -86,7 +86,7 @@ public class RestBookingStore extends RestBaseService implements ObjectStore<Boo
 			}
 			String apiName = "/bookings/";
 			apiName = apiName + "id/" + booking.getId().toString();
-			return getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()), bodyData);
+			getRestUtils().post(apiName, Optional.of(getServices().getCurrentUserStore().loadUserData()), bodyData);
 		} catch (SecurityException | IllegalArgumentException e) {
 			throw new IllegalStateException(e);
 		}
