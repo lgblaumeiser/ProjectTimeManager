@@ -32,19 +32,18 @@ public class AddBreakToBooking extends AbstractCommandHandler {
 			"--length" }, description = "Length of the break, default is 30 minutes", converter = OptionalStringConverter.class)
 	private Optional<String> breaklength = Optional.empty();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler#handleCommand()
-     */
-    @Override
-    public void handleCommand() {
-        getLogger().log("Change booking ...");
-        Booking toBeChanged = getServices().getBookingsStore().retrieveById(id).orElseThrow(IllegalStateException::new);
-        LocalTime startOfBreak = breakstart.orElseThrow(IllegalStateException::new);
-        Long afterBreakId = getServices().getBookingsStore().breakAt(toBeChanged, startOfBreak,
-                breaklength.map(length -> Integer.parseInt(length)));
-        getLogger().log("... new booking with id after break: " + afterBreakId.toString());
-    }
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler#handleCommand()
+	 */
+	@Override
+	public void handleCommand() {
+		getLogger().log("Insert break ...");
+		Booking toBeChanged = getServices().getBookingsStore().retrieveById(id).orElseThrow(IllegalStateException::new);
+		LocalTime startOfBreak = breakstart.orElseThrow(IllegalStateException::new);
+		getServices().getBookingsStore().breakAt(toBeChanged, startOfBreak,
+				breaklength.map(length -> Integer.parseInt(length)));
+		getLogger().log("... executed successfully");
+	}
 }
