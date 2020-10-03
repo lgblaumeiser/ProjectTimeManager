@@ -39,31 +39,31 @@ public class ControlBackend extends AbstractCommandHandler {
 	@Parameter(names = { "--status" }, description = "Check status of the backend")
 	private boolean status;
 
-	@Override
-	public void handleCommand() {
-		try {
-			getLogger().log("Check status of PTM backend...");
-			boolean isRunning = isBackendRunning();
+    @Override
+    public void handleCommand() {
+        try {
+            getLogger().log("Check status of PTM backend...");
+            boolean isRunning = isBackendRunning();
 
-			if (start && !isRunning) {
-				getLogger().log("Start PTM backend...");
-				startBackendProcess("up", "-d");
-				getLogger().log("PTM backend is running, stay tuned until system is initialized...");
-			} else if (stop && isRunning) {
-				getLogger().log("PTM backend shutting down...");
-				startBackendProcess("down");
-				getLogger().log("...done");
-			} else if (status) {
-				getLogger().log(isRunning ? "PTM backend running!" : "PTM backend down!");
-			} else {
-				getLogger().log("Nothing to do!");
-			}
-		} catch (IOException | InterruptedException e) {
-			throw new IllegalStateException(e);
-		}
-	}
+            if (start && !isRunning) {
+                getLogger().log("Start PTM backend...");
+                startBackendProcess("up", "-d");
+                getLogger().log("PTM backend is running, stay tuned until system is initialized...");
+            } else if (stop && isRunning) {
+                getLogger().log("PTM backend shutting down...");
+                startBackendProcess("down");
+                getLogger().log("...done");
+            } else if (status) {
+                getLogger().log(isRunning ? "PTM backend running!" : "PTM backend down!");
+            } else {
+                getLogger().log("Nothing to do!");
+            }
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
-	private void startBackendProcess(final String... command) throws IOException, InterruptedException {
+	private void startBackendProcess(final String... command) throws IOException {
 		BufferedReader outputReader = prepareAndStartProcess(command);
 		String line;
 		while ((line = outputReader.readLine()) != null) {
@@ -71,7 +71,7 @@ public class ControlBackend extends AbstractCommandHandler {
 		}
 	}
 
-	private boolean isBackendRunning() throws IOException, InterruptedException {
+	private boolean isBackendRunning() throws IOException {
 		BufferedReader outputReader = prepareAndStartProcess("ps");
 		String message = IOUtils.toString(outputReader);
 		if (stringHasContent(message)) {
@@ -80,7 +80,7 @@ public class ControlBackend extends AbstractCommandHandler {
 		return false;
 	}
 
-	private BufferedReader prepareAndStartProcess(final String... command) throws IOException, InterruptedException {
+	private BufferedReader prepareAndStartProcess(final String... command) throws IOException {
 		String pathToYaml = createPathToYaml();
 		List<String> commands = new ArrayList<>();
 		commands.addAll(asList("sudo", "docker-compose", "-f", pathToYaml));
@@ -94,12 +94,16 @@ public class ControlBackend extends AbstractCommandHandler {
 		return new File(ptmHome, "ptm_docker_config.yml").getAbsolutePath();
 	}
 
-	private BufferedReader startExternalProcess(final List<String> commands) throws IOException, InterruptedException {
-		String[] commandarray = commands.toArray(new String[commands.size()]);
-		Process process = new ProcessBuilder(commandarray).redirectErrorStream(true)
-				.redirectOutput(ProcessBuilder.Redirect.PIPE).start();
-		BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-		process.waitFor();
-		return outputReader;
-	}
+    private BufferedReader startExternalProcess(final List<String> commands) throws IOException {
+        String[] commandarray = commands.toArray(new String[commands.size()]);
+        Process process = new ProcessBuilder(commandarray).redirectErrorStream(true)
+                .redirectOutput(ProcessBuilder.Redirect.PIPE).start();
+        BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        return outputReader;
+    }
 }
