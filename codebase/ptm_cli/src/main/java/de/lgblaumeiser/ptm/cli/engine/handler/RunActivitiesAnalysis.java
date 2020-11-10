@@ -23,7 +23,7 @@ public class RunActivitiesAnalysis extends AbstractRunAnalysis {
 
 	@Parameter(names = { "-m",
 			"--month" }, description = "Month for the activity analysis", converter = YearMonthConverter.class)
-	private YearMonth bookingMonth = YearMonth.now();
+	private YearMonth bookingMonth = null;
 
 	@Parameter(names = { "-w",
 			"--week" }, description = "Day in week for activity analysis", converter = LocalDateConverter.class)
@@ -31,7 +31,7 @@ public class RunActivitiesAnalysis extends AbstractRunAnalysis {
 
 	@Parameter(names = { "-d",
 			"--day" }, description = "Day for activity analysis, either a iso date format or -<days>", converter = LocalDateConverter.class)
-	private LocalDate bookingDay = null;
+	private LocalDate bookingDay = LocalDate.now();
 
 	@Override
 	public void handleCommand() {
