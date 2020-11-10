@@ -27,7 +27,9 @@ public class RunHourAnalysis extends AbstractRunAnalysis {
 
 	@Parameter(names = { "-w",
 			"--week" }, description = "Day in week for hour analysis", converter = LocalDateConverter.class)
-	private LocalDate bookingDayInWeek;
+	private LocalDate bookingDayInWeek = null;
+
+
 
 	@Override
 	public void handleCommand() {
