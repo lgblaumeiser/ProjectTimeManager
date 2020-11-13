@@ -23,17 +23,23 @@ public class RunHourAnalysis extends AbstractRunAnalysis {
 
 	@Parameter(names = { "-m",
 			"--month" }, description = "Month for the hour analysis", converter = YearMonthConverter.class)
-	private YearMonth bookingMonth = YearMonth.now();
+	private YearMonth bookingMonth = null;
 
 	@Parameter(names = { "-w",
 			"--week" }, description = "Day in week for hour analysis", converter = LocalDateConverter.class)
 	private LocalDate bookingDayInWeek = null;
 
+	@Parameter(names = { "-s",
+			"--period-start" }, description = "Start day of period", converter = LocalDateConverter.class )
+	private LocalDate periodStart = null;
 
+	@Parameter(names = { "-e",
+			"--period-end" }, description = "First day after the period", converter = LocalDateConverter.class )
+	private LocalDate periodEnd = null;
 
 	@Override
 	public void handleCommand() {
-		runAnalysis(ANALYSIS_HOURS_ID, Optional.ofNullable(bookingMonth), Optional.ofNullable(bookingDayInWeek),
-				Optional.empty());
+		runAnalysis(ANALYSIS_HOURS_ID,
+				calculateTimeFrame(bookingMonth, bookingDayInWeek, null, periodStart, periodEnd, monthDefault));
 	}
 }

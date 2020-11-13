@@ -10,8 +10,11 @@ package de.lgblaumeiser.ptm.rest;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import java.security.Principal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 
+import de.lgblaumeiser.ptm.analysis.CalculationPeriod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,28 +38,22 @@ public class AnalysisRestController {
 	@Autowired
 	private ServiceMapper services;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{analyzerId}/{timeframe}/{param}")
+	@RequestMapping(method = RequestMethod.GET, value = "/{analyzerId}/{start}/{end}")
 	Collection<Collection<String>> runAnalysis(Principal principal, @PathVariable final String analyzerId,
-			@PathVariable final String timeframe, @PathVariable final String param) {
-		logger.info("Request: Get Analysis Data for {} for time frame {} {} and user {}",
+			@PathVariable final String start, @PathVariable final String end) {
+		LocalDate startdate = LocalDate.parse(start);
+		LocalDate enddate = LocalDate.parse(end);
+		logger.info("Request: Get Analysis Data for {} for time frame {} - {} and user {}",
 				removeTroubleCausingChars(analyzerId),
-				removeTroubleCausingChars(timeframe),
-				removeTroubleCausingChars(param),
+				startdate.format(DateTimeFormatter.ISO_LOCAL_DATE),
+				enddate.format(DateTimeFormatter.ISO_LOCAL_DATE),
 				principal.getName());
-		String[] analysisTime = calculateAnalysisTime(timeframe, param);
-		return services.analysisService().analyze(analyzerId.toUpperCase(), principal.getName(), timeframe,
-				analysisTime);
+		return services.analysisService().analyze(analyzerId.toUpperCase(), principal.getName(),
+				new CalculationPeriod(startdate, enddate));
 	}
 
 	private String removeTroubleCausingChars(String troubledString) {
 		return troubledString.replaceAll("[\n|\r|\t]", "_");
-	}
-
-	private String[] calculateAnalysisTime(String timeframe, String param) {
-		if (timeframe.equals("period")) {
-			return param.split("_");
-		}
-		return new String[] { param };
 	}
 
 	@ExceptionHandler(IllegalStateException.class)

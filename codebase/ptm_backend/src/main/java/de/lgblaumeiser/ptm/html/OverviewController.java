@@ -11,10 +11,12 @@ import static java.util.stream.Collectors.toList;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Comparator;
 
+import de.lgblaumeiser.ptm.analysis.CalculationPeriod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -37,8 +39,6 @@ public class OverviewController {
     private static final String HOURANALYSISID = "HOURS";
     private static final String ACTIVITIESANALYSISID = "ACTIVITIES";
     private static final String PROJECTSANALYSISID = "PROJECTS";
-    private static final String MONTHTIMEFRAME = "month";
-    private static final String DAYTIMEFRAME = "day";
 
     private static final String DATEATTRIBUTE = "date";
     private static final String MONTHATTRIBUTE = "month";
@@ -109,20 +109,28 @@ public class OverviewController {
                                 b.getComment()))
                         .collect(toList()));
 
-        setAnalysisData(model, HOURSANALYSISHEADLINEATTRIBUTE, HOURSANALYSISATTRIBUTE, HOURANALYSISID, MONTHTIMEFRAME,
-                dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
+        setAnalysisData(model, HOURSANALYSISHEADLINEATTRIBUTE, HOURSANALYSISATTRIBUTE, HOURANALYSISID,
+                getMonthPeriod(dateToShow), username);
 
         setAnalysisData(model, ACTIVITIESANALYSISTODAYHEADLINEATTRIBUTE, ACTIVITIESANALYSISTODAYATTRIBUTE,
-                ACTIVITIESANALYSISID, DAYTIMEFRAME, dateToShow.format(DateTimeFormatter.ISO_LOCAL_DATE), username);
+                ACTIVITIESANALYSISID, getDayPeriod(dateToShow), username);
 
         setAnalysisData(model, ACTIVITYANALYSISMONTHHEADLINEATTRIBUTE, ACTIVITYANALYSISMONTHATTRIBUTE,
-                ACTIVITIESANALYSISID, MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")),
-                username);
+                ACTIVITIESANALYSISID, getMonthPeriod(dateToShow), username);
 
         setAnalysisData(model, PROJECTANALYSISMONTHHEADLINEATTRIBUTE, PROJECTANALYSISMONTHATTRIBUTE, PROJECTSANALYSISID,
-                MONTHTIMEFRAME, dateToShow.format(DateTimeFormatter.ofPattern("yyyy-MM")), username);
+                getMonthPeriod(dateToShow), username);
 
         return TEMPLATENAME;
+    }
+
+    private CalculationPeriod getDayPeriod(final LocalDate dateToShow) {
+        return new CalculationPeriod(dateToShow, dateToShow.plusDays(1L));
+    }
+
+    private CalculationPeriod getMonthPeriod(final LocalDate dateToShow) {
+        YearMonth monthToShow = YearMonth.from(dateToShow);
+        return new CalculationPeriod(monthToShow.atDay(1), monthToShow.plusMonths(1L).atDay(1));
     }
 
     private int compareActivities(Activity a1, Activity a2) {
@@ -134,10 +142,10 @@ public class OverviewController {
     }
 
     private void setAnalysisData(final Model model, final String headlineAttr, final String analysisAttr,
-            final String analysisId, final String timeFrameType, final String timeFrame, final String username) {
+            final String analysisId, final CalculationPeriod period, final String username) {
         Collection<Collection<String>> analysisResult = services
                 .analysisService()
-                .analyze(analysisId, username, timeFrameType, timeFrame);
+                .analyze(analysisId, username, period);
         Collection<String> headline = Utils.getFirstFromCollection(analysisResult);
         Collection<Collection<String>> bodydata = analysisResult.stream().skip(1).collect(toList());
         model.addAttribute(headlineAttr, headline);

@@ -31,11 +31,19 @@ public class RunProjectsAnalysis extends AbstractRunAnalysis {
 
 	@Parameter(names = { "-d",
 			"--day" }, description = "Day for project analysis, either a iso date format or -<days>", converter = LocalDateConverter.class)
-	private LocalDate bookingDay = LocalDate.now();
+	private LocalDate bookingDay = null;
+
+	@Parameter(names = { "-s",
+			"--period-start" }, description = "Start day of period", converter = LocalDateConverter.class )
+	private LocalDate periodStart = null;
+
+	@Parameter(names = { "-e",
+			"--period-end" }, description = "First day after the period", converter = LocalDateConverter.class )
+	private LocalDate periodEnd = null;
 
 	@Override
 	public void handleCommand() {
-		runAnalysis(ANALYSIS_PROJECTS_ID, Optional.ofNullable(bookingMonth), Optional.ofNullable(bookingDayInWeek),
-				Optional.ofNullable(bookingDay));
+		runAnalysis(ANALYSIS_PROJECTS_ID,
+				calculateTimeFrame(bookingMonth, bookingDayInWeek, bookingDay, periodStart, periodEnd, dayDefault));
 	}
 }
