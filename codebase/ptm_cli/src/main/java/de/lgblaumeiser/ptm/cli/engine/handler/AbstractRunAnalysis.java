@@ -7,6 +7,9 @@
  */
 package de.lgblaumeiser.ptm.cli.engine.handler;
 
+import com.beust.jcommander.Parameter;
+import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
+
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -15,12 +18,39 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
-
-import de.lgblaumeiser.ptm.cli.engine.AbstractCommandHandler;
 
 abstract class AbstractRunAnalysis extends AbstractCommandHandler {
-	protected void runAnalysis(final String command, List<String> period) {
+	@Parameter(names = { "-m",
+			"--month" }, description = "Month for the analysis", converter = YearMonthConverter.class)
+	protected YearMonth bookingMonth = null;
+
+	@Parameter(names = { "-w",
+			"--week" }, description = "Day in week for analysis", converter = LocalDateConverter.class)
+	protected LocalDate bookingDayInWeek = null;
+
+	@Parameter(names = { "-d",
+			"--day" }, description = "Day for analysis, either a iso date format or -<days>", converter = LocalDateConverter.class)
+	protected LocalDate bookingDay = null;
+
+	@Parameter(names = { "-s",
+			"--period-start" }, description = "Start day of period", converter = LocalDateConverter.class )
+	protected LocalDate periodStart = null;
+
+	@Parameter(names = { "-e",
+			"--period-end" }, description = "First day after the period", converter = LocalDateConverter.class )
+	protected LocalDate periodEnd = null;
+
+	protected abstract String analysisId();
+
+	protected abstract DefaultFunction defaultPeriod();
+
+	@Override
+	public void handleCommand() {
+		runAnalysis(analysisId(),
+				calculateTimeFrame(bookingMonth, bookingDayInWeek, bookingDay, periodStart, periodEnd, defaultPeriod()));
+	}
+
+	private void runAnalysis(final String command, List<String> period) {
 		getLogger().log("Run analysis " + command.toLowerCase() + " analysis for period " + period.get(0)
 				+ " until " + period.get(1) + " ...");
 		Collection<Collection<String>> result = getServices().getAnalysisService().analyze(command, period);
@@ -28,7 +58,7 @@ abstract class AbstractRunAnalysis extends AbstractCommandHandler {
 		getLogger().log("... analysis done");
 	}
 
-	protected List<String> calculateTimeFrame(final YearMonth month, final LocalDate week,
+	private List<String> calculateTimeFrame(final YearMonth month, final LocalDate week,
 			final LocalDate day, final LocalDate periodStart, LocalDate periodEnd, DefaultFunction defaultCalculator) {
 		if (day != null) {
 			return calculatePeriod(day, day.plusDays(1L));
@@ -47,19 +77,9 @@ abstract class AbstractRunAnalysis extends AbstractCommandHandler {
 		List<String> applyDefault();
 	}
 
-	protected DefaultFunction dayDefault = new DefaultFunction() {
-		@Override
-		public List<String> applyDefault() {
-			return calculatePeriod(LocalDate.now(), LocalDate.now().plusDays(1L));
-		}
-	};
+	protected DefaultFunction dayDefault = () -> calculatePeriod(LocalDate.now(), LocalDate.now().plusDays(1L));
 
-	protected DefaultFunction monthDefault = new DefaultFunction() {
-		@Override
-		public List<String> applyDefault() {
-			return calculatePeriod(YearMonth.now().atDay(1), LocalDate.now().plusDays(1L));
-		}
-	};
+	protected DefaultFunction monthDefault = () -> calculatePeriod(YearMonth.now().atDay(1), LocalDate.now().plusDays(1L));
 
 	private List<String> calculateWeek(LocalDate p) {
 		LocalDate current = p;
