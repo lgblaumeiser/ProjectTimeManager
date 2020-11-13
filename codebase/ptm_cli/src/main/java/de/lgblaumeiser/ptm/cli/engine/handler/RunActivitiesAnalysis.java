@@ -7,11 +7,6 @@
  */
 package de.lgblaumeiser.ptm.cli.engine.handler;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
-import java.util.Optional;
-
-import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 /**
