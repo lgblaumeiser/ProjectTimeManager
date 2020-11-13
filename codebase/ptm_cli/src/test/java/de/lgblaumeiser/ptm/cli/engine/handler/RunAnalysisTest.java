@@ -32,10 +32,12 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	private static final String STARTDATE_FOR_MONTH = "2018-04-01";
 	private static final String ENDDATE_FOR_MONTH = "2018-05-01";
 
+	private static final String ANALYSIS_API_TEMPLATE = "/analysis/%s/%s/%s";
+
 	@Test
 	public void testRunHoursAnalysisThisMonth() {
 		commandline.runCommand(HOURS_ANALYSIS_COMMAND);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_HOURS_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_HOURS_ID,
 				YearMonth.now().atDay(1).format(DateTimeFormatter.ISO_LOCAL_DATE),
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)),
 				restutils.apiNameGiven);
@@ -44,32 +46,32 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunHoursAnalysisGivenMonth() {
 		commandline.runCommand(HOURS_ANALYSIS_COMMAND, "-m", MONTH_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_HOURS_ID, STARTDATE_FOR_MONTH, ENDDATE_FOR_MONTH), restutils.apiNameGiven);
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_HOURS_ID, STARTDATE_FOR_MONTH, ENDDATE_FOR_MONTH), restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunHoursAnalysisGivenWeekday() {
 		commandline.runCommand(HOURS_ANALYSIS_COMMAND, "-w", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_HOURS_ID, STARTDATE_FOR_WEEK, ENDDATE_FOR_WEEK), restutils.apiNameGiven);
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_HOURS_ID, STARTDATE_FOR_WEEK, ENDDATE_FOR_WEEK), restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunHoursAnalysisGivenPeriod() {
 		commandline.runCommand(HOURS_ANALYSIS_COMMAND, "-s", DATE_FOR_ANALYSIS, "-e", ENDDATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_HOURS_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_ANALYSIS), restutils.apiNameGiven);
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_HOURS_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_ANALYSIS), restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunHoursAnalysisGivenPeriodStart() {
 		commandline.runCommand(HOURS_ANALYSIS_COMMAND, "-s", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_HOURS_ID, DATE_FOR_ANALYSIS,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_HOURS_ID, DATE_FOR_ANALYSIS,
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)), restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunActivitiesAnalysisDefaultDay() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID,
 				LocalDate.now().format(DateTimeFormatter.ISO_DATE),
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)), restutils.apiNameGiven);
 	}
@@ -77,21 +79,21 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunActivitiesAnalysisGivenMonth() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-m", MONTH_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID, STARTDATE_FOR_MONTH, ENDDATE_FOR_MONTH),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID, STARTDATE_FOR_MONTH, ENDDATE_FOR_MONTH),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunActivitiesAnalysisGivenDay() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-d", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_DAY),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_DAY),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunActivitiesAnalysisGivenDayToday() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-d", "0");
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID,
 				LocalDate.now().format(DateTimeFormatter.ISO_DATE),
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)),
 				restutils.apiNameGiven);
@@ -100,7 +102,7 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunActivitiesAnalysisGivenDayYesterday() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-d", "-1");
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID,
 				LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE),
 				LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)),
 				restutils.apiNameGiven);
@@ -109,28 +111,28 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunActivitiesAnalysisGivenWeek() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-w", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID, STARTDATE_FOR_WEEK, ENDDATE_FOR_WEEK),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID, STARTDATE_FOR_WEEK, ENDDATE_FOR_WEEK),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunActivitiesAnalysisGivenPeriod() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-s", DATE_FOR_ANALYSIS, "-e", ENDDATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_ANALYSIS),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_ANALYSIS),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunActivitiesAnalysisGivenPeriodStart() {
 		commandline.runCommand(ACTIVITIES_ANALYSIS_COMMAND, "-s", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_ACTIVITIES_ID, DATE_FOR_ANALYSIS,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_ACTIVITIES_ID, DATE_FOR_ANALYSIS,
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)), restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunProjectsAnalysisDefaultDay() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID,
 				LocalDate.now().format(DateTimeFormatter.ISO_DATE),
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)),
 				restutils.apiNameGiven);
@@ -139,21 +141,21 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunProjectsAnalysisGivenMonth() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-m", MONTH_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID, STARTDATE_FOR_MONTH, ENDDATE_FOR_MONTH),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID, STARTDATE_FOR_MONTH, ENDDATE_FOR_MONTH),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunProjectsAnalysisGivenDay() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-d", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_DAY),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_DAY),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunProjectsAnalysisGivenDayToday() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-d", "0");
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID,
 				LocalDate.now().format(DateTimeFormatter.ISO_DATE),
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)),
 				restutils.apiNameGiven);
@@ -162,7 +164,7 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunProjectsAnalysisGivenDayYesterday() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-d", "-1");
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID,
 				LocalDate.now().minusDays(1).format(DateTimeFormatter.ISO_DATE),
 				LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)),
 				restutils.apiNameGiven);
@@ -171,21 +173,21 @@ public class RunAnalysisTest extends AbstractHandlerTest {
 	@Test
 	public void testRunProjectsAnalysisGivenWeek() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-w", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID, STARTDATE_FOR_WEEK, ENDDATE_FOR_WEEK),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID, STARTDATE_FOR_WEEK, ENDDATE_FOR_WEEK),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunProjectsAnalysisGivenPeriod() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-s", DATE_FOR_ANALYSIS, "-e", ENDDATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_ANALYSIS),
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID, DATE_FOR_ANALYSIS, ENDDATE_FOR_ANALYSIS),
 				restutils.apiNameGiven);
 	}
 
 	@Test
 	public void testRunProjectsAnalysisGivenPeriodStart() {
 		commandline.runCommand(PROJECTS_ANALYSIS_COMMAND, "-s", DATE_FOR_ANALYSIS);
-		assertEquals(String.format("/analysis/%s/%s/%s", ANALYSIS_PROJECTS_ID, DATE_FOR_ANALYSIS,
+		assertEquals(String.format(ANALYSIS_API_TEMPLATE, ANALYSIS_PROJECTS_ID, DATE_FOR_ANALYSIS,
 				LocalDate.now().plusDays(1L).format(DateTimeFormatter.ISO_LOCAL_DATE)), restutils.apiNameGiven);
 	}
 }
