@@ -7,6 +7,8 @@
  */
 package de.lgblaumeiser.ptm.analysis;
 
+import static de.lgblaumeiser.ptm.util.Utils.assertState;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,6 +19,7 @@ public class CalculationPeriod {
     List<LocalDate> daysInPeriod = new ArrayList<>();
 
     public CalculationPeriod(final LocalDate firstDay, final LocalDate firstDayAfter) {
+        assertState(firstDay.isBefore(firstDayAfter));
         LocalDate currentDate = firstDay;
         while (currentDate.isBefore(firstDayAfter)) {
             daysInPeriod.add(currentDate);

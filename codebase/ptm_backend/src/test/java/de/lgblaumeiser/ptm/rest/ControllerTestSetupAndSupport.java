@@ -83,7 +83,8 @@ public class ControllerTestSetupAndSupport {
     protected static final String TESTBOOKING4_STARTTIME = LocalTime.of(11, 0).format(ISO_LOCAL_TIME);
     protected static final String TESTBOOKING4_ENDTIME = LocalTime.of(12, 15).format(ISO_LOCAL_TIME);
 
-    protected static final String DATE_STRING = LocalDate.now().format(ISO_LOCAL_DATE);
+    protected static final LocalDate DATE = LocalDate.now();
+    protected static final String DATE_STRING = DATE.format(ISO_LOCAL_DATE);
 
     protected static final String EMPTY_JSON_ARRAY = "[]";
 

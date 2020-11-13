@@ -13,6 +13,7 @@ import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -50,17 +51,9 @@ public class DataAnalysisServiceTest {
     }
 
     @Test
-    public void testDataAnalysisServiceMonth() {
-        Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER, PERIODMONTH, DATESTRINGMONTH);
-        assertEquals(1, result.size());
-        Collection<String> content = getFirstFromCollection(result);
-        assertEquals(31, content.size());
-    }
-
-    @Test
     public void testDataAnalysisServicePeriod() {
-        Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER, PERIODWEEK, DATESTRINGDAYFIRST,
-                DATESTRINGDAYFIRSTAFTER);
+        Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER,
+                new CalculationPeriod(LocalDate.parse(DATESTRINGDAYFIRST), LocalDate.parse(DATESTRINGDAYFIRSTAFTER)));
         assertEquals(1, result.size());
         Collection<String> content = getFirstFromCollection(result);
         assertEquals(7, content.size());
@@ -68,24 +61,34 @@ public class DataAnalysisServiceTest {
 
     @Test
     public void testDataAnalysisServiceDay() {
-        Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER, PERIODDAY, DATESTRINGDAY);
+        Collection<Collection<String>> result = testee.analyze(ANALYSISID, USER,
+                new CalculationPeriod(LocalDate.parse(DATESTRINGDAY), LocalDate.parse(DATESTRINGDAY).plusDays(1L)));
         assertEquals(1, result.size());
         Collection<String> content = getFirstFromCollection(result);
         assertEquals(1, content.size());
     }
 
     @Test(expected = IllegalStateException.class)
-    public void testDataAnalysisServiceUnknownId() {
-        testee.analyze(ANALYSISID, emptyString(), emptyString(), emptyString());
+    public void testDataAnalysisServiceUnknownUser() {
+        testee.analyze(ANALYSISID, emptyString(),
+                new CalculationPeriod(LocalDate.parse(DATESTRINGDAYFIRST), LocalDate.parse(DATESTRINGDAYFIRSTAFTER)));
     }
 
     @Test(expected = IllegalStateException.class)
     public void testDataAnalysisServiceEmptyId() {
-        testee.analyze(emptyString(), PERIODDAY, DATESTRINGDAY, USER);
+        testee.analyze(emptyString(), USER,
+                new CalculationPeriod(LocalDate.parse(DATESTRINGDAYFIRST), LocalDate.parse(DATESTRINGDAYFIRSTAFTER)));
     }
 
     @Test(expected = IllegalStateException.class)
     public void testDataAnalysisServiceNullId() {
-        testee.analyze(null, PERIODDAY, DATESTRINGDAY, USER);
+        testee.analyze(null, USER,
+                new CalculationPeriod(LocalDate.parse(DATESTRINGDAYFIRST), LocalDate.parse(DATESTRINGDAYFIRSTAFTER)));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void testDataAnalysisServiceCorruptCalculationPeriod() {
+        testee.analyze(ANALYSISID, USER,
+                new CalculationPeriod(LocalDate.parse(DATESTRINGDAY), LocalDate.parse(DATESTRINGDAY)));
     }
 }

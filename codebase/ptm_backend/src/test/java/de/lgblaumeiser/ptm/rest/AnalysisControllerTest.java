@@ -20,6 +20,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import de.lgblaumeiser.ptm.rest.BookingRestController.BookingBody;
 
+import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
+
 /**
  * Test analysis test controller
  */
@@ -29,7 +32,7 @@ import de.lgblaumeiser.ptm.rest.BookingRestController.BookingBody;
 public class AnalysisControllerTest extends ControllerTestSetupAndSupport {
     private static final String HUNDERT_PERCENT_STRING = "100.0%";
 
-    private static String ANALYSIS_API_TEMPLATE = "/analysis/%s/month/%s";
+    private static String ANALYSIS_API_TEMPLATE = "/analysis/%s/%s/%s";
     private static String ANALYSIS_HOURS = "hours";
     private static String ANALYSIS_PROJECTS = "projects";
     private static String ANALYSIS_ACTIVITIES = "activities";
@@ -75,6 +78,9 @@ public class AnalysisControllerTest extends ControllerTestSetupAndSupport {
     }
 
     private String api(final String analysis) {
-        return String.format(ANALYSIS_API_TEMPLATE, analysis, DATE_STRING.substring(0, 7));
+        YearMonth analysisMonth = YearMonth.from(DATE);
+        String startDay = analysisMonth.atDay(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        String endDay = analysisMonth.plusMonths(1L).atDay(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+        return String.format(ANALYSIS_API_TEMPLATE, analysis, startDay, endDay);
     }
 }
