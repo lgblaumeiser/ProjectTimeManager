@@ -21,25 +21,13 @@ import com.beust.jcommander.Parameters;
 public class RunHourAnalysis extends AbstractRunAnalysis {
 	private static final String ANALYSIS_HOURS_ID = "HOURS";
 
-	@Parameter(names = { "-m",
-			"--month" }, description = "Month for the hour analysis", converter = YearMonthConverter.class)
-	private YearMonth bookingMonth = null;
-
-	@Parameter(names = { "-w",
-			"--week" }, description = "Day in week for hour analysis", converter = LocalDateConverter.class)
-	private LocalDate bookingDayInWeek = null;
-
-	@Parameter(names = { "-s",
-			"--period-start" }, description = "Start day of period", converter = LocalDateConverter.class )
-	private LocalDate periodStart = null;
-
-	@Parameter(names = { "-e",
-			"--period-end" }, description = "First day after the period", converter = LocalDateConverter.class )
-	private LocalDate periodEnd = null;
+	@Override
+	protected String analysisId() {
+		return ANALYSIS_HOURS_ID;
+	}
 
 	@Override
-	public void handleCommand() {
-		runAnalysis(ANALYSIS_HOURS_ID,
-				calculateTimeFrame(bookingMonth, bookingDayInWeek, null, periodStart, periodEnd, monthDefault));
+	protected DefaultFunction defaultPeriod() {
+		return monthDefault;
 	}
 }
