@@ -19,11 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import de.lgblaumeiser.ptm.ServiceMapper;
 
@@ -38,7 +34,7 @@ public class AnalysisRestController {
 	@Autowired
 	private ServiceMapper services;
 
-	@RequestMapping(method = RequestMethod.GET, value = "/{analyzerId}/{start}/{end}")
+	@GetMapping(value = "/{analyzerId}/{start}/{end}")
 	Collection<Collection<String>> runAnalysis(Principal principal, @PathVariable final String analyzerId,
 			@PathVariable final String start, @PathVariable final String end) {
 		LocalDate startdate = LocalDate.parse(start);
