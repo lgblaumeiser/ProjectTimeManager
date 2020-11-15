@@ -36,7 +36,7 @@
           <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>7.1</version>
+            <version>9.0</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -52,14 +52,14 @@
         	<dependency>
             	<groupId>org.ow2.asm</groupId>
             	<artifactId>asm</artifactId>
-            	<version>7.1</version>
+            	<version>9.0</version>
         	</dependency>
 		</dependencies>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.4</version>
+        <version>0.8.6</version>
         <executions>
           <execution>
             <goals>
