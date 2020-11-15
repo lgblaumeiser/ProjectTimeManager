@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.5.RELEASE</version>
+		<version>2.4.0</version>
 	</parent>
 
 	<properties>
@@ -57,9 +57,20 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.junit.vintage</groupId>
+			<artifactId>junit-vintage-engine</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.hamcrest</groupId>
+					<artifactId>hamcrest-core</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
       		<groupId>com.fasterxml.jackson.core</groupId>
       		<artifactId>jackson-annotations</artifactId>
-      		<version>2.9.9</version><!--$NO-MVN-MAN-VER$-->
+      		<version>2.11.3</version>
 		</dependency>
 		<dependency>
 			<groupId>de.lgblaumeiser</groupId>
@@ -81,7 +92,7 @@
           			<dependency>
             			<groupId>org.ow2.asm</groupId>
             			<artifactId>asm</artifactId>
-            			<version>7.1</version>
+            			<version>9.0</version>
           			</dependency>
         		</dependencies>
       		</plugin>
@@ -96,14 +107,14 @@
         			<dependency>
             			<groupId>org.ow2.asm</groupId>
             			<artifactId>asm</artifactId>
-            			<version>7.1</version>
+            			<version>9.0</version>
         			</dependency>
 				</dependencies>
       		</plugin>
   	  		<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.4</version>
+				<version>0.8.6</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
