@@ -6,6 +6,9 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
+variables:
+  PTM.Version: 1.6
+ 
 steps:
 - task: SonarCloudPrepare@1
   inputs:
@@ -37,4 +40,10 @@ steps:
   inputs:
     codeCoverageTool: 'jaCoCo' 
     summaryFileLocation: 'target/codecoverage/jacoco.xml'
-    reportDirectory: 'target/codecoverage' 
+    reportDirectory: 'target/codecoverage'
+    
+- script: |
+    docker build -t lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber) .
+    docker login -u lgblaumeiser -p $(ptm.docker_pwd)
+    docker push lgblaumeiser/ptm_backend:$(PTM.Version)_$(Build.BuildNumber)
+    
