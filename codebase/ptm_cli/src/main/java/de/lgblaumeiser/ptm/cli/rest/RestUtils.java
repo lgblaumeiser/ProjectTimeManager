@@ -39,7 +39,7 @@ import de.lgblaumeiser.ptm.cli.engine.UserStore.UserInfo;
  * Utils to do rest calls on the rest api
  */
 public class RestUtils {
-	private static final int TIMEOUT = 5 * 1000; // 5 times 1000 msec
+	private static final int TIMEOUT = 20 * 1000; // 20 times 1000 msec
 
 	private CloseableHttpClient clientConnector;
 	private String baseUrl;
