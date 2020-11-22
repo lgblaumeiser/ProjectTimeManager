@@ -10,8 +10,8 @@
 
 echo "Step: Request installation data"
 
-cli_jar=ptm_cli-1.6.jar
-rest_jar=ptm_backend-1.6.jar
+cli_jar=ptm_cli-1.6.1-rc1.jar
+rest_jar=ptm_backend-1.6.1-rc1.jar
 
 read -p "Installation folder: " installfolder
 

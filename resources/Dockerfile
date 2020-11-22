@@ -6,5 +6,5 @@
 
 FROM openjdk:8-jre
 VOLUME /var/ptm
-COPY ptm_backend-1.6.jar app.jar
+COPY ptm_backend-1.6.1-rc1.jar app.jar
 ENTRYPOINT ["java","-Dptm.filestore=/var/ptm", "-jar","/app.jar"]
