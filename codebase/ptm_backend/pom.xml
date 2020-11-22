@@ -11,7 +11,7 @@
 
 	<groupId>de.lgblaumeiser</groupId>
 	<artifactId>ptm_backend</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.6.1-rc1</version>
 	<packaging>jar</packaging>
 
 	<name>PTM Backend</name>
@@ -75,7 +75,7 @@
 		<dependency>
 			<groupId>de.lgblaumeiser</groupId>
 			<artifactId>datamanager</artifactId>
-			<version>1.7-SNAPSHOT</version>
+			<version>1.6.1-rc1</version>
 		</dependency>
   	</dependencies>
 
@@ -133,4 +133,8 @@
 	  		</plugin>
 		</plugins>
 	</build>
+
+  <scm>
+    <tag>release-1.6.1-rc1</tag>
+  </scm>
 </project>
