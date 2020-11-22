@@ -29,15 +29,10 @@ fi
 
 echo "Step: Install files and setup env variables"
 
-if [  -e /etc/profile.d/ptm.sh ]
-then
-	sudo rm /etc/profile.d/ptm.sh
-fi
 echo "export PATH=\$PATH:$installfolder" > ptm.sh
 echo "export PTM_HOME=$installfolder" >> ptm.sh
-chmod 755 ptm.sh
-sudo cp ptm.sh /etc/profile.d
-source /etc/profile.d/ptm.sh
+echo "Please add content of file ptm.sh to your shell resource file"
+echo "Run 'source .resource_file' afterwards to add the tool to the path"
 
 mkdir $installfolder
 cp ptm $installfolder
@@ -51,4 +46,4 @@ then
 	sudo docker build -t "de.lgblaumeiser/ptm" .
 fi
 
-echo "Installation done, you can remove this folder now"
+echo "Installation done, you can remove this folder after changing the shell resource file."
