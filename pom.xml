@@ -11,7 +11,7 @@
      
   <groupId>de.lgblaumeiser</groupId>
   <artifactId>ptm</artifactId>
-  <version>1.6.1-rc1</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>pom</packaging>
      
   <properties>
@@ -20,7 +20,7 @@
   </properties>
   <scm>
     <developerConnection>scm:git:https://github.com/lgblaumeiser/ProjectTimeManager.git</developerConnection>
-    <tag>release-1.6.1-rc1</tag>
+    <tag>HEAD</tag>
   </scm>
   <build>
     <plugins>
