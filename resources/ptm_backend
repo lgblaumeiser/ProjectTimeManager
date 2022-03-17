@@ -6,4 +6,4 @@
 #
 # SPDX-License-Identifier: MIT
 
-java -Dptm.host=localhost -Dptm.port=27727 -jar $PTM_HOME/ptm_cli-1.7.jar "$@"
+java -Dserver.port=27727 -jar $PTM_HOME/ptm_backend-1.7.jar
