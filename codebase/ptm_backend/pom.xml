@@ -20,7 +20,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.4.0</version>
+		<version>2.6.4</version>
 	</parent>
 
 	<properties>
@@ -70,7 +70,7 @@
 		<dependency>
       		<groupId>com.fasterxml.jackson.core</groupId>
       		<artifactId>jackson-annotations</artifactId>
-      		<version>2.11.3</version>
+      		<version>2.13.2</version>
 		</dependency>
 		<dependency>
 			<groupId>de.lgblaumeiser</groupId>
@@ -114,7 +114,7 @@
   	  		<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.6</version>
+				<version>0.8.7</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>

@@ -117,11 +117,7 @@ public abstract class AbstractHandlerTest {
         public InputStream get(final String apiName, final Optional<UserStore.UserInfo> user) {
             apiNameGiven = apiName;
             if (apiName.contains("services/license")) {
-                try {
-                    return IOUtils.toInputStream("BackendLicenseText", "UTF-8");
-                } catch (IOException e) {
-                    throw new IllegalStateException(e);
-                }
+                return IOUtils.toInputStream("BackendLicenseText", "UTF-8");
             }
             return new ByteArrayInputStream(rawDataGiven);
         }

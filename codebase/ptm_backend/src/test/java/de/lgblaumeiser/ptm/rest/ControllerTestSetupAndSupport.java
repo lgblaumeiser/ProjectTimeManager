@@ -134,7 +134,7 @@ public class ControllerTestSetupAndSupport {
         try {
             mockMvc.perform(
                     post(USER_REGISTRATION_API)
-                            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                            .contentType(MediaType.APPLICATION_JSON_VALUE)
                             .content(objectMapper.writeValueAsString(data)))
                     .andDo(print())
                     .andExpect(status().isCreated());
@@ -246,7 +246,7 @@ public class ControllerTestSetupAndSupport {
     protected ResultActions performGet(final String apiname, final Optional<String> authorizationString)
             throws Exception {
         MockHttpServletRequestBuilder request = get(apiname)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
+                .contentType(MediaType.APPLICATION_JSON_VALUE);
         if (authorizationString.isPresent()) {
             request = request.header(HttpHeaders.AUTHORIZATION, authorizationString.get());
         }
@@ -261,7 +261,7 @@ public class ControllerTestSetupAndSupport {
     protected ResultActions performPost(final String apiname, final Object data,
             final Optional<String> authorizationString) throws Exception {
         MockHttpServletRequestBuilder request = post(apiname)
-                .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(data));
         if (authorizationString.isPresent()) {
             request = request.header(HttpHeaders.AUTHORIZATION, authorizationString.get());
@@ -278,7 +278,7 @@ public class ControllerTestSetupAndSupport {
                     .content((byte[]) data);
         } else {
             request = request
-                    .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
                     .content(objectMapper.writeValueAsString(data));
         }
         if (authorizationString.isPresent()) {
