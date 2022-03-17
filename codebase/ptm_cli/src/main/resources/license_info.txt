@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2016, 2017, 2018, 2019, 2020 Lars Geyer-Blaumeiser
+Copyright (c) 2016, 2017, 2018, 2019, 2020, 2022 Lars Geyer-Blaumeiser
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -32,23 +32,23 @@ Please read license texts on this page: https://spdx.org/licenses/
 
 Dependencies of "de.lgblaumeiser:ptm_cli"
 
-* com.fasterxml.jackson.core:jackson-databind.2.11.3
+* com.fasterxml.jackson.core:jackson-databind.2.13.2
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
   
-* com.fasterxml.jackson.core:jackson-annotations:2.11.3
+* com.fasterxml.jackson.core:jackson-annotations:2.13.2
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations
 
-* com.fasterxml.jackson.core:jackson-core:2.11.3
+* com.fasterxml.jackson.core:jackson-core:2.13.2
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
 
-* com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.3
+* com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/com.fasterxml.jackson.datatype/jackson-datatype-jsr310
 
-* commons-io:commons-io:2.8.0
+* commons-io:commons-io:2.11.0
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/commons-io/commons-io
 
@@ -68,13 +68,13 @@ Dependencies of "de.lgblaumeiser:ptm_cli"
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore
 
-* com.beust:jcommander:1.78
+* com.beust:jcommander:1.82
   SPDX-License-Identifier: Apache-2.0
   Reference: https://mvnrepository.com/artifact/com.beust/jcommander
 
 Test Dependencies:
 
-* junit:junit:4.13.1
+* junit:junit:4.13.2
   SPDX-License-Identifier: EPL-1.0
   Reference: https://mvnrepository.com/artifact/junit/junit
   
