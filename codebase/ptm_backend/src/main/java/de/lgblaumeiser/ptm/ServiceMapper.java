@@ -50,7 +50,6 @@ public class ServiceMapper {
 	private final PasswordEncoder passwordEncoder;
 
 	public ServiceMapper() {
-		setProperty("filestore.folder", new File(getProperty("user.home"), ".ptm").getAbsolutePath());
 		FileStoreProvider storageProvider = new FileStoreProvider();
 		userStore = storageProvider.getUserFileStore();
 		activityStore = storageProvider.getActivityFileStore();
