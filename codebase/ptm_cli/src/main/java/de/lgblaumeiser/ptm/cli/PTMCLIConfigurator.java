@@ -22,7 +22,6 @@ import de.lgblaumeiser.ptm.cli.engine.handler.Backup;
 import de.lgblaumeiser.ptm.cli.engine.handler.ChangeActivity;
 import de.lgblaumeiser.ptm.cli.engine.handler.ChangeBooking;
 import de.lgblaumeiser.ptm.cli.engine.handler.ChangePassword;
-import de.lgblaumeiser.ptm.cli.engine.handler.ControlBackend;
 import de.lgblaumeiser.ptm.cli.engine.handler.DeleteBooking;
 import de.lgblaumeiser.ptm.cli.engine.handler.DeleteUser;
 import de.lgblaumeiser.ptm.cli.engine.handler.License;
@@ -83,7 +82,6 @@ public class PTMCLIConfigurator {
 	private static final String ACTIVITIES_ANALYSIS_COMMAND_ABBRV = "ac";
 	private static final String PROJECTS_ANALYSIS_COMMAND = "projects_analysis";
 	private static final String PROJECTS_ANALYSIS_COMMAND_ABBRV = "pa";
-	private static final String BACKEND_COMMAND = "backend";
 	private static final String BACKUP_COMMAND = "backup";
 	private static final String RESTORE_COMMAND = "restore";
 	private static final String LICENSE_COMMAND = "licenses";
@@ -139,8 +137,8 @@ public class PTMCLIConfigurator {
 				.addCommand(HOURS_ANALYSIS_COMMAND, new RunHourAnalysis(), HOURS_ANALYSIS_COMMAND_ABBRV)
 				.addCommand(ACTIVITIES_ANALYSIS_COMMAND, new RunActivitiesAnalysis(), ACTIVITIES_ANALYSIS_COMMAND_ABBRV)
 				.addCommand(PROJECTS_ANALYSIS_COMMAND, new RunProjectsAnalysis(), PROJECTS_ANALYSIS_COMMAND_ABBRV)
-				.addCommand(BACKEND_COMMAND, new ControlBackend()).addCommand(BACKUP_COMMAND, new Backup())
-				.addCommand(RESTORE_COMMAND, new Restore()).addCommand(LICENSE_COMMAND, new License()).build();
+				.addCommand(BACKUP_COMMAND, new Backup()).addCommand(RESTORE_COMMAND, new Restore())
+				.addCommand(LICENSE_COMMAND, new License()).build();
 		return jc;
 	}
 
