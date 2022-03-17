@@ -15,12 +15,6 @@ rest_jar=ptm_backend-1.7.jar
 
 read -p "Installation folder: " installfolder
 
-#read -p "Build docker container [Y/n]? " -r
-#if [[ $REPLY =~ ^[Yy]$ ]]
-#then
-#    build_docker=1
-#fi
-
 if [ -d "$installfolder" ]
 then
 	echo "Install folder $installfolder already exists, exiting"
@@ -39,12 +33,5 @@ cp ptm $installfolder
 cp ptm_backend $installfolder
 cp $cli_jar $installfolder
 cp $rest_jar $installfolder
-# cp ptm_docker_config.yml $installfolder
-
-#if [ $build_docker ]
-#then
-#	echo "Step: Build docker container"
-#	sudo docker build -t "de.lgblaumeiser/ptm" .
-#fi
 
 echo "Installation done, you can remove this folder after changing the shell resource file."
