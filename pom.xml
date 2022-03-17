@@ -19,7 +19,7 @@
     <bytecode.version>8</bytecode.version>
   </properties>
   <scm>
-    <developerConnection>scm:git:https://github.com/lgblaumeiser/ProjectTimeManager.git</developerConnection>
+    <developerConnection>scm:git:ssh://git@github.com/lgblaumeiser/ProjectTimeManager.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
   <build>
